@@ -6,7 +6,33 @@ for installing processing 3.0.0 on Mac OSX 10.11.1.
 
 Download processing app from website
 add Processing to path variable: Processing.app/Contents/MacOS/Processing
-Download https://github.com/sophacles/vim-processing into ~/.vim
 
 Install processing-java by typeing "install processing-java" in help menu of
 processing app
+
+
+Further notes on vim-processing integration below:
+
+download this https://github.com/sophacles/vim-processing and put the syntax folder into ~/.vim (or the file processing.vim into your syntax folder if you already have one
+
+add these two lines to your vimrc, the first of which sets up syntax highlighting and the second allows you to run and compile from vim:
+
+au BufRead,BufNewFile *.pde     setf processing
+:command P :! processing-java --sketch=$PWD/ --output=temp --run --force
+
+:P from vim compiles and runs a sketch
+
+If you want to use a different editor, you can run from the command line with the command processing-java --sketch=$PWD/ --output=temp --run --force
+
+To to get one-keystroke save compile run of processing in vim, set it to the makeprg in the vimrc:
+
+autocmd BufNewFile,BufRead *.pde set makeprg=mkdir\ -p\ ./output\ &&\ processing-java\ --sketch=\"`pwd`\"\ --output=\"`pwd`\"/output\ --run\ --force
+
+
+Note that this creates the dummy directory output. I've tried with mktemp and haven't gotten it to work. Then assign the makeprg to a key:
+
+nnoremap <Tab> :wa<bar>:make<bar><CR>
+
+
+The benefit of this is that different file types can set the makeprg to whatever is appropriate, and the key is always the same (Tab, in this case).:w
+
