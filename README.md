@@ -1,4 +1,5 @@
 # mrs - Modular Robotics Simulation
+
 **Authors: Alex Tong, Casey Gowrie, Kabir Singh**
 
 ===
