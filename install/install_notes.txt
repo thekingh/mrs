@@ -1,15 +1,14 @@
 Notes on installing files related to the MRS project.
 
 Installing processing on mac:
-Note that Kabir is running 2.2.1 on his arch-linux box. However, these notes are
+Note that Kabir is running 2.2.1 on his ubuntu-top. However, these notes are
 for installing processing 3.0.0 on Mac OSX 10.11.1.
 
 Download processing app from website
 add Processing to path variable: Processing.app/Contents/MacOS/Processing
 
-Install processing-java by typeing "install processing-java" in help menu of
+Install processing-java by typing "install processing-java" in help menu of
 processing app
-
 
 Further notes on vim-processing integration below:
 
