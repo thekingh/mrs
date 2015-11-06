@@ -1,6 +1,10 @@
-public class Grid {
+final int EMPTY =  0;
+final int HARM  = -1;
+final int VARM  = -2;
+final int UNIT  =  1;
 
-    private GridObject[][] grid;
+public class Grid {
+    private int[][] grid;
     private int h, w;
 
     public Grid() {
@@ -11,10 +15,10 @@ public class Grid {
         h = _h;
         w = _w;
 
-        grid = new GridObject[w][h];
+        grid = new int[w][h];
         for(int i = 0; i < w; i++) {
             for(int j = 0; j < h; j++) {
-                grid[i][j] = GridObject.EMPTY;
+                grid[i][j] = EMPTY;
             }
         }
     }
@@ -23,7 +27,7 @@ public class Grid {
        h = g.getHeight(); 
        w = g.getWidth(); 
 
-        grid = new GridObject[w][h];
+        grid = new int[w][h];
         for(int i = 0; i < w; i++) {
             for(int j = 0; j < h; j++) {
                 grid[i][j] = g.at(i, j);
@@ -33,20 +37,19 @@ public class Grid {
 
     public int getWidth() {
         return w;
-
-   }
+    }
 
     public int getHeight() {
         return h;
     }
 
-    public GridObject at(int r, int c) {
+    public int at(int r, int c) {
         return grid[r][c];
     }
 
-    public GridObject setState(int r, int c, GridObject newObject) {
-       GridObject prev = at(r, c);
-       grid[r][c] = newObject;
+    public int setState(int r, int c, int newState) {
+       int prev = at(r, c);
+       grid[r][c] = newState;
        return prev;
     }
 
@@ -66,11 +69,11 @@ public class Grid {
         
         for(int i = 0; i < w; i++) {
             for(int j = 0; j < h; j++) {
-                if ( at(i, j) == GridObject.VARM) {
+                if ( at(i, j) == ARM) {
                     drawer.Fill(255, 0, 0);
                     drawer.Rect(i * subW, j * subH, subW, subH);
                     drawer.Fill(255, 255, 255);
-                } else if ( at(i, j) == GridObject.UNIT) {
+                } else if ( at(i, j) == UNIT) {
                     drawer.Fill(0, 255, 0);
                     drawer.Rect(i * subW, j * subH, subW, subH);
                     drawer.Fill(255, 255, 255);
