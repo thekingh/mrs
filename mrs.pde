@@ -9,7 +9,7 @@ void setup() {
     for(int i = 0; i < g.getWidth(); i++) {
         for(int j = 0; j < g.getHeight(); j++) {
             if((i + j) % 2 == 0) {
-                g.setState(i, j, GridObject.VARM);
+                g.setState(i, j, GridObject.HARM);
             } else {
                 g.setState(i, j, GridObject.UNIT);
             }
