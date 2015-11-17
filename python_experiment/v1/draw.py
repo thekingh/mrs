@@ -45,6 +45,19 @@ class Module(object):
         N.alter_arm((arm + 2) % 4, direction, connection) # hacky opposite arm TODO
         self.alter_arm(arm, direction, connection)
 
+    def set_neighbor(self, arm, neighbor, extension, connection):
+        """ sets both modules neighbors
+
+        Args:
+            arm (int): Arm to alter
+            neighbor (Module): neighboring module
+            extension (int): distance between neighbors
+            connection (bool): True if arms are connected
+        """
+        self.neighbors[arm] = (neighbor, extension, connection)
+        neighbor.neighbors[(arm + 2) % 4] = (self, extension, connection)
+    
+
     def __repr__(self):
         return '<Module: ' + str(self.id) + '>'
 
@@ -81,8 +94,8 @@ class Graph(object):
     def get_coords(self):
         def add_neighbors_to_queue(Q, node, visited):
             curr, curr_coord = node
-            coord = list(curr_coord)
             for n in curr.neighbors:
+                coord = list(curr_coord)
                 neighbor, extension, connection = curr.neighbors[n]
                 if neighbor.id not in visited:
                     if n == 0: #North
@@ -91,7 +104,7 @@ class Graph(object):
                         coord[0] += 1 + extension
                     if n == 2: #South
                         coord[1] += 1 + extension
-                    if n == 4:
+                    if n == 3: #West
                         coord[0] -= 1 + extension
                     Q.append((neighbor, tuple(coord)))
                     visited.add(neighbor.id)
@@ -119,7 +132,7 @@ class Graph(object):
             return to_return
         visited = set()
         current = self.master
-        max_coords = (1,1)
+        max_coords = (0,0)
         min_coords = (0,0)
         Q = [] #builds out list of coords
         i = 0
@@ -131,7 +144,6 @@ class Graph(object):
             max_coords = update_max(max_coords, curr_coord)
             min_coords = update_min(min_coords, curr_coord)
             Q, visited = add_neighbors_to_queue(Q, node, visited)
-            print Q
             i += 1
         print min_coords, max_coords
         return Q, min_coords, max_coords
@@ -140,7 +152,7 @@ class Graph(object):
         Q, min_coords, max_coords = self.get_coords()
         minx, miny = min_coords
         maxx, maxy = max_coords
-        G = Grid(maxx - minx, maxy - miny)
+        G = Grid(1 + maxx - minx, 1 + maxy - miny) #must add one for original
         for node, (x, y) in Q:
             G.add_node(x - minx, y - miny, node)
         return G
@@ -170,17 +182,19 @@ class Grid(object):
         self.grid[x][y] = obj
         return prev
 
+def twoByTwoGen(expanded = False):
+    """ returns a 2x2 module """
+    M = [Module() for i in range(4)]
+    a, b, c, d = M
+    a.set_neighbor(1, b, expanded, True)
+    b.set_neighbor(2, c, expanded, True)
+    c.set_neighbor(1, d, expanded, True)
+    d.set_neighbor(0, a, expanded, True)
+    return M
+
 def main():
-#    g = Grid(5,5)
-#    g.grid[3][3] = GridArm()
-#    g.grid[2][1] = GridArm(True)
-#    g.grid[1][2] = Module()
-    
-    a = Module()
-    b = Module()
-    a.neighbors[0] = (b, 0, 1)
-    b.neighbors[2] = (a, 0, 1)
-    gr = Graph(a)
+    m = twoByTwoGen()
+    gr = Graph(m[0])
     g = gr.to_grid()
     print g.grid
     g.display()
