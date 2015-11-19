@@ -11,6 +11,9 @@ class Module(Node):
         super(Module, self).__init__()
         self.size = 2
         self.has_inside = False
+        self.sub_modules = []
+
+
 
 class Unit(Node):
     def __init__(self):
