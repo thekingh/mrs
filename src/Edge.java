@@ -1,51 +1,21 @@
-/*
- * Casey Gowrie, Kabir Singh, Alex Tong
- * Senior Capstone Project
- *
- * Edge.java
- *
- * connection between neighboring robot modules
- */
-
-package src;
-
 public class Edge {
-	private final Module[] endpoints;
-	private boolean isConnected;
+	private static int counter = 0;
+	private final int id;
 	private boolean isExtended;
+	private boolean isConnected;
+	private boolean isVertical;
+	private Node n1;
+	private Node n2;
 
-	public Edge() {
-		Edge(null, null, false, false);
-	} 
-
-	public Edge(Module m1, Module m2, boolean isConnected, boolean isExtended) {
-		this.endpoints = new Module[2];
-		this.endpoints[0] = m1;
-		this.endpoints[1] = m2;
-		this.isConnected = isConnected;
+	public Edge(boolean isExtended, boolean isConnected, boolean isVertical, Node n1, Node n2) {
+		id = counter++;
 		this.isExtended = isExtended;
+		this.isConnected = isConnected;
+		this.isVertical = isVertical;
+		this.n1 = n1;
+		this.n2 = n2;
 	}
 
-	public boolean getIsConnected() {
-	    return isConnected;
-	}
-
-	public void setIsConnected(boolean isConnected) {
-	    this.isConnected = isConnected;
-	}
-
-	public boolean getIsExtended() {
-	    return isExtended;
-	}
-
-	public void setIsExtended(boolean isExtended) {
-	    this.isExtended = isExtended;
-	}
-
+	//TODO write getters and setters
+	
 }
-
-
-
-
-
-

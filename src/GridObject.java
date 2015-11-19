@@ -1,14 +1,26 @@
+package src;
+
+public enum GridObjectType {
+	NODE,
+	EDGE,
+}
+
 public class GridObject {
-    
-    GridObjectType t;
-    int  id;
+	private GridObjectType t; 
+	private int id;
 
-    public class GridObject() {
+	public GridObject() {
+		this(null, -1);
+	}
 
-    }
-    
-    public class GridObject(//TODO parameters lol) {
+	public GridObject(GridObjectType t, int id) {
+		this.t  = t;
+		this.id = id;
+	}
 
-    }
+	public GridObjectType getType() {
+
+		
+	}
 
 }
