@@ -1,6 +1,6 @@
 package src;
 
-public enum GridObjectType {
+enum GridObjectType {
 	NODE,
 	EDGE,
 }
@@ -18,9 +18,9 @@ public class GridObject {
 		this.id = id;
 	}
 
-	public GridObjectType getType() {
+	// public GridObjectType getType() {
 
 		
-	}
+	// }
 
 }

@@ -22,8 +22,10 @@ public class Grid {
 
 		grid = new GridObject[w][h];
 		for(int i = 0; i < w; i++) {
-			grid[i][j] = null;
-			// TODO gridobjects
+			for (int j = 0; j < h; j++) {
+				grid[i][j] = null;
+				// TODO gridobjects
+			}
 		}
 	}
 

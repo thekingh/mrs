@@ -14,7 +14,9 @@ public class Graph {
 	private Map<Integer, Edge> edges;
 
 	public Graph() {
-		Graph(new HashMap<Integer, Node>(), new HashMap<Integer, Edge>());
+		//Graph(new HashMap<Integer, Node>(), new HashMap<Integer, Edge>());
+		this.nodes = new HashMap<Integer, Node>();
+		this.edges = new HashMap<Integer, Edge>();
 	}
 
 	public Graph(Map<Integer, Node> nodes, Map<Integer, Edge> edges) {

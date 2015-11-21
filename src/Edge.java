@@ -1,3 +1,5 @@
+package src;
+
 public class Edge {
 	private static int counter = 0;
 	private final int id;
