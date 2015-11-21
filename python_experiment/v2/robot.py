@@ -7,9 +7,10 @@ class Robot(object):
         isSpatialCurrent (bool): whether the spatial rep reflects the current relational rep
         spatial (Grid): last generated spatial representation
     """
-    def __init__(self, N, master = None):
+    def __init__(self, Nodelist, master_module = None):
         self.N = N
-        self.master = master
+        self.master_module = master_module
+        self.master_unit   = master_module.master #?????? TODO
         self.isSpatialCurrent = False
         self.spatial = None
 
