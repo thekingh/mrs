@@ -45,9 +45,9 @@ public class Grid {
 
 	public String toString() {
 		String str = "";
-		for (int i = 0; i < w; i++) {
 			// NEEDSWORK: do we want positive y down
-			for (int j = h-1; j >= 0; j++) {
+        for (int j = h-1; j >= 0; j--) {
+            for (int i = 0; i < w; i++) {
 				Object o = grid[i][j];
 				if (o == null) {
 					str += " ";
@@ -55,7 +55,7 @@ public class Grid {
 					str += o.toString();
 				}
 			}
-			str += "/n";
+			str += "\n";
 		}
 
 		return str;

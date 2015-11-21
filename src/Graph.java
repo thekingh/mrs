@@ -57,7 +57,13 @@ public class Graph {
         Node currNode = (Node) curr.o();
         Coordinate currCoord = curr.c();
         for(int dir = 0; dir < 4; dir++) {// little messy might need work
+            System.out.println(dir);
             Node n = currNode.getNeighbor(dir); // n is neighbor TODO WRONG
+            System.out.println("neighbor");
+            if (n != null) {
+                System.out.println(n.getId());
+            }
+
             if (n == null) {
                 continue;
             }
@@ -71,7 +77,8 @@ public class Graph {
             } else {
                 ext = 0;
             }
-            if (V.contains(n)) {
+            if (!V.contains(n)) {
+                System.out.println("add n");
                 Coordinate nc = calcRelativeLocation(currCoord, dir, ext);
                 GridObject g = new GridObject(n, nc);
                 Q.add(g);
@@ -93,10 +100,10 @@ public class Graph {
                 minx = g.c().x();
             }
             if(g.c().y() > maxy) {
-                maxx = g.c().y();
+                maxy = g.c().y();
             }
             if(g.c().y() < miny) {
-                minx = g.c().y();
+                miny = g.c().y();
             }
         }
         Coordinate min = new Coordinate(minx, miny);
@@ -131,8 +138,9 @@ public class Graph {
         int i = 0;                              //holds list index
         GridObject g = new GridObject(nodes.get(0), new Coordinate(0,0));
         Q.add(g);                 //already checked existance
+        V.add(nodes.get(0));
         while (i < Q.size()) {
-            GridObject curr = Q.get(i);
+            //GridObject curr = Q.get(i);
             addNeighborsToQueue(Q, E, V, i);
             i++;
             System.out.println("Printing Q");
@@ -150,7 +158,9 @@ public class Graph {
         int h   = max.y() - min.y() + 1;
         List<GridObject> normQ = normalize(Q, min);
         List<GridObject> normE = normalize(E, min);
-		return new Grid(Q, E, w, h);
+        System.out.println(w);
+        System.out.println(h);
+		return new Grid(normQ, normE, w, h);
 	}
 }
 
