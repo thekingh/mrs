@@ -9,7 +9,8 @@ package src;
 
 public class Grid {
 
-	private GridObject[][] grid;
+	//private Map<Integer, >  
+	private Object[][] grid;
 	private int h, w;
 
 	public Grid() {

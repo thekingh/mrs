@@ -1,26 +1,7 @@
 package src;
 
-enum GridObjectType {
-	NODE,
-	EDGE,
-}
-
 public class GridObject {
-	private GridObjectType t; 
-	private int id;
-
-	public GridObject() {
-		this(null, -1);
-	}
-
-	public GridObject(GridObjectType t, int id) {
-		this.t  = t;
-		this.id = id;
-	}
-
-	// public GridObjectType getType() {
-
-		
-	// }
+	// if we need this then we could have edge and node and one be null
+	// then two constructors for it one with edge one with node
 
 }
