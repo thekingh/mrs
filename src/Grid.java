@@ -19,6 +19,13 @@ public class Grid {
 	private final int w;
 	private final int h;
 
+	public Grid() {
+		nodes = new ArrayList<GridObject>();
+		grid = null;
+		w = 0;
+		h = 0;
+	}
+
 	public Grid(List<GridObject> nodes, List<GridObject> edges, int w, int h) {
 		this.nodes = nodes;
 		this.w = w;
