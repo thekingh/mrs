@@ -11,4 +11,8 @@ public class Unit extends Node {
 	public Unit() {
 		super();
 	}
+
+	public String toString() {
+		return "o";
+	}
 }

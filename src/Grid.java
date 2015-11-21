@@ -6,6 +6,8 @@
 
 package src;
 
+import java.util.Map;
+
 
 public class Grid {
 
@@ -15,7 +17,8 @@ public class Grid {
 	private int h, w;
 
 	public Grid() {
-		this(0, 0);
+		h = 0;
+		w = 0;
 	}
 
 }

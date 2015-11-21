@@ -37,6 +37,8 @@ public abstract class Node {
 	public int getId() {
 		return id;
 	}
+
+	public abstract String toString();
 }
 
 

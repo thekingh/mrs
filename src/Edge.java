@@ -5,7 +5,7 @@ public class Edge {
 	private final int id;
 	private boolean isExtended;
 	private boolean isConnected;
-	private final isVertical;
+	private final boolean isVertical;
 	private final Node n1;
 	private final Node n2;
 
@@ -42,6 +42,14 @@ public class Edge {
 
 	public Node getN2() {
 	    return n2;
+	}
+
+	public String toString() {
+		if (isVertical) {
+			return "|";
+		} else {
+			return "-";
+		}
 	}
 
 }

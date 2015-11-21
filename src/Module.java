@@ -41,4 +41,9 @@ public class Module extends Node {
 	public boolean hasInside() {
 		return (inside != null);
 	}
+
+	// NEEDSWORK: print all of the units?
+	public String toString() {
+		return "M";
+	}
 }
