@@ -6,7 +6,6 @@
 
 package src;
 
-
 public class Module extends Node {
 
 	private final int size;
@@ -24,6 +23,7 @@ public class Module extends Node {
 		}
 
 		// TODO: make connections between sub units
+        // potential to make a graph and call to grid and back?
 	}
 
 	public int getSize() {
