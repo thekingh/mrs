@@ -2,4 +2,5 @@ temp/*
 *.pyc
 *.swp
 *.class
+src/src/*
 
