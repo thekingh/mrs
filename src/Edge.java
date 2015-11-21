@@ -18,21 +18,21 @@ public class Edge {
 		this.n2 = n2;
 	}
 
-	public boolean getIsExtended() {
+	public boolean isExtended() {
 	    return isExtended;
 	}
 	public void setIsExtended(boolean isExtended) {
 	    this.isExtended = isExtended;
 	}
 
-	public boolean getIsConnected() {
+	public boolean isConnected() {
 	    return isConnected;
 	}
 	public void setIsConnected(boolean isConnected) {
 	    this.isConnected = isConnected;
 	}
 
-	public boolean getIsVertical() {
+	public boolean isVertical() {
 	    return isVertical;
 	}
 
@@ -42,6 +42,14 @@ public class Edge {
 
 	public Node getN2() {
 	    return n2;
+	}
+
+	public Node getOpposite(Node n) {
+		if (n.equals(n1)) {
+			return n1;
+		} else {
+			return n2;
+		}
 	}
 
 	public String toString() {

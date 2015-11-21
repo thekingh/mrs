@@ -30,12 +30,21 @@ public abstract class Node {
 		connections.put(direction, edge);
 	}
 
-	public void getEdge(int direction) {
-		connections.get(direction);
+	public Edge getEdge(int direction) {
+		return connections.get(direction);
+	}
+
+	public Node getNeighbor(int direction) {
+		Edge e = getEdge(direction);
+		return e.getOpposite(this);
 	}	
 
 	public int getId() {
 		return id;
+	}
+
+	public boolean equals(Node n) {
+		return (this.id == n.getId());
 	}
 
 	public abstract String toString();
