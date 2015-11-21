@@ -9,6 +9,8 @@ public class Edge {
 	private final Node n1;
 	private final Node n2;
 
+
+	// NEEDWORK: change ordering of args?
 	public Edge(boolean isExtended, boolean isConnected, boolean isVertical, Node n1, Node n2) {
 		id = counter++;
 		this.isExtended = isExtended;

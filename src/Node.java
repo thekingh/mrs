@@ -26,7 +26,7 @@ public abstract class Node {
 		this.connections = connections;
 	}
 
-	public void setEdge(int direction, Edge edge) {
+	public void putEdge(int direction, Edge edge) {
 		connections.put(direction, edge);
 	}
 
@@ -36,6 +36,9 @@ public abstract class Node {
 
 	public Node getNeighbor(int direction) {
 		Edge e = getEdge(direction);
+		if (e == null) {
+			return null;
+		}
 		return e.getOpposite(this);
 	}	
 
