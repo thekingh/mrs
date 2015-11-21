@@ -1,26 +1,33 @@
 /*
  * Casey Gowrie, Kabir Singh, Alex Tong
- * Senior Capstone Project
- * 
- * Graph.java
  *
- * graphical represenation of modular robot
  */
 
 package src;
 
+import java.util.Map;
+import java.util.HashMap;
+
 public class Graph {
-	private Module master;
+
+	private Map<Integer, Node> nodes;
+	private Map<Integer, Edge> edges;
 
 	public Graph() {
-		master = null;
+		Graph(new HashMap<Integer, Node>(), new HashMap<Integer, Edge>());
 	}
 
-	public Graph(Module master) {
-		this.master = master;
+	public Graph(Map<Integer, Node> nodes, Map<Integer, Edge> edges) {
+		this.nodes = nodes;
+		this.edges = edges;
 	}
 
+	// TODO
 	public Grid toGrid() {
-		
+		return null;
 	}
 }
+
+
+
+

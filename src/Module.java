@@ -1,62 +1,44 @@
 /*
  * Casey Gowrie, Kabir Singh, Alex Tong
  *
- * Senior Capstone Project
- *
- * represents a robot module
+ * robot module with n*n
  */
 
 package src;
 
-import java.util.Map;
-import java.util.HashMap;
 
-public class Module {
-	private static int counter = 0;
+public class Module extends Node {
 
-	private final int id;
+	private final int size;
 	private Module inside;
-	private Map<Integer, Edge> connections;
+	private Unit[][] units;
 
-	public Module() {
-		id = counter++;
-		connections = new HashMap<Integer, Edge>();
+	public Module(int size) {
+		super();
+		this.size = size;
+		this.units = new Unit[size][size];
+		for (int i = 0; i < size; i++) {
+			for (int j = 0; j < size; j++) {
+				this.units[i][j] = new Unit();
+			}
+		}
+
+		// TODO: make connections between sub units
 	}
 
-	public Module(Map<Integer, Edge> connections) {
-		id = counter++;
-		this.connections = connections;
+	public int getSize() {
+		return size;
 	}
-
-	public void setEdge(int direction, Edge edge) {
-		connections.put(direction, edge);
-	}
-
-	public void getEdge(int direction) {
-		connections.get(direction);
-	}	
 
 	public Module getInside() {
-	    return inside;
+		return inside;
 	}
 
-	public void setInside(Module inside) {
-	    this.inside = inside;
+	public void putInside(Module m) {
+		inside = m;
 	}
 
 	public boolean hasInside() {
-		return (inside == null);
-	}
-
-	public int getId() {
-		return id;
+		return (inside != null);
 	}
 }
-
-
-
-
-
-
-
-
