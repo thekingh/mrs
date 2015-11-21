@@ -9,33 +9,14 @@ package src;
 
 public class Grid {
 
-	//private Map<Integer, >  
+	// map from node id to coordinate
+	private Map<Integer, Coordinate> nodes;  
 	private Object[][] grid;
 	private int h, w;
 
 	public Grid() {
 		this(0, 0);
 	}
-
-	public Grid(int h, int w) {
-		this.h = h;
-		this.w = w;
-
-		grid = new GridObject[w][h];
-		for(int i = 0; i < w; i++) {
-			for (int j = 0; j < h; j++) {
-				grid[i][j] = null;
-				// TODO gridobjects
-			}
-		}
-	}
-
-	public Graph toGraph() {
-		return null;
-	}
-
-
-
 
 }
 
