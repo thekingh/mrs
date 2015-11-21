@@ -48,9 +48,9 @@ public class Edge {
 
 	public Node getOpposite(Node n) {
 		if (n.equals(n1)) {
-			return n1;
-		} else {
 			return n2;
+		} else {
+			return n1;
 		}
 	}
 
