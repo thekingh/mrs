@@ -18,4 +18,8 @@ public class Coordinate {
 	public int y() {
 		return coors.y;
 	}
+
+	public String toString() {
+		return String.format("(%d, %d)", x, y);
+	}
 }
