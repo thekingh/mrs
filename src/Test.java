@@ -24,7 +24,7 @@ public class Test {
 		Module m2 = new Module(2);
 		Module m3 = new Module(2);
 		Edge e1_2 = m1.addNeighbor(m2, 2, true, true);
-		Edge e2_3 = m2.addNeighbor(m2, 1, true, true);
+		Edge e2_3 = m2.addNeighbor(m3, 1, true, true);
 
 		Map<Integer, Node> ms = new HashMap<Integer, Node>();
 		ms.put(m1.getId(), m1);

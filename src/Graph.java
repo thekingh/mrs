@@ -46,6 +46,7 @@ public class Graph {
 
     /**
      * Calculates a new coordinate relative to an input coordinate
+     * Note that coordinate system is x pos is right and y pos is up
      *
      * @param curr      The current coordinate in (x,y) representation
      * @param dir       The relative direction of the new point relative to the
@@ -60,13 +61,13 @@ public class Graph {
         int y = curr.y();
         switch(dir) {
             case 0: //North
-                y -= 1 + ext;
+                y += 1 + ext;
                 break;
             case 1: //East
                 x += 1 + ext;
                 break;
             case 2: //South
-                y += 1 + ext;
+                y -= 1 + ext;
                 break;
             case 3: //West
                 x -= 1 + ext;
