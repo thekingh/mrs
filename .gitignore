@@ -2,6 +2,6 @@ temp/*
 *.pyc
 *.swp
 *.class
-src/src/*
+src/src/*.class
 doc/
 
