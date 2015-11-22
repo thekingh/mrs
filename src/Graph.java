@@ -71,7 +71,7 @@ public class Graph {
             case 3: //West
                 x -= 1 + ext;
                 break;
-            default: //REALLY BAD
+            default: //Not optimal
                 break;
         }
         return new Coordinate(x, y);
@@ -89,20 +89,26 @@ public class Graph {
         GridObject curr = Q.get(i);
         Node currNode = (Node) curr.o();
         Coordinate currCoord = curr.c();
-        for(int dir = 0; dir < 4; dir++) {// little messy might need work
+        for(int dir = 0; dir < 4; dir++) {// TODO revisit
             System.out.println(dir);
             Node n = currNode.getNeighbor(dir); // n is neighbor TODO WRONG
             System.out.println("neighbor");
+
             if (n != null) {
                 System.out.println(n.getId());
             }
 
+            // No neighbor in given direction
             if (n == null) {
                 continue;
             }
+
             Edge e = currNode.getEdge(dir);
             final int ext;
-            if (e.isExtended()) { //Add edge to grid also
+
+            // Determine if there is an extended arm in given direction
+            // and add to edge list
+            if (e.isExtended()) { 
                 Coordinate ec = calcRelativeLocation(currCoord, dir, 0); 
                 GridObject eg = new GridObject(e, ec);
                 E.add(eg);
@@ -110,6 +116,8 @@ public class Graph {
             } else {
                 ext = 0;
             }
+
+            // Add node to list if not already visited
             if (!V.contains(n)) {
                 System.out.println("add n");
                 Coordinate nc = calcRelativeLocation(currCoord, dir, ext);
@@ -120,12 +128,21 @@ public class Graph {
         }
     }
 
+    /** 
+     *  Given a list of grid objects, return a pair of the bounds in 
+     *  the negative and positive directions for x and y.
+     *
+     * @param Q         List of all nodes
+     * 
+     * @return          Pair of coordinates: (minx, miny) , (maxx, maxy)
+     */
+
     private Pair<Coordinate, Coordinate> getBounds(List<GridObject> Q) {
         int minx = 0;
         int miny = 0;
         int maxx = 0;
         int maxy = 0;
-        for(GridObject g : Q) { //TODO fix
+        for(GridObject g : Q) { //TODO better way? 
             if(g.c().x() > maxx) {
                 maxx = g.c().x();
             }
@@ -144,6 +161,17 @@ public class Graph {
         return new Pair<Coordinate, Coordinate>(min, max);
     }
 
+
+    /** 
+     * Given a list of nodes, perform transformation so that all coordinates
+     * in the grid are in the first quadrant. 
+     *
+     * @param Q         List of all nodes
+     * @param min       Min location in x and y directions
+     * 
+     * @return          Transformed list of gridobjects entirely in the
+     *                  first quadrant
+     */
     private List<GridObject> normalize(List<GridObject> Q, Coordinate min) {
         int x = min.x();
         int y = min.y();
@@ -157,7 +185,11 @@ public class Graph {
         return toReturn;
     }
 
-	// TODO
+    /** 
+     * Transform a graph into a Grid (Cartesian space)
+     *
+     * @return          The Cartesian respresentation of a Graph
+     */
 	public Grid toGrid() {
         if (nodes.isEmpty()) { //return default/empty grid
             return new Grid();
