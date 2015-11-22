@@ -30,13 +30,11 @@ public class Module extends Node {
 		this.size = size;
 		this.units = new Unit[size][size];
 
-
 		for (int i = 0; i < size; i++) {
 			for (int j = 0; j < size; j++) {
 				this.units[i][j] = new Unit();
 			}
 		}
-
 
 		// adding all interior edges to units
 		Unit u;
@@ -95,9 +93,91 @@ public class Module extends Node {
 				u.add(units[i][j]);
 			}
 		}
-
 		return u;
 	}
+
+    /**
+     * returns a list
+     */
+    public List<Unit> getSideUnits(int dir) {
+        List<Unit> toReturn = new ArrayList<Unit>();
+        int mini = 0;
+        int minj = 0;
+        int maxi = size;
+        int maxj = size;
+        switch(dir) {
+            case 0:
+                maxj = 1;
+                break;
+            case 1:
+                mini = size - 1;
+                break;
+            case 2:
+                minj = size - 1;
+                break;
+            case 3:
+                maxi = 1;
+                break;
+            default:
+                break;
+        }
+        for (int i = mini; i < maxi; i++) {
+            for (int j = minj; j <maxj; j++) {
+                toReturn.add(units[i][j]);
+            }
+        }
+        return toReturn;
+    }
+
+
+    /**
+     * Adds all the smaller arms given two modules with an edge between them
+     *
+     * @param neighbor      
+     * @return              Set<Edge> of edges added
+     */
+    public Set<Edge> addExteriorSubEdges(Module neighbor) {
+        int neighborDir = 0;
+        boolean isExtended;
+        boolean isConnected;
+        Set<Edge> toReturn = new HashSet<Edge>();
+        Edge e;
+        Unit potentialn;
+        for (int dir = 0; dir < 4; dir++) { //check for correct direction
+            potentialn = (Unit)getNeighbor(dir);
+            if (potentialn.equals(neighbor)) {
+                neighborDir = dir;
+                break;
+            }
+        }
+        e = getEdge(neighborDir);
+        isExtended = e.isExtended();
+        isConnected = e.isConnected();
+        List<Unit> thisSideUnits     = getSideUnits(neighborDir);
+        List<Unit> neighborSideUnits = neighbor.getSideUnits((neighborDir + 2) % 4);
+
+        Unit u;
+        Unit n;
+        Edge newe;
+        for (int i = 0; i < size; i++) {
+            u = thisSideUnits.get(i);
+            n = neighborSideUnits.get(i);
+            newe = u.addNeighbor(n, neighborDir, isExtended, isConnected);
+            toReturn.add(newe);
+        }
+        return toReturn;
+    }
+
+    public Map<Integer, Unit> getUnitMap() {
+        Map<Integer, Unit> toReturn = new HashMap<Integer, Unit>();
+		for (int i = 0; i < size; i++) {
+			for (int j = 0; j < size; j++) {
+                Unit u = units[i][j];
+				toReturn.put(u.getId(), u);
+			}
+		}
+        return toReturn;
+    }
 
 	// NEEDSWORK: print all of the units?
 	public String toString() {
