@@ -236,9 +236,20 @@ public class Graph {
         System.out.println(h);
 		return new Grid(normQ, normE, w, h);
 	}
-
-
+    
+/*    public void removeInvalidEdges(Grid g) {*/
+/*       */
+/**/
+/*        */
+/*    }*/
+/**/
+/*    //Yes, I am aware this is a big ugly function */
 /*    public void updateGraph(Grid g) {*/
+/**/
+/*        //TODO remove all invalid edges first*/
+/*        removeInvalidEdges(g);*/
+/**/
+/*        //TODO sift into several functions pls*/
 /**/
 /*        Object[][] grid = g.getGrid();*/
 /*        List<GridObject> nodeList = g.getNodes();*/
@@ -253,31 +264,44 @@ public class Graph {
 /*                */
 /*                Coordinate adj = calcRelativeLocation(gc, i, 0);*/
 /**/
-/*                //check adjacent coordinates to see if they have nodes*/
-/*                if(g.inBounds(adj) && */
-/*                   grid[adj.x()][ad.y()].o() instanceof Node) {*/
+/*                if(g.inBounds(adj)) {*/
+/*                    //check adjacent coordinates to see if they have nodes*/
+/*                    if(grid[adj.x()][adj.y()].o() instanceof Node) {*/
 /**/
-/*                    boolean isVertical = (i % 2 == 0) ? true : false;*/
-/*                    // make that edge*/
-/*                    Edge e = new Edge((Node)grid[gc.x() ][gc.y() ].o(),*/
-/*                                      (Node)grid[adj.x()][adj.y()].o(),*/
-/*                                      false,*/
-/*                                      false, //TODO what do about connectedness*/
-/*                                      isVertical);*/
-/*                    //check to see if that edge exists*/
+/*                        boolean isVertical = (i % 2 == 0) ? true : false;*/
+/*                        // make that edge*/
+/*                        Edge e = new Edge((Node)grid[gc.x() ][gc.y() ].o(),*/
+/*                                          (Node)grid[adj.x()][adj.y()].o(),*/
+/*                                          false,*/
+/*                                          false, //TODO leaving unconnected*/
+/*                                          isVertical);*/
 /**/
-/*                    if(!edges.contains(e)) {*/
-/*                        edges.add(e);*/
+/*                        //check to see if that edge exists, add if not*/
+/*                        if(!edges.contains(e)) {*/
+/*                            edges.add(e);*/
+/*                        }*/
+/**/
+/**/
+/*                    // in bounds but not a node*/
+/*                    } else {*/
+/*                        // get 2nd degree (? lol) adjacent coordinate*/
+/*                        Coordinate nAdj = calcRelativeLocation(adj, i, 0);*/
+/**/
+/*                        if(grid[nAdj.x()][nAdj.y()].o() instanceof Node) {*/
+/*                            boolean isVertical = (i % 2 == 0) ? true : false;*/
+/*                            Edge e = new Edge((Node)grid[gc.x() ][gc.y() ].o(),*/
+/*                                              (Node)grid[nAdj.x()][nAdj.y()].o(),*/
+/*                                              false,*/
+/*                                              false, //TODO leaving unconnected*/
+/*                                              isVertical);*/
+/*                            if(!edges.contains(e)) {*/
+/*                                edges.add(e);*/
+/*                            }*/
+/**/
+/*                        }*/
 /*                    }*/
-/*                } else if () {*/
-/**/
 /*                }*/
-/**/
 /*            }*/
-/**/
-/**/
-/**/
-/**/
 /*        }*/
 /*    }*/
 }
