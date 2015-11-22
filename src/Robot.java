@@ -20,12 +20,19 @@ public class Robot {
 	private boolean isUnitGridCurrent;
 
 
-	public Robot() {
+	public Robot(Graph moduleGraph) {
 		// what to use?
+		this.moduleGraph = moduleGraph;
+	}
+
+	public Graph getUnitGraph() {
+		generateUnitGraph();
+		return unitGraph;
 	}
 
 
 	// generates unit graph from module graph
+	// NEEDSWORK: want to return unit graph? record status?
 	private void generateUnitGraph() {
 		Map<Integer, Node> uNodes = new HashMap<Integer, Node>(); 
 		Set<Edge> uEdges = new HashSet<Edge>();
@@ -34,7 +41,7 @@ public class Robot {
 
 		Module m1, m2;
 
-		for (Edge mEdge : mEdges.values()) {
+		for (Edge mEdge : mEdges) {
 			m1 = (Module) mEdge.getN1();
 			m2 = (Module) mEdge.getN2();
 
@@ -43,11 +50,15 @@ public class Robot {
 			uEdges.addAll(m1.addExteriorSubEdges(m2));
 		}
 
-		for (Module m : mNodes.values()) {
+		Module m;
+		for (Node n : mNodes.values()) {
+			m = (Module) n;
 			uEdges.addAll(m.getInteriorEdges());
 
-			uModules.putAll(m.getUnitMap());
+			uNodes.putAll(m.getUnitMap());
 		}
+
+		unitGraph = new Graph(uNodes, uEdges);
 	}
 
 

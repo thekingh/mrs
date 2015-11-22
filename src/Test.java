@@ -35,9 +35,16 @@ public class Test {
 		es.add(e1_2);
 		es.add(e2_3);
 
-		Graph g = new Graph(ms, es);
-		Grid c = g.toGrid();
-		System.out.println(c);
+		Graph moduleGraph = new Graph(ms, es);
+		Grid moduleGrid = moduleGraph.toGrid();
+		System.out.println(moduleGrid);
+
+		Robot r = new Robot(moduleGraph);
+
+		Graph unitGraph = r.getUnitGraph();
+		Grid unitGrid = unitGraph.toGrid();
+		System.out.println(unitGrid);
+	
 
 	}
 
