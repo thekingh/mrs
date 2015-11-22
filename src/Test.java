@@ -31,9 +31,9 @@ public class Test {
 		ms.put(m2.getId(), m2);
 		ms.put(m3.getId(), m3);
 
-		Map<Integer, Edge> es = new HashMap<Integer, Edge>();
-		es.put(0, e1_2);
-		es.put(1, e2_3);
+		Set<Edge> es = new HashSet<Edge>();
+		es.add(e1_2);
+		es.add(e2_3);
 
 		Graph g = new Graph(ms, es);
 		Grid c = g.toGrid();

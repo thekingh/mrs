@@ -27,7 +27,27 @@ public class Robot {
 
 	// generates unit graph from module graph
 	private void generateUnitGraph() {
-		
+		Map<Integer, Node> uNodes = new HashMap<Integer, Node>(); 
+		Set<Edge> uEdges = new HashSet<Edge>();
+		Map<Integer, Node> mNodes = moduleGraph.getNodes();
+		Set<Edge> mEdges = moduleGraph.getEdges();
+
+		Module m1, m2;
+
+		for (Edge mEdge : mEdges.values()) {
+			m1 = (Module) mEdge.getN1();
+			m2 = (Module) mEdge.getN2();
+
+			// NEEDSWORK: adding all the exterior edges here seems weird???
+			// maybe add when we connect modules?
+			uEdges.addAll(m1.addExteriorSubEdges(m2));
+		}
+
+		for (Module m : mNodes.values()) {
+			uEdges.addAll(m.getInteriorEdges());
+
+			uModules.putAll(m.getUnitMap());
+		}
 	}
 
 

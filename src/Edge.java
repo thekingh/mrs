@@ -20,6 +20,10 @@ public class Edge {
 		this.n2 = n2;
 	}
 
+	public int getId() {
+		return id;
+	}
+
 	public boolean isExtended() {
 	    return isExtended;
 	}
@@ -52,6 +56,12 @@ public class Edge {
 		} else {
 			return n1;
 		}
+	}
+
+	// edge equality is nodes on either side are same between two edges
+	public boolean equals(Edge e) {
+		return ((n1.equals(e.getN1()) && n2.equals(e.getN2())) ||
+				(n1.equals(e.getN2()) && n2.equals(e.getN1())));
 	}
 
 	public String toString() {
