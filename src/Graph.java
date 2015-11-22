@@ -29,8 +29,8 @@ import java.util.HashSet;
  */
 public class Graph {
 
-	private Map<Integer, Node> nodes;
-	private Map<Integer, Edge> edges;
+	private final Map<Integer, Node> nodes;
+	private final Map<Integer, Edge> edges;
 
 	public Graph() {
 		//Graph(new HashMap<Integer, Node>(), new HashMap<Integer, Edge>());
@@ -42,6 +42,14 @@ public class Graph {
 		this.nodes = nodes;
 		this.edges = edges;
 	}
+
+    public Map<Integer, Node> getNodes() {
+        return nodes;
+    }
+
+    public Man<Integer, Edge> getEdges() {
+        return edges;
+    }
 
 
     /**
