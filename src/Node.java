@@ -70,9 +70,9 @@ public abstract class Node {
         } else {
             isVertical = false;
         }
-        Edge e = new Edge(isExtended, isConnected, isVertical, this, neighbor);
+        Edge e = new Edge(this, neighbor, isExtended, isConnected, isVertical);
         putEdge(direction, e);
-        neighbor.putEdge((direction + 2) % 2, e);
+        neighbor.putEdge((direction + 2) % 4, e);
         return e
     }
 
