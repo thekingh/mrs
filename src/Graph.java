@@ -35,7 +35,7 @@ public class Graph {
 	public Graph() {
 		//Graph(new HashMap<Integer, Node>(), new HashMap<Integer, Edge>());
 		this.nodes = new HashMap<Integer, Node>();
-		this.edges = new HashSet<Integer, Edge>();
+		this.edges = new HashSet<Edge>();
 	}
 
 	public Graph(Map<Integer, Node> nodes, Set<Edge> edges) {
@@ -210,9 +210,13 @@ public class Graph {
         Set<Node> V = new HashSet<Node>();    //Visited node set
         
         int i = 0;                              //holds list index
-        GridObject g = new GridObject(nodes.get(0), new Coordinate(0,0));
+        System.out.println("NODES:");
+        System.out.println(nodes);
+        // get random node in the map of id to node
+        Node start = nodes.values().iterator().next();
+        GridObject g = new GridObject(start, new Coordinate(0,0));
         Q.add(g);                 //already checked existance
-        V.add(nodes.get(0));
+        V.add(start);
         while (i < Q.size()) {
             //GridObject curr = Q.get(i);
             addNeighborsToQueue(Q, E, V, i);

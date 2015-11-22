@@ -42,21 +42,25 @@ public class Module extends Node {
 		Edge eLeft, eDown;
 		this.interiorEdges = new HashSet<Edge>();
 
-		for (int i = 0; i < size - 1; i++) {
-			for (int j = 0; j < size - 1; j++) {
+		for (int i = 0; i < size; i++) {
+			for (int j = 0; j < size; j++) {
 				u = this.units[i][j];
 
 				// add right edge with neighbor
-				rightNeighbor = this.units[i+1][j];
-				eLeft = u.addNeighbor(rightNeighbor, 1, EXTENDED_EDGES, 
-					CONNECTED_EDGES);
-				this.interiorEdges.add(eLeft);
+				if (i < size - 1) {
+					rightNeighbor = this.units[i+1][j];
+					eLeft = u.addNeighbor(rightNeighbor, 1, EXTENDED_EDGES, 
+						CONNECTED_EDGES);
+					this.interiorEdges.add(eLeft);
+				}
 
 				// add down edge with neighbor
-				downNeighbor = this.units[i][j+1];
-				eDown = u.addNeighbor(downNeighbor, 2, EXTENDED_EDGES,
-					CONNECTED_EDGES);
-				this.interiorEdges.add(eDown);
+				if (j < size - 1) {
+					downNeighbor = this.units[i][j+1];
+					eDown = u.addNeighbor(downNeighbor, 2, EXTENDED_EDGES,
+						CONNECTED_EDGES);
+					this.interiorEdges.add(eDown);
+				}
 			}
 		}
 	}
@@ -142,10 +146,10 @@ public class Module extends Node {
         boolean isConnected;
         Set<Edge> toReturn = new HashSet<Edge>();
         Edge e;
-        Unit potentialn;
+        Node potentialn;
         for (int dir = 0; dir < 4; dir++) { //check for correct direction
-            potentialn = (Unit)getNeighbor(dir);
-            if (potentialn.equals(neighbor)) {
+            potentialn = getNeighbor(dir);
+            if (potentialn != null && potentialn.equals(neighbor)) {
                 neighborDir = dir;
                 break;
             }
