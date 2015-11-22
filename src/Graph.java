@@ -30,15 +30,15 @@ import java.util.HashSet;
 public class Graph {
 
 	private final Map<Integer, Node> nodes;
-	private final Map<Integer, Edge> edges;
+	private final Set<Edge> edges;
 
 	public Graph() {
 		//Graph(new HashMap<Integer, Node>(), new HashMap<Integer, Edge>());
 		this.nodes = new HashMap<Integer, Node>();
-		this.edges = new HashMap<Integer, Edge>();
+		this.edges = new HashSet<Integer, Edge>();
 	}
 
-	public Graph(Map<Integer, Node> nodes, Map<Integer, Edge> edges) {
+	public Graph(Map<Integer, Node> nodes, Set<Edge> edges) {
 		this.nodes = nodes;
 		this.edges = edges;
 	}
@@ -47,7 +47,7 @@ public class Graph {
         return nodes;
     }
 
-    public Man<Integer, Edge> getEdges() {
+    public Set<Edge> getEdges() {
         return edges;
     }
 
@@ -236,8 +236,49 @@ public class Graph {
         System.out.println(h);
 		return new Grid(normQ, normE, w, h);
 	}
+
+
+/*    public void updateGraph(Grid g) {*/
+/**/
+/*        Object[][] grid = g.getGrid();*/
+/*        List<GridObject> nodeList = g.getNodes();*/
+/**/
+/*        for(GridObject gridNode : nodeList) {*/
+/**/
+/*            // get grid coordinate*/
+/*            Coordinate gc = gridNode.c();*/
+/**/
+/*            // check in each direction*/
+/*            for(int i = 0; i < 4; i++) {*/
+/*                */
+/*                Coordinate adj = calcRelativeLocation(gc, i, 0);*/
+/**/
+/*                //check adjacent coordinates to see if they have nodes*/
+/*                if(g.inBounds(adj) && */
+/*                   grid[adj.x()][ad.y()].o() instanceof Node) {*/
+/**/
+/*                    boolean isVertical = (i % 2 == 0) ? true : false;*/
+/*                    // make that edge*/
+/*                    Edge e = new Edge((Node)grid[gc.x() ][gc.y() ].o(),*/
+/*                                      (Node)grid[adj.x()][adj.y()].o(),*/
+/*                                      false,*/
+/*                                      false, //TODO what do about connectedness*/
+/*                                      isVertical);*/
+/*                    //check to see if that edge exists*/
+/**/
+/*                    if(!edges.contains(e)) {*/
+/*                        edges.add(e);*/
+/*                    }*/
+/*                } else if () {*/
+/**/
+/*                }*/
+/**/
+/*            }*/
+/**/
+/**/
+/**/
+/**/
+/*        }*/
+/*    }*/
 }
-
-
-
 
