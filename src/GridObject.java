@@ -6,6 +6,7 @@ public class GridObject {
     //
     private final Object o;
     private final Coordinate c;
+    private boolean isNode;
     
     public GridObject(Object o, Coordinate c) {
         this.o = o;

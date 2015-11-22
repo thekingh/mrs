@@ -61,6 +61,23 @@ public class Grid {
 		return str;
 	}
 
+    public List<GridObject> getNodes() {
+        return nodes;
+    }
+
+    public Object[][] getGrid() {
+        return grid;
+    }
+
+    public boolean inBounds(int x, int y) {
+        if((x >= 0) && (x < w) &&
+           (y >= 0) && (y < h)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 }
 
 
