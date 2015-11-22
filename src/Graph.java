@@ -12,6 +12,21 @@ import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+
+
+/**
+ * Graph represents a relational network between modular robots. 
+ * A Modular robot graph has state containing a nodelist and an edgelist
+ * Nodes must subclass the Node abstract class and edges must do the same for 
+ * the edge class.
+ *
+ *
+ * @author Alex Tong
+ * @author Kabir Singh
+ * @author Casey Gowrie
+ * @version 1.0
+ *
+ */
 public class Graph {
 
 	private Map<Integer, Node> nodes;
@@ -28,30 +43,48 @@ public class Graph {
 		this.edges = edges;
 	}
 
+
+    /**
+     * Calculates a new coordinate relative to an input coordinate
+     *
+     * @param curr      The current coordinate in (x,y) representation
+     * @param dir       The relative direction of the new point relative to the
+     *                  current point note that dir is in the set {0,1,2,3},
+     *                  where 0=North, 1=East, 2=South, 3=West.
+     * @param ext       The distance between the new point and the current point
+     *                  i.e. ext(ension) of 0 is adjacent
+     * @return          The new absolute coordinate
+     */
     private Coordinate calcRelativeLocation(Coordinate curr, int dir, int ext) {
         int x = curr.x();
         int y = curr.y();
-        Coordinate nc;
         switch(dir) {
             case 0: //North
-                nc = new Coordinate(x, y - (1 + ext));
+                y -= 1 + ext;
                 break;
             case 1: //East
-                nc = new Coordinate(x + (1 + ext), y);
+                x += 1 + ext;
                 break;
             case 2: //South
-                nc = new Coordinate(x, y + (1 + ext));
+                y += 1 + ext;
                 break;
             case 3: //West
-                nc = new Coordinate(x - (1 + ext), y);
+                x -= 1 + ext;
                 break;
-            default: // REALLY BAD
-                nc = null;
+            default: //REALLY BAD
                 break;
         }
-        return nc;
+        return new Coordinate(x, y);
     }
 
+    /**
+     * Performs update in toGrid operation 
+     *
+     * @param Q         List of Nodes with location calculated
+     * @param E         List of Edges with location calculated
+     * @param V         Set of Nodes that have alread been processed
+     * @param i         
+     */
     private void addNeighborsToQueue(List<GridObject> Q, List<GridObject> E, Set<Node> V, int i) {
         GridObject curr = Q.get(i);
         Node currNode = (Node) curr.o();

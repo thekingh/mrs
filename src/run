@@ -1,2 +1,5 @@
 #!/bin/bash
+echo "Starting MRS program"
+echo "===================="
+javac -g -d . *.java
 java src.Test
