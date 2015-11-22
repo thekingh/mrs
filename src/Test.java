@@ -22,7 +22,7 @@ public class Test {
 
 		Module m1 = new Module(2);
 		Module m2 = new Module(2);
-		Edge e1 = new Edge(true, true, true, m1, m2);
+		Edge e1 = new Edge(m1, m2, true, true, true);
 
 		Map<Integer, Node> ms = new HashMap<Integer, Node>();
 		ms.put(m1.getId(), m1);
