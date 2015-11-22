@@ -22,17 +22,18 @@ public class Test {
 
 		Module m1 = new Module(2);
 		Module m2 = new Module(2);
-		Edge e1 = new Edge(m1, m2, true, true, true);
+		Module m3 = new Module(2);
+		Edge e1_2 = m1.addNeighbor(m2, 2, true, true);
+		Edge e2_3 = m2.addNeighbor(m2, 1, true, true);
 
 		Map<Integer, Node> ms = new HashMap<Integer, Node>();
 		ms.put(m1.getId(), m1);
 		ms.put(m2.getId(), m2);
+		ms.put(m3.getId(), m3);
 
 		Map<Integer, Edge> es = new HashMap<Integer, Edge>();
-		es.put(0, e1);
-
-		m1.putEdge(0, e1);
-		m2.putEdge(2, e1);
+		es.put(0, e1_2);
+		es.put(1, e2_3);
 
 		Graph g = new Graph(ms, es);
 		Grid c = g.toGrid();
