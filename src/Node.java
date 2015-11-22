@@ -52,6 +52,10 @@ public abstract class Node {
 		return e.getOpposite(this);
 	}	
 
+	public int getId() {
+		return id;
+	}
+
     /**
      * Creates and returns an edge making a neighbor in a relative direction
      *
@@ -76,10 +80,26 @@ public abstract class Node {
         return e;
     }
 
-
-	public int getId() {
-		return id;
-	}
+    /**
+     * Given a node, attempts to find the direction to that node in the set
+     * {0=North, 1=East, 2=South, 3=West}.
+     * @param neighbor          Neighboring node to find
+     *
+     * @return                  direction of neighboring node. If neighbor is
+     *                          not found as a neighbor, returns -1
+     */
+    public int findNeighborDirection(Node neighbor) {
+        Node potentialn;
+        int neighborDir = -1;
+        for (int dir = 0; dir < 4; dir++) { //check for correct direction
+            potentialn = getNeighbor(dir);
+            if (potentialn != null && potentialn.equals(neighbor)) {
+                neighborDir = dir;
+                break;
+            }
+        }
+        return neighborDir;
+    }
 
 	public boolean equals(Node n) {
 		return (this.id == n.getId());
@@ -87,7 +107,3 @@ public abstract class Node {
 
 	public abstract String toString();
 }
-
-
-
-
