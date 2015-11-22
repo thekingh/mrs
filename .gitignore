@@ -3,4 +3,5 @@ temp/*
 *.swp
 *.class
 src/src/*
+doc/
 
