@@ -18,7 +18,7 @@ public class Module extends Node {
 	private static final boolean EXTENDED_EDGES = false;
 	private static final boolean CONNECTED_EDGES = true;
 
-	private final int size;
+	private static int size;
 	private Module inside;
 	private Set<Edge> interiorEdges;
 	private Unit[][] units;
