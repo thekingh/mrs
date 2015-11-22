@@ -79,6 +79,26 @@ public class Module extends Node {
 		return (inside != null);
 	}
 
+	public Set<Edge> getInteriorEdges() {
+		return interiorEdges;
+	}
+
+	public Unit getUnit(int i, int j) {
+		return units[i][j];
+	}
+
+	// might not be needed
+	public Set<Unit> getUnitSet() {
+		Set<Unit> u = new HashSet<Unit>();
+		for (int i = 0; i < size; i++) {
+			for (int j = 0; j < size; j++) {
+				u.add(units[i][j]);
+			}
+		}
+
+		return u;
+	}
+
 	// NEEDSWORK: print all of the units?
 	public String toString() {
 		return "M";
