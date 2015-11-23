@@ -256,7 +256,7 @@ public class Graph {
             for(int i = 0; i < 4; i++) {
 
                 // get two adjacent coordinates
-                Coordinate adj   = calcRelativeLocation(gc, i, 0);
+                Coordinate adj   = calcRelativeLocation(gc , i, 0);
                 Coordinate nAdj  = calcRelativeLocation(adj, i, 0);
 
                 // get previously stored neighbor 
@@ -266,18 +266,18 @@ public class Graph {
                 // check if is in bounds on grid and if new edge is needed
                 if(g.inBounds(adj) && checkNewEdge(g, gc, adj, oldNeighbor, i, false)) {
                     
-                    Node n1 = ((Node)((GridObject)grid[gc.x() ][gc.y()]).o());
-                    Node n2 = ((Node)((GridObject)grid[adj.x()][adj.y()]).o());
+                    Node n1 = ((Node)(grid[gc.x() ][gc.y()]).o());
+                    Node n2 = ((Node)(grid[adj.x()][adj.y()]).o());
 
-                    Edge e = new Edge(n1, n2,false,false, isVertical);
+                    Edge e = new Edge(n1, n2, false,false, isVertical);
                     edges.add(e);
 
-                } else if (g.inBounds(nAdj) && checkNewEdge(g, gc, nAdj, oldNeighbor,i, true)) {
+                } else if (g.inBounds(nAdj) && checkNewEdge(g, gc, nAdj, oldNeighbor, i, true)) {
 
-                    Node n1 = ((Node)((GridObject)grid[gc.x() ][gc.y()]).o());
-                    Node n2 = ((Node)((GridObject)grid[nAdj.x()][nAdj.y()]).o());
+                    Node n1 = ((Node)(grid[gc.x() ][gc.y()]).o());
+                    Node n2 = ((Node)(grid[nAdj.x()][nAdj.y()]).o());
 
-                    Edge e = new Edge(n1, n2, false, false, isVertical);
+                    Edge e = new Edge(n1, n2, true, false, isVertical);
                     edges.add(e);
                 }
             }
@@ -285,16 +285,17 @@ public class Graph {
     }
 
     // TODO stratification right? do I want to change neighbors here?
+    // TODO make a modify edge?
     public boolean checkNewEdge(Grid g, Coordinate c1, Coordinate c2, Node old, int dir,
                                 boolean isExtended) {
 
         Object[][] grid = g.getGrid();
-        GridObject g2 = (GridObject)grid[c2.x()][c2.y()];
+        GridObject g2 = grid[c2.x()][c2.y()];
 
         // Check to see if c2 is a node
         if(g2.o() instanceof Node) {
             
-            Node n1 = ((Node)((GridObject)grid[c1.x() ][c1.y()]).o());
+            Node n1 = ((Node)(grid[c1.x() ][c1.y()]).o());
             Node n2 = (Node)g2.o();
 
             // if the old neighbor is the same, do nothing
@@ -307,9 +308,9 @@ public class Graph {
                 return false;
             // neighbor is diff, yes to new edge, set new neighbor
             } else {
-                n1.addNeighbor(n2, dir, isExtended, false);
 
                 edges.remove(n1.getEdge(dir));
+                n1.addNeighbor(n2, dir, isExtended, false);
 
                 return true; 
             }
