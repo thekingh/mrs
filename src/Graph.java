@@ -304,6 +304,9 @@ public class Graph {
             } else {
                 Node n1 = ((Node)((GridObject)grid[c1.x() ][c1.y()]).o());
                 n1.addNeighbor(n2, dir, isExtended, false);
+
+                edges.remove(n1.getEdge(dir));
+
                 return true; 
             }
         }
