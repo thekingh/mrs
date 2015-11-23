@@ -40,6 +40,7 @@ public class Grid {
 		for (GridObject o : merged) {
 			Coordinate coord = o.c();
 			this.grid[coord.x()][coord.y()] = o.o();
+            //TODO changed this ^^
 		}
 	}
 
