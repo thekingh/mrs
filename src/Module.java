@@ -18,7 +18,7 @@ public class Module extends Node {
 	private static final boolean EXTENDED_EDGES = false;
 	private static final boolean CONNECTED_EDGES = true;
 
-	private final int size;
+	private static int size;
 	private Module inside;
 	private Set<Edge> interiorEdges;
 	private Unit[][] units;
@@ -101,7 +101,15 @@ public class Module extends Node {
 	}
 
     /**
-     * returns a list
+     * gets a list containing the units on a side of the module.
+     * The list is ordered from left to right or from top to bottom (depending)
+     * on direction. This means that with two neighboring modules, side units
+     * can be matched up, ad we can easily create edges between modules
+     *
+     * @param dir           Indicates which side of the module to get. 
+     *                      0=North, 1=East, 2=South, 3=West
+     *
+     * @return              List of Unit objects
      */
     public List<Unit> getSideUnits(int dir) {
         List<Unit> toReturn = new ArrayList<Unit>();
@@ -110,16 +118,16 @@ public class Module extends Node {
         int maxi = size;
         int maxj = size;
         switch(dir) {
-            case 0:
+            case 0: // North
                 maxj = 1;
                 break;
-            case 1:
+            case 1: // East
                 mini = size - 1;
                 break;
-            case 2:
+            case 2: // South
                 minj = size - 1;
                 break;
-            case 3:
+            case 3: // West
                 maxi = 1;
                 break;
             default:
@@ -133,40 +141,40 @@ public class Module extends Node {
         return toReturn;
     }
 
-
     /**
-     * Adds all the smaller arms given two modules with an edge between them
+     * Adds all the smaller arms given two modules with an edge between them.
+     * Note that there must exist an edge between them otherwise this method
+     * will throw an error
      *
-     * @param neighbor      
+     * @param neighbor      Neigbor to connect to.
+     *
      * @return              Set<Edge> of edges added
      */
     public Set<Edge> addExteriorSubEdges(Module neighbor) {
-        int neighborDir = 0;
         boolean isExtended;
         boolean isConnected;
         Set<Edge> toReturn = new HashSet<Edge>();
         Edge e;
-        Node potentialn;
-        for (int dir = 0; dir < 4; dir++) { //check for correct direction
-            potentialn = getNeighbor(dir);
-            if (potentialn != null && potentialn.equals(neighbor)) {
-                neighborDir = dir;
-                break;
-            }
-        }
-        e = getEdge(neighborDir);
-        isExtended = e.isExtended();
-        isConnected = e.isConnected();
-        List<Unit> thisSideUnits     = getSideUnits(neighborDir);
-        List<Unit> neighborSideUnits = neighbor.getSideUnits((neighborDir + 2) % 4);
 
+        int dir = findNeighborDirection(neighbor);
+        if (dir == -1) {
+            //TODO THROW ERROW
+           System.out.println("HALP WE BROKE IT");
+        }
+        e = getEdge(dir);
+
+        List<Unit> thisSideUnits     = getSideUnits(dir);
+        List<Unit> neighborSideUnits = neighbor.getSideUnits((dir + 2) % 4);
         Unit u;
         Unit n;
         Edge newe;
+
+        isExtended = e.isExtended();
+        isConnected = e.isConnected();
         for (int i = 0; i < size; i++) {
             u = thisSideUnits.get(i);
             n = neighborSideUnits.get(i);
-            newe = u.addNeighbor(n, neighborDir, isExtended, isConnected);
+            newe = u.addNeighbor(n, dir, isExtended, isConnected);
             toReturn.add(newe);
         }
         return toReturn;
