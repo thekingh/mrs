@@ -69,6 +69,10 @@ public class Grid {
         return grid;
     }
 
+    public boolean inBounds(Coordinate c) {
+        return inBounds(c.x(), c.y());
+    }
+
     public boolean inBounds(int x, int y) {
         if((x >= 0) && (x < w) &&
            (y >= 0) && (y < h)) {

@@ -240,73 +240,75 @@ public class Graph {
         System.out.println(h);
 		return new Grid(normQ, normE, w, h);
 	}
-    
-/*    public void removeInvalidEdges(Grid g) {*/
-/*       */
-/**/
-/*        */
-/*    }*/
-/**/
-/*    //Yes, I am aware this is a big ugly function */
-/*    public void updateGraph(Grid g) {*/
-/**/
-/*        //TODO remove all invalid edges first*/
-/*        removeInvalidEdges(g);*/
-/**/
-/*        //TODO sift into several functions pls*/
-/**/
-/*        Object[][] grid = g.getGrid();*/
-/*        List<GridObject> nodeList = g.getNodes();*/
-/**/
-/*        for(GridObject gridNode : nodeList) {*/
-/**/
-/*            // get grid coordinate*/
-/*            Coordinate gc = gridNode.c();*/
-/**/
-/*            // check in each direction*/
-/*            for(int i = 0; i < 4; i++) {*/
-/*                */
-/*                Coordinate adj = calcRelativeLocation(gc, i, 0);*/
-/**/
-/*                if(g.inBounds(adj)) {*/
-/*                    //check adjacent coordinates to see if they have nodes*/
-/*                    if(grid[adj.x()][adj.y()].o() instanceof Node) {*/
-/**/
-/*                        boolean isVertical = (i % 2 == 0) ? true : false;*/
-/*                        // make that edge*/
-/*                        Edge e = new Edge((Node)grid[gc.x() ][gc.y() ].o(),*/
-/*                                          (Node)grid[adj.x()][adj.y()].o(),*/
-/*                                          false,*/
-/*                                          false, //TODO leaving unconnected*/
-/*                                          isVertical);*/
-/**/
-/*                        //check to see if that edge exists, add if not*/
-/*                        if(!edges.contains(e)) {*/
-/*                            edges.add(e);*/
-/*                        }*/
-/**/
-/**/
-/*                    // in bounds but not a node*/
-/*                    } else {*/
-/*                        // get 2nd degree (? lol) adjacent coordinate*/
-/*                        Coordinate nAdj = calcRelativeLocation(adj, i, 0);*/
-/**/
-/*                        if(grid[nAdj.x()][nAdj.y()].o() instanceof Node) {*/
-/*                            boolean isVertical = (i % 2 == 0) ? true : false;*/
-/*                            Edge e = new Edge((Node)grid[gc.x() ][gc.y() ].o(),*/
-/*                                              (Node)grid[nAdj.x()][nAdj.y()].o(),*/
-/*                                              false,*/
-/*                                              false, //TODO leaving unconnected*/
-/*                                              isVertical);*/
-/*                            if(!edges.contains(e)) {*/
-/*                                edges.add(e);*/
-/*                            }*/
-/**/
-/*                        }*/
-/*                    }*/
-/*                }*/
-/*            }*/
-/*        }*/
-/*    }*/
+
+    public void updateGraph(Grid g) {
+
+        Object[][] grid = g.getGrid();
+        List<GridObject> nodeList = g.getNodes();
+
+        // iterate through all nodes
+        for(GridObject gridNode : nodeList) {
+
+            // get grid coordinate
+            Coordinate gc = gridNode.c();
+
+            // check in each direction
+            for(int i = 0; i < 4; i++) {
+
+                // get two adjacent coordinates
+                Coordinate adj   = calcRelativeLocation(gc, i, 0);
+                Coordinate nAdj  = calcRelativeLocation(adj, i, 0);
+
+                // get previously stored neighbor 
+                Node oldNeighbor = ((Node)gridNode.o()).getNeighbor(i);
+                boolean isVertical = (i % 2 == 0) ? true : false;
+
+                // check if is in bounds on grid and if new edge is needed
+                if(g.inBounds(adj) && checkNewEdge(g, gc, adj, oldNeighbor, i, false)) {
+                    
+                    Node n1 = ((Node)((GridObject)grid[gc.x() ][gc.y()]).o());
+                    Node n2 = ((Node)((GridObject)grid[adj.x()][adj.y()]).o());
+
+                    Edge e = new Edge(n1, n2,false,false, isVertical);
+                    edges.add(e);
+
+                } else if (g.inBounds(nAdj) && checkNewEdge(g, gc, nAdj, oldNeighbor,i, true)) {
+
+                    Node n1 = ((Node)((GridObject)grid[gc.x() ][gc.y()]).o());
+                    Node n2 = ((Node)((GridObject)grid[nAdj.x()][nAdj.y()]).o());
+
+                    Edge e = new Edge(n1, n2, false, false, isVertical);
+                    edges.add(e);
+                }
+            }
+        }
+    }
+
+    // TODO stratification right? do I want to change neighbors here?
+    public boolean checkNewEdge(Grid g, Coordinate c1, Coordinate c2, Node old, int dir,
+                                boolean isExtended) {
+
+        Object[][] grid = g.getGrid();
+        GridObject g2 = (GridObject)grid[c2.x()][c2.y()];
+
+        // Check to see if c2 is a node
+        if(g2.o() instanceof Node) {
+            
+            Node n2 = (Node)g2.o();
+
+            // if the old neighbor is the same, do nothing
+            if(n2.equals(old)) {
+                //TODO case when neighbor is same, but extension is diff
+                return false;
+            // neighbor is diff, yes to new edge, set new neighbor
+            } else {
+                Node n1 = ((Node)((GridObject)grid[c1.x() ][c1.y()]).o());
+                n1.addNeighbor(n2, dir, isExtended, false);
+                return true; 
+            }
+        }
+
+        return false;
+    }
 }
 
