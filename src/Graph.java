@@ -294,15 +294,19 @@ public class Graph {
         // Check to see if c2 is a node
         if(g2.o() instanceof Node) {
             
+            Node n1 = ((Node)((GridObject)grid[c1.x() ][c1.y()]).o());
             Node n2 = (Node)g2.o();
 
             // if the old neighbor is the same, do nothing
             if(n2.equals(old)) {
-                //TODO case when neighbor is same, but extension is diff
+
+                if(n1.getEdge(i).isExtended() != isExtended) {
+                    n1.getEdge(i).setExtended(isExtended); 
+                }
+
                 return false;
             // neighbor is diff, yes to new edge, set new neighbor
             } else {
-                Node n1 = ((Node)((GridObject)grid[c1.x() ][c1.y()]).o());
                 n1.addNeighbor(n2, dir, isExtended, false);
 
                 edges.remove(n1.getEdge(dir));
