@@ -43,10 +43,13 @@ public class Grid {
 		}
 	}
 
+    /**
+     * Produces string representation of the grid, with positive x right
+     * positive y up.
+     */
 	public String toString() {
 		String str = "";
-			// NEEDSWORK: do we want positive y down
-        for (int j = h-1; j >= 0; j--) {
+        for (int j = h - 1; j >= 0; j--) {
             for (int i = 0; i < w; i++) {
 				Object o = grid[i][j];
 				if (o == null) {
@@ -57,7 +60,6 @@ public class Grid {
 			}
 			str += "\n";
 		}
-
 		return str;
 	}
 
@@ -78,7 +80,6 @@ public class Grid {
     }
 
     public boolean isNode(int x, int y) {
-
         return inBounds(x, y) && grid[x][y] instanceof Node;
     }
 
@@ -106,7 +107,7 @@ public class Grid {
     }
 
     /**
-     * returns null if out of bounds
+     * produces a new GridObject, returns null if out of bounds, or no object
      */
     public GridObject getGridObject(int x, int y) {
         if (!inBounds(x, y)) {
@@ -137,6 +138,4 @@ public class Grid {
         return null;
     }
 }
-
-
 
