@@ -77,9 +77,9 @@ public class Robot {
         int dirOfNeighbor = -1;
         int dirClockwise  = (dir + 1) % 4;
         int dirCounterClock = (dir - 1) % 4;
-        if (M.isNeighborInDirection(N, dirClockwise) {
+        if (M.isNeighborInDirection(N, dirClockwise)) {
             dirOfNeighbor = dirClockwise;
-        } else if (M.isNeighborInDirection(N, dirCounterClock) {
+        } else if (M.isNeighborInDirection(N, dirCounterClock)) {
             dirOfNeighbor = dirCounterClock;
         } else {
             return false;
@@ -115,10 +115,10 @@ public class Robot {
         //TODO, Needswork
         int dirClockwise  = (dir + 1) % 4;
         int dirCounterClock = (dir - 1) % 4;
-        if slideIsPossible(M, getNeighbor(dirClockwise), dir) {
+        if (slideIsPossible(M, (Module)M.getNeighbor(dirClockwise), dir)) {
             return true;
         } 
-        if slideIsPossible(M, getNeighbor(dirCounterClock), dir) {
+        if (slideIsPossible(M, (Module)M.getNeighbor(dirCounterClock), dir)) {
             return true;
         } 
         return false;
@@ -139,6 +139,7 @@ public class Robot {
 
         
 
+        return true;
     }
 
 
