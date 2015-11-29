@@ -51,7 +51,6 @@ public class Graph {
         return edges;
     }
 
-
     /**
      * Calculates a new coordinate relative to an input coordinate
      * Note that coordinate system is x pos is right and y pos is up
@@ -74,10 +73,10 @@ public class Graph {
      * @param Q         List of Nodes with location calculated
      * @param E         List of Edges with location calculated
      * @param V         Set of Nodes that have alread been processed
-     * @param i         
+     * @param head      Index of the queue Q's head
      */
-    private void addNeighborsToQueue(List<GridObject> Q, List<GridObject> E, Set<Node> V, int i) {
-        GridObject curr = Q.get(i);
+    private void addNeighborsToQueue(List<GridObject> Q, List<GridObject> E, Set<Node> V, int head) {
+        GridObject curr = Q.get(head);
         Node currNode = (Node) curr.o();
         Coordinate currCoord = curr.c();
         for(int dir = 0; dir < 4; dir++) {// TODO revisit
@@ -207,18 +206,25 @@ public class Graph {
 		return new Grid(normQ, normE, w, h);
 	}
 
-
-
     /**
      * Updates a relational graph neighbors taking into account spatial
      * considerations.
      *
+     * Note that all new edges are formed not connected
+     *
+     *  Clear previous EdgeSet
      *  For node N:
      *      for direction d:
-     *          findClosestNeighbor
+     *          findClosestNeighbor (in the grid)
      *
+     *          if there is no neighbor, delete N's Edge
+     *          
+     *          check if there is already an edge between N and its neighbor 
      *
+     *          if so, change if necessary, *******Throw error???? if connected
+     *          else,  create a new edge
      *
+     * @param g         spatial representation used in edge update
      */
     public boolean updateGraph(Grid g) {
 
