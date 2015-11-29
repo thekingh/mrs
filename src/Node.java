@@ -84,6 +84,25 @@ public abstract class Node {
         return e;
     }
 
+    public boolean hasNeighborInDirection(int dir) {
+        return connections.containsKey(dir);
+    }
+    
+    /**
+     * returns true if other is a neighbor of this
+     */
+    public boolean isNeighbor(Node other) {
+        if (findNeighborDirection(other) == -1) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public boolean isNeighborInDirection(Node other, int dir) {
+        return getNeighbor(dir).equals(other);
+    }
+
     /**
      * Given a node, attempts to find the direction to that node in the set
      * {0=North, 1=East, 2=South, 3=West}.
