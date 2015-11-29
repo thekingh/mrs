@@ -40,6 +40,10 @@ public abstract class Node {
 		connections.put(direction, edge);
 	}
 
+    public void removeEdge(int dir) {
+        connections.remove(dir);
+    }
+
 	public Edge getEdge(int direction) {
 		return connections.get(direction);
 	}

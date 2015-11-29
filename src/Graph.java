@@ -65,25 +65,7 @@ public class Graph {
      * @return          The new absolute coordinate
      */
     private Coordinate calcRelativeLocation(Coordinate curr, int dir, int ext) {
-        int x = curr.x();
-        int y = curr.y();
-        switch(dir) {
-            case 0: //North
-                y += 1 + ext;
-                break;
-            case 1: //East
-                x += 1 + ext;
-                break;
-            case 2: //South
-                y -= 1 + ext;
-                break;
-            case 3: //West
-                x -= 1 + ext;
-                break;
-            default: //Not optimal
-                break;
-        }
-        return new Coordinate(x, y);
+        return curr.calcRelativeLoc(dir, ext);
     }
 
     /**
@@ -99,14 +81,7 @@ public class Graph {
         Node currNode = (Node) curr.o();
         Coordinate currCoord = curr.c();
         for(int dir = 0; dir < 4; dir++) {// TODO revisit
-            System.out.println(dir);
             Node n = currNode.getNeighbor(dir); // n is neighbor TODO WRONG
-            System.out.println("neighbor");
-
-            if (n != null) {
-                System.out.println(n.getId());
-            }
-
             // No neighbor in given direction
             if (n == null) {
                 continue;
@@ -128,7 +103,6 @@ public class Graph {
 
             // Add node to list if not already visited
             if (!V.contains(n)) {
-                System.out.println("add n");
                 Coordinate nc = calcRelativeLocation(currCoord, dir, ext);
                 GridObject g = new GridObject(n, nc);
                 Q.add(g);
@@ -210,8 +184,6 @@ public class Graph {
         Set<Node> V = new HashSet<Node>();    //Visited node set
         
         int i = 0;                              //holds list index
-        System.out.println("NODES:");
-        System.out.println(nodes);
         // get random node in the map of id to node
         Node start = nodes.values().iterator().next();
         GridObject g = new GridObject(start, new Coordinate(0,0));
@@ -221,10 +193,6 @@ public class Graph {
             //GridObject curr = Q.get(i);
             addNeighborsToQueue(Q, E, V, i);
             i++;
-            System.out.println("Printing Q");
-            System.out.println(Q);
-            System.out.println("Printing V");
-            System.out.println(V);
         }
         List<GridObject> all = new ArrayList<GridObject>();
         all.addAll(Q);
@@ -236,89 +204,73 @@ public class Graph {
         int h   = max.y() - min.y() + 1;
         List<GridObject> normQ = normalize(Q, min);
         List<GridObject> normE = normalize(E, min);
-        System.out.println(w);
-        System.out.println(h);
 		return new Grid(normQ, normE, w, h);
 	}
 
-    /*
-    public void updateGraph(Grid g) {
 
-        GridObject[][] grid = g.getGrid();
+
+    /**
+     * Updates a relational graph neighbors taking into account spatial
+     * considerations.
+     *
+     *  For node N:
+     *      for direction d:
+     *          findClosestNeighbor
+     *
+     *
+     *
+     */
+    public boolean updateGraph(Grid g) {
+
         List<GridObject> nodeList = g.getNodes();
+        Set<Edge>        edgeSet  = new HashSet<Edge>();
+        Node obj;
+        Edge e;
+        Coordinate coord;
+        GridObject neighbor;
+        boolean isExtended;
+        boolean isConnected;
+        boolean isVertical;
 
-        // iterate through all nodes
-        for(GridObject gridNode : nodeList) {
-
-            // get grid coordinate
-            Coordinate gc = gridNode.c();
-
-            // check in each direction
-            for(int i = 0; i < 4; i++) {
-
-                // get two adjacent coordinates
-                Coordinate adj   = calcRelativeLocation(gc , i, 0);
-                Coordinate nAdj  = calcRelativeLocation(adj, i, 0);
-
-                // get previously stored neighbor 
-                Node oldNeighbor = ((Node)gridNode.o()).getNeighbor(i);
-                boolean isVertical = (i % 2 == 0) ? true : false;
-
-                // check if is in bounds on grid and if new edge is needed
-                if(g.inBounds(adj) && checkNewEdge(g, gc, adj, oldNeighbor, i, false)) {
-                    
-                    Node n1 = ((Node)(grid[gc.x() ][gc.y()].o()));
-                    Node n2 = ((Node)(grid[adj.x()][adj.y()].o()));
-
-                    Edge e = new Edge(n1, n2, false,false, isVertical);
-                    edges.add(e);
-
-                } else if (g.inBounds(nAdj) && checkNewEdge(g, gc, nAdj, oldNeighbor, i, true)) {
-
-                    Node n1 = ((Node)(grid[gc.x() ][gc.y()].o()));
-                    Node n2 = ((Node)(grid[nAdj.x()][nAdj.y()].o()));
-
-                    Edge e = new Edge(n1, n2, true, false, isVertical);
-                    edges.add(e);
-                }
-            }
-        }
-    }
-
-    // TODO stratification right? do I want to change neighbors here?
-    // TODO make a modify edge?
-    public boolean checkNewEdge(Grid g, Coordinate c1, Coordinate c2, Node old, int dir,
-                                boolean isExtended) {
-
-        GridObject[][] grid = g.getGrid();
-        GridObject g2 = grid[c2.x()][c2.y()];
-
-        // Check to see if c2 is a node
-        if(g2.o() instanceof Node) {
+        for(GridObject V : nodeList) {
             
-            Node n1 = ((Node)(grid[c1.x() ][c1.y()].o()));
-            Node n2 = (Node)g2.o();
-
-            // if the old neighbor is the same, do nothing
-            if(n2.equals(old)) {
-
-                if(n1.getEdge(dir).isExtended() != isExtended) {
-                    n1.getEdge(dir).setIsExtended(isExtended); 
-                }
-
-                return false;
-            // neighbor is diff, yes to new edge, set new neighbor
+            if (V.o() instanceof Node) {
+                obj   = (Node) V.o();
             } else {
-
-                edges.remove(n1.getEdge(dir));
-                n1.addNeighbor(n2, dir, isExtended, false);
-
-                return true; 
+                System.out.println("THings when wrong");
+                return false;
+            }
+            coord = V.c();
+            for(int dir = 0; dir < 4; dir++) {
+                e = obj.getEdge(dir);
+                neighbor = g.findClosestNode(coord, dir);
+                int dist = coord.mDist(neighbor.c());
+                if (neighbor == null) {
+                    obj.removeEdge(dir);
+                    continue;
+                }
+                //if e is extended must also check same nodes
+                if (e.isValidEdge(V, g)) { //if e is valid then keep connected
+                    isExtended = (dist == 2);
+                    if (e.isConnected()) {
+                        if (e.isExtended() != isExtended) {
+                            System.out.println("We broke things uh oh");
+                            return false;
+                        }
+                    } else {
+                        e.setIsExtended(isExtended);
+                    }
+                } else {
+                    isVertical  = (dir % 2 == 0);
+                    isConnected = false;
+                    isExtended  = (dist == 2);
+                    e = new Edge(obj, (Node)neighbor.o(), isExtended, isConnected,
+                                 isVertical);
+                }
+                edgeSet.add(e);
             }
         }
-
-        return false;
+        return true;
     }
-    */
 }
 

@@ -1,6 +1,6 @@
 package src;
 
-import Math;
+import java.lang.Math;
 
 public class Coordinate {
 	private final Pair<Integer, Integer> coord;
@@ -38,8 +38,8 @@ public class Coordinate {
      * @return          The new absolute coordinate
      */
     public Coordinate calcRelativeLoc(int dir, int ext) {
-        x = x();
-        y = y();
+        int x = x();
+        int y = y();
         switch(dir) {
             case 0: //North
                 y += 1 + ext;
@@ -60,14 +60,14 @@ public class Coordinate {
     }
 
     public int mDist(Coordinate c) {
-        return abs(x() - c.x()) + abs(y() - c.y());
+        return Math.abs(x() - c.x()) + Math.abs(y() - c.y());
     }
 
     public int xDist(Coordinate c) {
-        return abs(x() - c.x());
+        return Math.abs(x() - c.x());
     }
 
     public int yDist(Coordinate c) {
-        return abs(y() - c.y());
+        return Math.abs(y() - c.y());
     }
 }

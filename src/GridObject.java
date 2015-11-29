@@ -24,4 +24,5 @@ public class GridObject {
     public String toString() {
         return o.toString() + ", " + c.toString();
     }
+    
 }

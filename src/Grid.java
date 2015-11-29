@@ -13,7 +13,6 @@ import java.util.ArrayList;
 
 public class Grid {
 
-	// map from node id to coordinate
 	private final List<GridObject> nodes;  
 	private final Object[][] grid;
 	private final int w;
@@ -70,19 +69,73 @@ public class Grid {
         return grid;
     }
 
+    public boolean inBounds(int x, int y) {
+        return (x >= 0) && (x < w) && (y >= 0) && (y < h);
+    }
+
     public boolean inBounds(Coordinate c) {
         return inBounds(c.x(), c.y());
     }
 
-    public boolean inBounds(int x, int y) {
-        if((x >= 0) && (x < w) &&
-           (y >= 0) && (y < h)) {
-            return true;
-        } else {
-            return false;
-        }
+    public boolean isNode(int x, int y) {
+
+        return inBounds(x, y) && grid[x][y] instanceof Node;
     }
 
+    public boolean isNode(Coordinate c) {
+        return isNode(c.x(), c.y());
+    }
+
+    public boolean isEdge(int x, int y) {
+        return inBounds(x, y) && grid[x][y] instanceof Edge;
+    }
+
+    public boolean isEdge(Coordinate c) {
+        return isEdge(c.x(), c.y());
+    }
+
+    public Object at(int x, int y) {
+        if (!inBounds(x, y)) {
+            return null;
+        }
+        return grid[x][y];
+    }
+
+    public Object at(Coordinate c) {
+        return at(c.x(), c.y());
+    }
+
+    /**
+     * returns null if out of bounds
+     */
+    public GridObject getGridObject(int x, int y) {
+        if (!inBounds(x, y)) {
+            return null;
+        }
+        return new GridObject(grid[x][y], new Coordinate(x, y));
+    }
+
+    public GridObject getGridObject(Coordinate c) {
+        return getGridObject(c.x(), c.y());
+    }
+
+    /**
+     * finds the closest neighboring node in a direction, return NULL if further
+     * than MAX_DIST = 1.
+     * @param c     root coordinate
+     * @param dir   direction to search
+     */
+    public GridObject findClosestNode(Coordinate c, int dir) {
+        final int MAX_DIST = 1;
+        Coordinate cp;
+        for (int i = 0; i <= MAX_DIST; i++) {
+            cp = c.calcRelativeLoc(dir, i);
+            if (isNode(cp)) { //auto bounds checks
+                return getGridObject(cp);
+            }
+        }
+        return null;
+    }
 }
 
 
