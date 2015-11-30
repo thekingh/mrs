@@ -60,11 +60,40 @@ public class Edge {
 		}
 	}
 
-	// edge equality is nodes on either side are same between two edges
-	public boolean equals(Edge e) {
+    @Override
+    public boolean equals(final Object o) {
+        if(o == null) {
+            return false;
+        }
+
+        if(!(o instanceof Edge)) {
+            return false;
+        }
+
+        Edge e = (Edge)o;
+
 		return ((n1.equals(e.getN1()) && n2.equals(e.getN2())) ||
 				(n1.equals(e.getN2()) && n2.equals(e.getN1())));
-	}
+    }
+
+    @Override
+    public int hashCode() {
+        
+        String n1_s = Integer.toString(n1.getId());
+        String n2_s = Integer.toString(n2.getId());
+
+        if(n1.getId() < n2.getId()) {
+            return ((n1_s + "," + n2_s).hashCode());
+        } else {
+            return ((n2_s + "," + n1_s).hashCode());
+        }
+    }
+
+	// edge equality is nodes on either side are same between two edges
+/*	public boolean equals(Edge e) {*/
+/*		return ((n1.equals(e.getN1()) && n2.equals(e.getN2())) ||*/
+/*				(n1.equals(e.getN2()) && n2.equals(e.getN1())));*/
+/*	}*/
 
 	public String toString() {
 		if (isVertical) {
