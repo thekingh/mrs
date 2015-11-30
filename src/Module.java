@@ -18,16 +18,19 @@ public class Module extends Node {
 	private static final boolean EXTENDED_EDGES = false;
 	private static final boolean CONNECTED_EDGES = true;
 
-	private static int size;
+	private static int size = 2;
 	private Module inside;
 	private Set<Edge> interiorEdges;
 	private Unit[][] units;
 
+    public Module(int size) {
+        this.size = size;
+        Module();
+    }
 	// TODO make constructor with isExtended, isConnected arguments
 	// then have this call it with defaults
-	public Module(int size) {
+	public Module() {
 		super();
-		this.size = size;
 		this.units = new Unit[size][size];
 
 		for (int i = 0; i < size; i++) {
@@ -139,6 +142,31 @@ public class Module extends Node {
             }
         }
         return toReturn;
+    }
+
+    public Unit getUnitInQuadrant(int dir1, int dir2) {
+        assert (size == 2);
+        //TODO fix or get rid super ugly
+        switch(4 * dir1 + dir2) {
+            case 1:
+                return getUnit(0,1);
+            case 3: 
+                return getUnit(0,0);
+            case 4:
+                return getUnit(0,1);
+            case 6:
+                return getUnit(1,1);
+            case 9:
+                return getUnit(1,1);
+            case 11:
+                return getUnit(1,0);
+            case 12:
+                return getUnit(0,0);
+            case 14:
+                return getUnit(1,0);
+            default:
+                return null;
+        }
     }
 
     /**
