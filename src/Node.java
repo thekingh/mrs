@@ -36,20 +36,25 @@ public abstract class Node {
 		this.connections = connections;
 	}
 
-	public void putEdge(int direction, Edge edge) {
-		connections.put(direction, edge);
+
+    public boolean hasEdge(int dir) {
+        return hasNeighborInDirection(dir);
+    }
+
+	public void putEdge(int dir, Edge edge) {
+		connections.put(dir, edge);
 	}
 
     public void removeEdge(int dir) {
         connections.remove(dir);
     }
 
-	public Edge getEdge(int direction) {
-		return connections.get(direction);
+	public Edge getEdge(int dir) {
+		return connections.get(dir);
 	}
 
-	public Node getNeighbor(int direction) {
-		Edge e = getEdge(direction);
+	public Node getNeighbor(int dir) {
+		Edge e = getEdge(dir);
 		if (e == null) {
 			return null;
 		}
@@ -129,4 +134,13 @@ public abstract class Node {
 	}
 
 	public abstract String toString();
+/*
+    public abstract void connect(int dir);
+
+    public abstract void disconnect(int dir);
+
+    public abstract void extend(int dir);
+
+    public abstract void contract(int dir);
+*/
 }

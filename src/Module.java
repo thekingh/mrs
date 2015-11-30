@@ -20,13 +20,10 @@ public class Module extends Node {
 
 	private static int size = 2;
 	private Module inside;
-	private Set<Edge> interiorEdges;
+	private final Set<Edge> horizontalEdges;
+    private final Set<Edge> verticalEdges;
 	private Unit[][] units;
 
-    public Module(int size) {
-        this.size = size;
-        Module();
-    }
 	// TODO make constructor with isExtended, isConnected arguments
 	// then have this call it with defaults
 	public Module() {
@@ -43,7 +40,8 @@ public class Module extends Node {
 		Unit u;
 		Unit rightNeighbor, downNeighbor; // future neighbor to unit
 		Edge eLeft, eDown;
-		this.interiorEdges = new HashSet<Edge>();
+		this.verticalEdges = new HashSet<Edge>();
+		this.horizontalEdges = new HashSet<Edge>();
 
 		for (int i = 0; i < size; i++) {
 			for (int j = 0; j < size; j++) {
@@ -54,7 +52,7 @@ public class Module extends Node {
 					rightNeighbor = this.units[i+1][j];
 					eLeft = u.addNeighbor(rightNeighbor, 1, EXTENDED_EDGES, 
 						CONNECTED_EDGES);
-					this.interiorEdges.add(eLeft);
+					this.horizontalEdges.add(eLeft);
 				}
 
 				// add down edge with neighbor
@@ -62,7 +60,7 @@ public class Module extends Node {
 					downNeighbor = this.units[i][j+1];
 					eDown = u.addNeighbor(downNeighbor, 2, EXTENDED_EDGES,
 						CONNECTED_EDGES);
-					this.interiorEdges.add(eDown);
+					this.verticalEdges.add(eDown);
 				}
 			}
 		}
@@ -85,6 +83,8 @@ public class Module extends Node {
 	}
 
 	public Set<Edge> getInteriorEdges() {
+        Set<Edge> interiorEdges = new HashSet<Edge>(horizontalEdges);
+        interiorEdges.addAll(verticalEdges);
 		return interiorEdges;
 	}
 
@@ -217,6 +217,35 @@ public class Module extends Node {
 			}
 		}
         return toReturn;
+    }
+
+    /**
+     * gets the interior edges either all horizontal or all vertical.
+     *
+     * @param 
+     * @param
+     */
+    public Set<Edge> getInteriorEdges(boolean vertical) {
+        if (vertical) {
+            return verticalEdges;
+        } else {
+            return horizontalEdges;
+        }
+    }
+
+    private void modifyInteriorEdges(boolean vertical, boolean extend) {
+        Set<Edge> interior = getInteriorEdges(vertical);
+        for (Edge e : interior) {
+            e.setIsExtended(extend);
+        }
+    }
+
+    public void expandInteriorEdges(boolean vertical) {
+        modifyInteriorEdges(vertical, true);
+    }
+
+    public void contractInteriorEdges(boolean vertical) {
+        modifyInteriorEdges(vertical, false);
     }
 
 	// NEEDSWORK: print all of the units?
