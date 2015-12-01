@@ -210,7 +210,7 @@ public class Graph {
      * Updates a relational graph neighbors taking into account spatial
      * considerations.
      *
-     * Note that all new edges are formed not connected
+     * Note that we remove all old edges
      *
      *  Clear previous EdgeSet
      *  For node N:
@@ -219,15 +219,10 @@ public class Graph {
      *
      *          if there is no neighbor, delete N's Edge
      *          
-     *          check if there is already an edge between N and its neighbor 
-     *
-     *          if so, change if necessary, *******Throw error???? if connected
-     *          else,  create a new edge
      *
      * @param g         spatial representation used in edge update
      */
     public boolean updateGraph(Grid g) {
-
         List<GridObject> nodeList = g.getNodes();
         Set<Edge>        edgeSet  = new HashSet<Edge>();
         Node obj;
@@ -239,40 +234,25 @@ public class Graph {
         boolean isVertical;
 
         for(GridObject V : nodeList) {
-            
-            if (V.o() instanceof Node) {
-                obj   = (Node) V.o();
-            } else {
+            if (!(V.o() instanceof Node)) {
                 System.out.println("THings when wrong");
                 return false;
             }
+            obj   = (Node) V.o();
             coord = V.c();
             for(int dir = 0; dir < 4; dir++) {
                 e = obj.getEdge(dir);
                 neighbor = g.findClosestNode(coord, dir);
-                int dist = coord.mDist(neighbor.c());
                 if (neighbor == null) {
                     obj.removeEdge(dir);
                     continue;
                 }
-                //if e is extended must also check same nodes
-                if (e.isValidEdge(V, g)) { //if e is valid then keep connected
-                    isExtended = (dist == 2);
-                    if (e.isConnected()) {
-                        if (e.isExtended() != isExtended) {
-                            System.out.println("We broke things uh oh");
-                            return false;
-                        }
-                    } else {
-                        e.setIsExtended(isExtended);
-                    }
-                } else {
-                    isVertical  = (dir % 2 == 0);
-                    isConnected = false;
-                    isExtended  = (dist == 2);
-                    e = new Edge(obj, (Node)neighbor.o(), isExtended, isConnected,
-                                 isVertical);
-                }
+                int dist = coord.mDist(neighbor.c());
+                isVertical  = (dir % 2 == 0);
+                isConnected = false;
+                isExtended  = (dist == 2);
+                e = new Edge(obj, (Node)neighbor.o(), isExtended, isConnected, isVertical);
+                e.setIsConnected(this.edges.contains(e));
                 edgeSet.add(e);
             }
         }
