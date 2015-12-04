@@ -8,8 +8,6 @@ package src;
 
 import java.util.Set;
 import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -208,12 +206,12 @@ public class Module extends Node {
         return toReturn;
     }
 
-    public Map<Integer, Unit> getUnitMap() {
-        Map<Integer, Unit> toReturn = new HashMap<Integer, Unit>();
+    public Set<Unit> getUnitMap() {
+        Set<Unit> toReturn = new HashSet<Unit>();
 		for (int i = 0; i < size; i++) {
 			for (int j = 0; j < size; j++) {
                 Unit u = units[i][j];
-				toReturn.put(u.getId(), u);
+				toReturn.add(u);
 			}
 		}
         return toReturn;

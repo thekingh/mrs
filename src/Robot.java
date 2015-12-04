@@ -31,9 +31,9 @@ public class Robot {
 	// generates unit graph from module graph
 	// NEEDSWORK: want to return unit graph? record status?
 	private void generateUnitGraph() {
-		Map<Integer, Node> uNodes = new HashMap<Integer, Node>(); 
+		Set<Node> uNodes = new HashSet<Node>(); 
 		Set<Edge> uEdges = new HashSet<Edge>();
-		Map<Integer, Node> mNodes = moduleGraph.getNodes();
+		Set<Node> mNodes = moduleGraph.getNodes();
 		Set<Edge> mEdges = moduleGraph.getEdges();
 
 		Module m1, m2;
@@ -48,11 +48,11 @@ public class Robot {
 		}
 
 		Module m;
-		for (Node n : mNodes.values()) {
+		for (Node n : mNodes) {
 			m = (Module) n;
 			uEdges.addAll(m.getInteriorEdges());
 
-			uNodes.putAll(m.getUnitMap());
+			uNodes.addAll(m.getUnitMap());
 		}
 
 		unitGraph = new Graph(uNodes, uEdges);
@@ -82,6 +82,7 @@ public class Robot {
                 M.expandInteriorEdges(dir % 2 == 0); //true if vertical 0, 2
                 break;
             case 2:
+                trailingEdge = trailing.getEdge(neighborDir);
                 unitGraph.addEdge(leading, u3, neighborDir);
                 unitGraph.removeEdge(trailingEdge);
                 break;
@@ -125,14 +126,14 @@ public class Robot {
      * @param neighborDir   Direction of neighboring modules to slide against
      */
     private void performSlide(Module M, int dir, int neighborDir, int step) {
-        Module M2 = M.getNeighbor(neighborDir);
-        Module M3 = M2.getNeighbor(dir);
+        Module M2 = (Module) M.getNeighbor(neighborDir);
+        Module M3 = (Module) M2.getNeighbor(dir);
         Unit u1 = M2.getUnitInQuadrant(opposite(neighborDir), opposite(dir));
         Unit u2 = M2.getUnitInQuadrant(opposite(neighborDir), dir);
         Unit u3 = M3.getUnitInQuadrant(opposite(neighborDir), opposite(dir));
         Unit u4 = M3.getUnitInQuadrant(opposite(neighborDir), dir);
-        performHalfSlide(M, u1, u2, u3, dir, neighborDir);
-        performHalfSlide(M, u2, u3, u4, dir, neighborDir);
+        performHalfSlide(M, u1, u2, u3, dir, neighborDir, step);
+        performHalfSlide(M, u2, u3, u4, dir, neighborDir, step);
 
         /*
         List <Unit> mSide = M.getSideUnits(neighborDir);

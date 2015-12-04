@@ -10,8 +10,6 @@ package src;
 
 import java.util.Set;
 import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -25,11 +23,11 @@ public class Test {
 		Edge e2_3 = m2.addNeighbor(m3, 1, true, true);
 		Edge e3_4 = m3.addNeighbor(m4, 2, true, true);
 
-		Map<Integer, Node> ms = new HashMap<Integer, Node>();
-		ms.put(m1.getId(), m1);
-		ms.put(m2.getId(), m2);
-		ms.put(m3.getId(), m3);
-		ms.put(m4.getId(), m3);
+		Set<Node> ms = new HashSet<Node>();
+        ms.add(m1);
+        ms.add(m2);
+        ms.add(m3);
+        ms.add(m4);
 
 		Set<Edge> es = new HashSet<Edge>();
 		es.add(e1_2);

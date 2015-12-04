@@ -7,8 +7,6 @@ package src;
 
 import java.util.Set;
 import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -29,21 +27,21 @@ import java.util.HashSet;
  */
 public class Graph {
 
-	private final Map<Integer, Node> nodes;
-	private final Set<Edge> edges;
+	private final Set<Node> nodes;
+	private Set<Edge> edges;
 
 	public Graph() {
 		//Graph(new HashMap<Integer, Node>(), new HashMap<Integer, Edge>());
-		this.nodes = new HashMap<Integer, Node>();
+		this.nodes = new HashSet<Node>();
 		this.edges = new HashSet<Edge>();
 	}
 
-	public Graph(Map<Integer, Node> nodes, Set<Edge> edges) {
+	public Graph(Set<Node> nodes, Set<Edge> edges) {
 		this.nodes = nodes;
 		this.edges = edges;
 	}
 
-    public Map<Integer, Node> getNodes() {
+    public Set<Node> getNodes() {
         return nodes;
     }
 
@@ -55,17 +53,14 @@ public class Graph {
     //     edges.add(e);
     // }
 
-    public void addEdge(int id1, int id2, int dir) {
-        addEdge(id1, id2, dir, false, true);
+    public void addEdge(Node n1, Node n2, int dir) {
+        addEdge(n1, n2, dir, false, true);
     }
 
     // dir from 1 to 2
     // NEEDSWORK: default: maybe always contracted and connected
-    public void addEdge(int id1, int id2, int dir, 
-        boolean isExtended, boolean isConnected) {
-
-        Node n1 = nodes.get(id1);
-        Node n2 = nodes.get(id2);
+    public void addEdge(Node n1, Node n2, int dir, 
+                        boolean isExtended, boolean isConnected) {
 
         boolean isVertical = ((dir % 2) == 0);
 
@@ -216,7 +211,7 @@ public class Graph {
         
         int i = 0;                              //holds list index
         // get random node in the map of id to node
-        Node start = nodes.values().iterator().next();
+        Node start = nodes.iterator().next();
         GridObject g = new GridObject(start, new Coordinate(0,0));
         Q.add(g);                 //already checked existance
         V.add(start);
