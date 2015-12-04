@@ -141,7 +141,7 @@ public class Robot {
             } else{ 
                 performHalfSlide(M, u2, u3, u4, dir, neighborDir, step);
             }
-            drawUnit()
+            drawUnit();
         }
 
         //updating module graph
@@ -155,7 +155,7 @@ public class Robot {
      * not possible to slide on either side.
      */
     private int getNeighborDir(Module M, int dir) {
-        int leftDir = (dir - 1) % 4;
+        int leftDir = (dir + 3) % 4; //THIS IS REALLY DUMB but -1 doesnt work
         int rightDir = (dir + 1) % 4;
         if (M.hasNeighborInDirection(leftDir)) {
             Module M2 = (Module) M.getNeighbor(leftDir);

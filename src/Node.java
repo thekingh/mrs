@@ -133,6 +133,10 @@ public abstract class Node {
 		return (this.id == n.getId());
 	}
 
+    public Map<Integer, Edge> getConnections() {
+        return connections;
+    }
+
 	public abstract String toString();
 /*
     public abstract void connect(int dir);
