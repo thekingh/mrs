@@ -7,12 +7,12 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.io.PrintWriter;
+import java.io.IOException;
 
 public class Robot {
 	private Graph moduleGraph;
 	private Graph unitGraph;
-	private Grid moduleGrid;
-	private Grid unitGrid;
 
 	private boolean isModuleGridCurrent;
 	private boolean isUnitGridCurrent;
@@ -202,4 +202,59 @@ public class Robot {
     public void drawModule() {
         System.out.println(moduleGraph.toGrid());
     }
+
+    public String getRobotString() {
+
+        String robot = "x, y, ext0, con0, ext1, con1, ext2, con2, ext3, con3\n";
+
+        Grid grid = unitGraph.toGrid();
+        
+        List<GridObject> nodes = grid.getNodes();
+        for(GridObject g : nodes) {
+            
+            //x, y
+            Coordinate c = g.c();
+            robot += Integer.toString(c.x()) + "," + Integer.toString(c.y());
+
+            Node n = (Node)g.o();
+            for(int dir = 0; dir < 4; dir++ ) {
+                Edge e = n.getEdge(dir);
+                
+                if( e == null) {
+                    robot += ",-1,-1";
+                } else {
+                    if(e.isExtended()) {
+                        robot += ",1";
+                    } else {
+                        robot += ",0";
+                    }
+
+                    if(e.isConnected()) {
+                        robot += ",1";
+                    } else {
+                        robot += ",0";
+                    }
+                }
+            }
+
+            robot += "\n";
+        }
+
+        return robot;
+
+    }
+
+    public void exportToFile(String file) {
+        
+        try {
+            PrintWriter writer = new PrintWriter(file);
+            String robot = getRobotString();
+            writer.println(robot);
+            writer.close();
+        } catch ( IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }

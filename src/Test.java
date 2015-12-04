@@ -71,6 +71,8 @@ public class Test {
         System.out.println(m3.getConnections());
         System.out.println(m3.getId());
         r.drawModule();
+
+        r.exportToFile("temp.rbt");
     }
 
 	public static void main(String[] args) {
