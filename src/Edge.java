@@ -112,9 +112,9 @@ public class Edge {
     }
 
     /**
-     * removes references to an edge from nodes
+     * removes references to an edge from nodes, does not delete the edge
      */
-    public boolean remove() {
+    public boolean removeFromNodes() {
         //TODO perhaps faster? garbage collection?
         int n1dir = n1.findNeighborDirection(n2);
         int n2dir = (n1dir + 2) % 4;

@@ -63,64 +63,6 @@ public class Robot {
         return 0 <= dir && dir < 4;
     }
 
-    private boolean slideIsPossible(Module M, Module N, int dir) {
-        //1
-        if (!directionIsValid(dir)) {
-            return false;
-        }
-        //2 UNTESTED TODO
-
-        //3
-        int dirOfNeighbor = -1;
-        int dirClockwise  = (dir + 1) % 4;
-        int dirCounterClock = (dir - 1) % 4;
-        if (M.isNeighborInDirection(N, dirClockwise)) {
-            dirOfNeighbor = dirClockwise;
-        } else if (M.isNeighborInDirection(N, dirCounterClock)) {
-            dirOfNeighbor = dirCounterClock;
-        } else {
-            return false;
-        }
-        //4
-        if (!N.hasNeighborInDirection(dir)) {
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * Tests if given a module if sliding in a direction is possible.
-     * 
-     * A slideIsPossible if the following conditions are met:
-     * 1) direction is in the set {0,1,2,3}
-     * 2) M in set of Nodes
-     * 3) M has a neighbor N in either the dir + 1 or dir - 1 directions (mod 4)
-     *      with property 4
-     * 4) N has a neighbor in dir direction
-     * 5) Assert that nothing is inside the module
-     *
-     * Unchecked conditions:
-     * 1) if M has other neighbors besides N, then MN may not be on a cycle of G
-     * 2) The space relative to M in the direction dir is empty of Nodes
-     *
-     * @param M         Module to consider
-     * @param dir       direction to slide module relative to the rest of robot
-     *
-     * @return          returns if slide affirms to the previous conditions
-     *
-     */
-    public boolean slideIsPossible(Module M, int dir) {
-        //TODO, Needswork
-        int dirClockwise  = (dir + 1) % 4;
-        int dirCounterClock = (dir - 1) % 4;
-        if (slideIsPossible(M, (Module)M.getNeighbor(dirClockwise), dir)) {
-            return true;
-        } 
-        if (slideIsPossible(M, (Module)M.getNeighbor(dirCounterClock), dir)) {
-            return true;
-        } 
-        return false;
-    }
 
     /**
      * Performs slide operations.
@@ -134,25 +76,24 @@ public class Robot {
      * @param neighborDir   Direction of neighboring modules to slide against
      */
     private void performSlide(Module M, int dir, int neighborDir, int step) {
-        assert (M.getSize() == 2);
         List <Unit> mSide = M.getSideUnits(neighborDir);
-        Unit back;
-        Unit front;
+        Unit trailing;
+        Unit leading;
         if (dir == 0 || dir == 3) {
-            back = mSide.get(1);
-            front = mSide.get(0);
+            trailing = mSide.get(1);
+            leading = mSide.get(0);
         } else {
-            back = mSide.get(0);
-            front = mSide.get(1);
+            trailing = mSide.get(0);
+            leading = mSide.get(1);
         }
         switch(step) {
             //This seems bad... TODO
             case 0:
             case 3:
-                //Disconnect front, connect back, disconnect top back
-                back.connect(neighborDir);
-                front.disconnect(neighborDir);
-                //TODO disconnect top back
+                //Disconnect leading, connect trailing, disconnect top trailing
+                trailing.connect(neighborDir);
+                leading.disconnect(neighborDir);
+                //TODO disconnect top trailing
                 //
                 //expand interior
                 break;
@@ -162,8 +103,8 @@ public class Robot {
                 break;
             case 2:
             case 5:
-                back.disconnect(neighborDir);
-                front.connect(neighborDir);
+                trailing.disconnect(neighborDir);
+                leading.connect(neighborDir);
                 break;
             default:
                 break;
@@ -179,9 +120,6 @@ public class Robot {
      * @return          Slide status, returns true if performed successfully
      */
     public boolean slide(Module M, int dir) {
-        if (!slideIsPossible(M, dir)) {
-            return false;
-        }
 
 
 
