@@ -51,6 +51,16 @@ public class Graph {
         return edges;
     }
 
+    public void addEdge(Edge e) {
+        edges.add(e);
+    }
+
+    public void removeEdge(Edge e) {
+        // NEEDSWORK: do we want to leave this in the edge class?
+        e.remove();
+        edges.remove(e);
+    }
+
     /**
      * Calculates a new coordinate relative to an input coordinate
      * Note that coordinate system is x pos is right and y pos is up
