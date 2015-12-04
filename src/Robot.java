@@ -64,6 +64,53 @@ public class Robot {
     }
 
 
+    public void performHalfSlide(Module M, Unit u1, Unit u2, Unit u3,
+                                 int dir, int neighborDir, int step) {
+        List <Unit> mSide = M.getSideUnits(neighborDir);
+        Unit trailing = M.getUnitInQuadrant(neighborDir, opposite(dir));
+        Unit leading  = M.getUnitInQuadrant(neighborDir, dir);
+        Edge leadingEdge;
+        Edge trailingEdge;
+    
+        switch(step) {
+            case 0:
+                leadingEdge = leading.getEdge(neighborDir);
+                unitGraph.removeEdge(leadingEdge);
+                unitGraph.addEdge(trailing, u1, neighborDir);
+                break;
+            case 1:
+                M.expandInteriorEdges(dir % 2 == 0); //true if vertical 0, 2
+                break;
+            case 2:
+                unitGraph.addEdge(leading, u3, neighborDir);
+                unitGraph.removeEdge(trailingEdge);
+                break;
+            case 3:
+                M.contractInteriorEdges(dir % 2 == 0); //true if vertical 0, 2
+                break;
+            case 4:
+                unitGraph.addEdge(trailing, u2, neighborDir);
+                break;
+            default:
+                System.out.println("OMG");
+                break;
+        }
+    }
+
+
+    /*
+    public Module[] getSlideNeighbors(Module M, int dir, int neighborDir) {
+        Module M2 = M.getNeighbor(neighborDir);
+        Module M3 = M2.getNeighbor(dir);
+        Module[] toReturn = {M2, M3};
+        return toReturn;
+    }
+    */
+
+    public int opposite(int dir) {
+        return (dir + 2) % 4;
+    }
+
     /**
      * Performs slide operations.
      * Assumptions made:
@@ -71,11 +118,23 @@ public class Robot {
      * 2) module size is 2
      * 3) dir and neighbor are adjacent directions
      *
+     * 1) must have edges between them (not necessarily connected)
+     *
      * @param M             Module to slide
      * @param dir           Direction to slide module
      * @param neighborDir   Direction of neighboring modules to slide against
      */
     private void performSlide(Module M, int dir, int neighborDir, int step) {
+        Module M2 = M.getNeighbor(neighborDir);
+        Module M3 = M2.getNeighbor(dir);
+        Unit u1 = M2.getUnitInQuadrant(opposite(neighborDir), opposite(dir));
+        Unit u2 = M2.getUnitInQuadrant(opposite(neighborDir), dir);
+        Unit u3 = M3.getUnitInQuadrant(opposite(neighborDir), opposite(dir));
+        Unit u4 = M3.getUnitInQuadrant(opposite(neighborDir), dir);
+        performHalfSlide(M, u1, u2, u3, dir, neighborDir);
+        performHalfSlide(M, u2, u3, u4, dir, neighborDir);
+
+        /*
         List <Unit> mSide = M.getSideUnits(neighborDir);
         Unit trailing;
         Unit leading;
@@ -109,6 +168,7 @@ public class Robot {
             default:
                 break;
         }
+        */
     }
 
     /**
