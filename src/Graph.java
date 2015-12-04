@@ -51,13 +51,35 @@ public class Graph {
         return edges;
     }
 
-    public void addEdge(Edge e) {
+    // public void addEdge(Edge e) {
+    //     edges.add(e);
+    // }
+
+    public void addEdge(int id1, int id2, int dir) {
+        addEdge(id1, id2, dir, false, true);
+    }
+
+    // dir from 1 to 2
+    // NEEDSWORK: default: maybe always contracted and connected
+    public void addEdge(int id1, int id2, int dir, 
+        boolean isExtended, boolean isConnected) {
+
+        Node n1 = nodes.get(id1);
+        Node n2 = nodes.get(id2);
+
+        boolean isVertical = ((dir % 2) == 0);
+
+        Edge e = new Edge(n1, n2, isExtended, isConnected, isVertical);
+
+        n1.putEdge(dir, e);
+        n2.putEdge((dir + 2) % 4, e);
+
         edges.add(e);
     }
 
     public void removeEdge(Edge e) {
-        // NEEDSWORK: do we want to leave this in the edge class?
-        e.remove();
+        // NEEDSWORK: do we want to leave this in the edge class? make remove here
+        e.removeFromNodes();
         edges.remove(e);
     }
 
