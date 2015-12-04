@@ -21,10 +21,14 @@ public class Robot {
 	public Robot(Graph moduleGraph) {
 		// what to use?
 		this.moduleGraph = moduleGraph;
+        generateUnitGraph();
 	}
 
+    public Graph getModuleGraph() {
+        return moduleGraph;
+    }
+
 	public Graph getUnitGraph() {
-		generateUnitGraph();
 		return unitGraph;
 	}
 
