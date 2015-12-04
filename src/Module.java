@@ -146,6 +146,21 @@ public class Module extends Node {
         assert (size == 2);
         //TODO fix or get rid super ugly
         switch(4 * dir1 + dir2) {
+            case 3:
+            case 12:
+                return getUnit(0,0);
+            case 11:
+            case 14:
+                return getUnit(0,1);
+            case 1:
+            case 4:
+                return getUnit(1,0);
+            case 6:
+            case 9:
+                return getUnit(1,1);
+            default:
+                return null;
+/*
             case 1:
                 return getUnit(0,1);
             case 3: 
@@ -164,6 +179,7 @@ public class Module extends Node {
                 return getUnit(1,0);
             default:
                 return null;
+*/
         }
     }
 
@@ -206,16 +222,6 @@ public class Module extends Node {
         return toReturn;
     }
 
-    public Set<Unit> getUnitMap() {
-        Set<Unit> toReturn = new HashSet<Unit>();
-		for (int i = 0; i < size; i++) {
-			for (int j = 0; j < size; j++) {
-                Unit u = units[i][j];
-				toReturn.add(u);
-			}
-		}
-        return toReturn;
-    }
 
     /**
      * gets the interior edges either all horizontal or all vertical.
