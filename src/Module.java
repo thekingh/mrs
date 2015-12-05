@@ -252,6 +252,16 @@ public class Module extends Node {
         modifyInteriorEdges(vertical, false);
     }
 
+    // TODO: add checks to make sure edge exists
+    public void expandExteriorEdges(int dir) {
+        List<Unit> sideUnits = getSideUnits(dir);
+
+        for (Unit u : sideUnits) {
+            Edge sideEdge = u.getEdge(dir);
+            sideEdge.setIsExtended(true);
+        }
+    }
+
 	// NEEDSWORK: print all of the units?
 	public String toString() {
 		//return "M";
