@@ -67,11 +67,11 @@ public class Robot {
     }
 
 
-    public void performHalfSlide(Module M, Unit u1, Unit u2, Unit u3,
+    public void performHalfSlide(Module m, Unit u1, Unit u2, Unit u3,
                                  int dir, int neighborDir, int step) {
-        List <Unit> mSide = M.getSideUnits(neighborDir);
-        Unit trailing = M.getUnitInQuadrant(neighborDir, opposite(dir));
-        Unit leading  = M.getUnitInQuadrant(neighborDir, dir);
+        List <Unit> mSide = m.getSideUnits(neighborDir);
+        Unit trailing = m.getUnitInQuadrant(neighborDir, opposite(dir));
+        Unit leading  = m.getUnitInQuadrant(neighborDir, dir);
         Edge leadingEdge;
         Edge trailingEdge;
         
@@ -86,7 +86,7 @@ public class Robot {
                 unitGraph.addEdge(trailing, u1, neighborDir);
                 break;
             case 1:
-                M.expandInteriorEdges(dir % 2 == 0); //true if vertical 0, 2
+                m.expandInteriorEdges(dir % 2 == 0); //true if vertical 0, 2
                 break;
             case 2:
                 trailingEdge = trailing.getEdge(neighborDir);
@@ -94,7 +94,7 @@ public class Robot {
                 unitGraph.removeEdge(trailingEdge);
                 break;
             case 3:
-                M.contractInteriorEdges(dir % 2 == 0); //true if vertical 0, 2
+                m.contractInteriorEdges(dir % 2 == 0); //true if vertical 0, 2
                 break;
             case 4:
                 unitGraph.addEdge(trailing, u2, neighborDir);
@@ -103,10 +103,6 @@ public class Robot {
                 System.out.println("OMG");
                 break;
         }
-    }
-
-    public int opposite(int dir) {
-        return (dir + 2) % 4;
     }
 
     /**
@@ -122,32 +118,51 @@ public class Robot {
      * @param dir           Direction to slide module
      * @param neighborDir   Direction of neighboring modules to slide against
      */
-    private void performSlide(Module M, int dir, int neighborDir) {
-        Module M2 = (Module) M.getNeighbor(neighborDir);
-        Module M3 = (Module) M2.getNeighbor(dir);
+    private void performSlide(Module m, int dir, int neighborDir) {
+        Module m2 = (Module) m.getNeighbor(neighborDir);
+        Module m3 = (Module) m2.getNeighbor(dir);
         print(String.format("neighbordir %d", neighborDir));
         print (String.format("Dir is %d", dir));
-        Unit u1 = M2.getUnitInQuadrant(opposite(neighborDir), opposite(dir));
-        Unit u2 = M2.getUnitInQuadrant(opposite(neighborDir), dir);
-        Unit u3 = M3.getUnitInQuadrant(opposite(neighborDir), opposite(dir));
-        Unit u4 = M3.getUnitInQuadrant(opposite(neighborDir), dir);
+        Unit u1 = m2.getUnitInQuadrant(opposite(neighborDir), opposite(dir));
+        Unit u2 = m2.getUnitInQuadrant(opposite(neighborDir), dir);
+        Unit u3 = m3.getUnitInQuadrant(opposite(neighborDir), opposite(dir));
+        Unit u4 = m3.getUnitInQuadrant(opposite(neighborDir), dir);
         print(String.format("u1 %d", u1.getId()));
         print(String.format("u2 %d", u2.getId()));
         print(String.format("u3 %d", u3.getId()));
         print(String.format("u4 %d", u4.getId()));
         for (int step = 0; step < 10; step++) {
             if (step < 5) {
-                performHalfSlide(M, u1, u2, u3, dir, neighborDir, step);
+                performHalfSlide(m, u1, u2, u3, dir, neighborDir, step);
             } else{ 
-                performHalfSlide(M, u2, u3, u4, dir, neighborDir, step);
+                performHalfSlide(m, u2, u3, u4, dir, neighborDir, step);
             }
             drawUnit();
         }
 
         //updating module graph
-        moduleGraph.removeEdge(M.getEdge(neighborDir));
-        moduleGraph.addEdge(M, M3, neighborDir);
+        moduleGraph.removeEdge(m.getEdge(neighborDir));
+        moduleGraph.addEdge(m, m3, neighborDir);
         drawModule();
+    }
+
+    /**
+     * Performs a unit slide if possible on a module in a given direction
+     *
+     * @param M         Module to slide, note type Module not Node
+     * @param dir       direction to slide relative to rest of robot
+     *
+     * @return          Slide status, returns true if performed successfully
+     */
+    public boolean slide(Module m, int dir) {
+        int neighborDir = getNeighborDir(m, dir);
+
+        if (neighborDir == -1) {
+            System.out.println("ERROR SLIDE NOT POSSIBLE");
+            return false;
+        }
+        performSlide(m, dir, neighborDir);
+        return true;
     }
 
     /**
@@ -172,31 +187,22 @@ public class Robot {
         return -1;
     }
 
-    //TODO remove me
-    private void print(Object o) {
-        System.out.println(o);
-    }
-    /**
-     * Performs a unit slide if possible on a module in a given direction
-     *
-     * @param M         Module to slide, note type Module not Node
-     * @param dir       direction to slide relative to rest of robot
-     *
-     * @return          Slide status, returns true if performed successfully
-     */
-    public boolean slide(Module M, int dir) {
-        int neighborDir = getNeighborDir(M, dir);
-
-        if (neighborDir == -1) {
-            System.out.println("ERROR SLIDE NOT POSSIBLE");
-            return false;
-        }
-        performSlide(M, dir, neighborDir);
-        return true;
+    public int opposite(int dir) {
+        return (dir + 2) % 4;
     }
 
     public void drawUnit() {
+        delay(1000);
         System.out.println(unitGraph.toGrid());
+    }
+
+    private void delay(int millis) {
+        try {
+            Thread.sleep(millis); 
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
     }
 
     public void drawModule() {
@@ -254,6 +260,11 @@ public class Robot {
         } catch ( IOException e) {
             e.printStackTrace();
         }
+    }
+
+    //TODO remove me
+    private void print(Object o) {
+        System.out.println(o);
     }
 
 

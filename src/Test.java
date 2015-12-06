@@ -29,6 +29,7 @@ public class Test {
 		Module m1 = new Module();
 		Module m2 = new Module();
 		Module m3 = new Module();
+
 		Edge e1_2 = m1.addNeighbor(m2, 2, false, true);
 		Edge e2_3 = m2.addNeighbor(m3, 1, false, true);
 
@@ -68,17 +69,17 @@ public class Test {
         r.drawModule();
         r.drawUnit();
         r.slide(m3, 0);
-        System.out.println(m3.getConnections());
-        System.out.println(m3.getId());
-        r.drawModule();
+        //System.out.println(m3.getConnections());
+        //System.out.println(m3.getId());
+        //r.drawModule();
 
-        r.exportToFile("temp.rbt");
+        //r.exportToFile("temp.rbt");
     }
 
 	public static void main(String[] args) {
         //printTest();
-        //slideTest();
-        slideTest2();
+        slideTest();
+        //slideTest2();
 
 	}
 
