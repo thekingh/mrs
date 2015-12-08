@@ -14,37 +14,54 @@ import java.io.IOException;
 
 public class viz extends PApplet {
 
-String data_path = "temp.rbt";
+//String data_path = "states/state";
 
-ArrayList<DrawUnit> units;
+ArrayList<ArrayList<DrawUnit>> states;
+/*ArrayList<DrawUnit> units;*/
+int stateCount = 0;
 int num_w = 10;
 int num_h = 10;
+int curState = 0;
 
 public void setup() {
-    units = new ArrayList<DrawUnit>();
+    states = new ArrayList<ArrayList<DrawUnit>>();
     readData();
-
 
     size(700, 700);
 }
 
 public void readData() {
-    //TODO ignore \n at end?
-    String[] lines = loadStrings(data_path); 
 
-    for(int i = 1; i < lines.length; i++) {
-        String[] robotString = split(lines[i], ",");
+    String path = "states/state" + stateCount + ".rbt";
+    File f = new File(path);
 
-        int[] robotInt    = new int[robotString.length];
-        for(int j = 0; j < robotString.length; j++) {
-            robotInt[j] = parseInt(robotString[j]);
+    while(f.exists()) {
+    
+        println("State " + stateCount + " exists");
+        String[] lines = loadStrings(path); 
+        ArrayList<DrawUnit> units = new ArrayList<DrawUnit>();
+
+        for(int i = 1; i < lines.length; i++) {
+            String[] robotString = split(lines[i], ",");
+            println("parse line " + i);
+
+            int[] robotInt    = new int[robotString.length];
+            for(int j = 0; j < robotString.length; j++) {
+                robotInt[j] = parseInt(robotString[j]);
+            }
+
+            DrawUnit u = new DrawUnit(robotInt[0], robotInt[1], robotInt[2], 
+                                      robotInt[3], robotInt[4], robotInt[5], 
+                                      robotInt[6], robotInt[7], robotInt[8], 
+                                      robotInt[9]);
+            units.add(u);
         }
 
-        DrawUnit u = new DrawUnit(robotInt[0], robotInt[1], robotInt[2], 
-                                  robotInt[3], robotInt[4], robotInt[5], 
-                                  robotInt[6], robotInt[7], robotInt[8], 
-                                  robotInt[9]);
-        units.add(u);
+        states.add(units);
+        stateCount++;
+
+        path = "states/state" + stateCount + ".rbt";
+        f = new File(path);
     }
 }
 
@@ -69,16 +86,31 @@ public void drawGrid() {
 
 }
 
-public void drawRobots() {
+public void drawRobots(int index) {
+    ArrayList<DrawUnit> units = states.get(index);
     for(DrawUnit u: units) {
         u.render();
     }
 }
 
+public void keyPressed() {
+
+    if(key == 'h' && curState > 0) {
+        curState--;
+    }
+
+    if(key == 'l' && curState < stateCount-1) {
+        curState++;
+    }
+
+
+
+}
+
 public void draw() {
     background(200, 200, 200);
     drawGrid();
-    drawRobots();
+    drawRobots(curState);
 }
 public class DrawUnit {
     
@@ -129,6 +161,7 @@ public class DrawUnit {
 
 
         //draw arms LOL
+        //TODO this code is ugly and I hate it 
 
         //top
         stroke(0, 255);
