@@ -21,13 +21,11 @@ void readData() {
 
     while(f.exists()) {
     
-        println("State " + stateCount + " exists");
         String[] lines = loadStrings(path); 
         ArrayList<DrawUnit> units = new ArrayList<DrawUnit>();
 
         for(int i = 1; i < lines.length; i++) {
             String[] robotString = split(lines[i], ",");
-            println("parse line " + i);
 
             int[] robotInt    = new int[robotString.length];
             for(int j = 0; j < robotString.length; j++) {

@@ -37,13 +37,11 @@ public void readData() {
 
     while(f.exists()) {
     
-        println("State " + stateCount + " exists");
         String[] lines = loadStrings(path); 
         ArrayList<DrawUnit> units = new ArrayList<DrawUnit>();
 
         for(int i = 1; i < lines.length; i++) {
             String[] robotString = split(lines[i], ",");
-            println("parse line " + i);
 
             int[] robotInt    = new int[robotString.length];
             for(int j = 0; j < robotString.length; j++) {
@@ -126,7 +124,8 @@ public class DrawUnit {
         this(0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
     }
 
-    public DrawUnit(int x, int y, int c0, int e0, int c1, int e1, int c2, int e2, int c3, int e3) {
+/*    public DrawUnit(int x, int y, int c0, int e0, int c1, int e1, int c2, int e2, int c3, int e3) {*/
+    public DrawUnit(int x, int y, int e0, int c0, int e1, int c1, int e2, int c2, int e3, int c3) {
         this.x = x;
         this.y = y;
 
@@ -150,8 +149,11 @@ public class DrawUnit {
         int block_size =  width / num_w;
         int unit_width = block_size/2;
 
-        int extended_len   = unit_width/2;
-        int contracted_len = unit_width/8;
+        int extended_len   = 3 *unit_width/2;
+        int contracted_len = unit_width/2;
+        int disconnect = unit_width/4;
+/*        int extended_len   = unit_width/2;*/
+/*        int contracted_len = unit_width/8;*/
 
         int left   =  (block_size * (num_w/2 + x)) + unit_width/2;
         int top    =  (block_size * (num_h/2 - y)) + unit_width/2;
@@ -170,8 +172,13 @@ public class DrawUnit {
             line(left + (unit_width/2), top, left + unit_width/2, top - extended_len);
             line(left + (unit_width/4), top - extended_len, right - unit_width/4, top - extended_len);
         } else {
-            line(left + (unit_width/2), top, left + unit_width/2, top - contracted_len);
-            line(left + (unit_width/4), top - contracted_len, right - unit_width/4, top - contracted_len);
+            if(connections[0] == 1) {
+                line(left + (unit_width/2), top, left + unit_width/2, top - contracted_len);
+                line(left + (unit_width/4), top - contracted_len, right - unit_width/4, top - contracted_len);
+            } else {
+                line(left + (unit_width/2), top, left + unit_width/2, top - contracted_len + disconnect);
+                line(left + (unit_width/4), top - contracted_len + disconnect, right - unit_width/4, top - contracted_len + disconnect);
+            }
         }
 
         //bottom
@@ -179,17 +186,27 @@ public class DrawUnit {
             line(left + (unit_width/2), top, left + unit_width/2, bottom + extended_len);
             line(left + (unit_width/4), bottom + extended_len, right - unit_width/4, bottom + extended_len);
         } else {
-            line(left + (unit_width/2), bottom, left + unit_width/2, bottom + contracted_len);
-            line(left + (unit_width/4), bottom + contracted_len, right - unit_width/4, bottom + contracted_len);
+            if(connections[2] == 1) {
+                line(left + (unit_width/2), bottom, left + unit_width/2, bottom + contracted_len);
+                line(left + (unit_width/4), bottom + contracted_len, right - unit_width/4, bottom + contracted_len);
+            } else {
+                line(left + (unit_width/2), bottom, left + unit_width/2, bottom + contracted_len - disconnect);
+                line(left + (unit_width/4), bottom + contracted_len - disconnect, right - unit_width/4, bottom + contracted_len - disconnect);
+            }
         }
 
         //left
         if(this.extensions[3] == 1) {
-            line(left, top + (unit_width/2), left - extended_len , top + unit_width/2 );
-            line(left - extended_len, top + (unit_width/4), left - extended_len, bottom - (unit_width/4));
+                line(left, top + (unit_width/2), left - extended_len , top + unit_width/2 );
+                line(left - extended_len, top + (unit_width/4), left - extended_len, bottom - (unit_width/4));
         } else {
-            line(left, top + (unit_width/2), left - contracted_len , top + unit_width/2 );
-            line(left - contracted_len, top + (unit_width/4), left - contracted_len, bottom - (unit_width/4));
+            if(connections[3] == 1) {
+                line(left, top + (unit_width/2), left - contracted_len , top + unit_width/2 );
+                line(left - contracted_len, top + (unit_width/4), left - contracted_len, bottom - (unit_width/4));
+            } else {
+                line(left, top + (unit_width/2), left - contracted_len + disconnect , top + unit_width/2 );
+                line(left - contracted_len + disconnect, top + (unit_width/4), left - contracted_len + disconnect, bottom - (unit_width/4));
+            }
         }
 
         //right
@@ -197,8 +214,13 @@ public class DrawUnit {
             line(right, top + (unit_width/2), right + extended_len , top + unit_width/2 );
             line(right + extended_len, top + (unit_width/4), right + extended_len, bottom - (unit_width/4));
         } else {
-            line(right, top + (unit_width/2), right + contracted_len , top + unit_width/2 );
-            line(right + contracted_len, top + (unit_width/4), right + contracted_len, bottom - (unit_width/4));
+            if(connections[1] == 1) {
+                line(right, top + (unit_width/2), right + contracted_len , top + unit_width/2 );
+                line(right + contracted_len, top + (unit_width/4), right + contracted_len, bottom - (unit_width/4));
+            } else {
+                line(right, top + (unit_width/2), right + contracted_len - disconnect, top + unit_width/2 );
+                line(right + contracted_len - disconnect, top + (unit_width/4), right + contracted_len - disconnect, bottom - (unit_width/4));
+            }
         }
 
         strokeWeight(1);
