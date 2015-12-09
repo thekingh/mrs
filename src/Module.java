@@ -183,6 +183,20 @@ public class Module extends Node {
         }
     }
 
+    public Edge addNeighbor(Module neighbor, int dir, boolean isExtended, boolean isConnected) {
+        boolean isVertical;
+        if (dir == 0 || dir == 2) { //NEEDSWORK is sort of poor form
+            isVertical = true;
+        } else {
+            isVertical = false;
+        }
+        Edge e = new Edge(this, neighbor, isExtended, isConnected, isVertical);
+        putEdge(dir, e);
+        neighbor.putEdge((dir + 2) % 4, e);
+        addExteriorSubEdges(neighbor, dir, isExtended, isConnected);
+        return e;
+    }
+
     /**
      * Adds all the smaller arms given two modules with an edge between them.
      * Note that there must exist an edge between them otherwise this method
@@ -192,17 +206,12 @@ public class Module extends Node {
      *
      * @return              Set<Edge> of edges added
      */
-    public Set<Edge> addExteriorSubEdges(Module neighbor) {
-        boolean isExtended;
-        boolean isConnected;
+    private Set<Edge> addExteriorSubEdges(Module neighbor, int dir,
+        boolean isExtended, boolean isConnected) {
+
         Set<Edge> toReturn = new HashSet<Edge>();
         Edge e;
 
-        int dir = findNeighborDirection(neighbor);
-        if (dir == -1) {
-            //TODO THROW ERROW
-           System.out.println("HALP WE BROKE IT");
-        }
         e = getEdge(dir);
 
         List<Unit> thisSideUnits     = getSideUnits(dir);
@@ -211,8 +220,6 @@ public class Module extends Node {
         Unit n;
         Edge newe;
 
-        isExtended = e.isExtended();
-        isConnected = e.isConnected();
         for (int i = 0; i < size; i++) {
             u = thisSideUnits.get(i);
             n = neighborSideUnits.get(i);
@@ -220,6 +227,21 @@ public class Module extends Node {
             toReturn.add(newe);
         }
         return toReturn;
+    }
+
+    public List<Edge> getExteriorSubEdges(int dir) {
+        List<Edge> sideEdges = new ArrayList<Edge>();
+
+        List<Unit> sideUnits = getSideUnits(dir);
+        for (Unit u : sideUnits) {
+            sideEdges.add(u.getEdge(dir));
+        }
+
+        return sideEdges;
+    }
+
+    public List<Edge> getExteriorSubEdges(Module neighbor) {
+        return getExteriorSubEdges(this.findNeighborDirection(neighbor));
     }
 
 

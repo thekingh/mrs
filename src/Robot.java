@@ -42,13 +42,12 @@ public class Robot {
 
 		Module m1, m2;
 
+        // NEEDSWORK: could do with only nodes and getExteriorSubEdges in all direc
 		for (Edge mEdge : mEdges) {
 			m1 = (Module) mEdge.getN1();
 			m2 = (Module) mEdge.getN2();
 
-			// NEEDSWORK: adding all the exterior edges here seems weird???
-			// maybe add when we connect modules?
-			uEdges.addAll(m1.addExteriorSubEdges(m2));
+			uEdges.addAll(m1.getExteriorSubEdges(m2));
 		}
 
 		Module m;
@@ -192,7 +191,7 @@ public class Robot {
     }
 
     public void drawUnit() {
-        delay(1000);
+        delay(500);
         System.out.println(unitGraph.toGrid());
     }
 

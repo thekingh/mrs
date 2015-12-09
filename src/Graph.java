@@ -53,6 +53,13 @@ public class Graph {
     //     edges.add(e);
     // }
 
+    public void addNeighbor(Node n, Node neighbor, int dir, boolean isExtended, 
+        boolean isConnected) {
+
+        Edge e = n.addNeighbor(neighbor, dir, isExtended, isConnected);
+        edges.add(e);
+    }
+
     public void addEdge(Node n1, Node n2, int dir) {
         addEdge(n1, n2, dir, false, true);
     }
