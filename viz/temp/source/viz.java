@@ -14,7 +14,7 @@ import java.io.IOException;
 
 public class viz extends PApplet {
 
-//String data_path = "states/state";
+String data_path = "states/state";
 
 ArrayList<ArrayList<DrawUnit>> states;
 /*ArrayList<DrawUnit> units;*/
@@ -147,27 +147,39 @@ public class DrawUnit {
 
         // do some maths, center on axes
         int block_size =  width / num_w;
-        int unit_width = block_size/2;
+/*        int unit_width = 2 * block_size/3;*/
+/*        int extended_len   = 2 *block_size/3;*/
+/*        int contracted_len = block_size/6;*/
+/*        int disconnect     = block_size/12;*/
 
-        int extended_len   = 3 *unit_width/2;
-        int contracted_len = unit_width/2;
-        int disconnect = unit_width/4;
-/*        int extended_len   = unit_width/2;*/
-/*        int contracted_len = unit_width/8;*/
+        
+        double ratio = 4.0f/5;
+        int unit_width     = (int)((double)block_size * ratio);
+        println("uw: " + unit_width);
+        int margin         = (int)(((1 -  ratio)/2) * (double)block_size);
+        println("m: " + margin);
 
-        int left   =  (block_size * (num_w/2 + x)) + unit_width/2;
-        int top    =  (block_size * (num_h/2 - y)) + unit_width/2;
-        int right  =  left + unit_width;
-        int bottom =  top  + unit_width;
+        int extended_len   = margin + block_size/2;
+        int contracted_len = margin;
+        int disconnect     = margin/2;
+
+        int left   = ((block_size * (num_w/2 + x)) + (block_size - unit_width)/2);
+        int top    = ((block_size * (num_h/2 - y)) + (block_size - unit_width)/2);
+        int right  = (left + unit_width);
+        int bottom = (top  + unit_width);
         
 
+        // draw rectangle, red for right now
+        fill(51, 204, 255);
+        rect(left, top, (int)unit_width, (int)unit_width);
+        fill(255, 255, 255);
 
         //draw arms LOL
         //TODO this code is ugly and I hate it 
 
         //top
         stroke(0, 255);
-        strokeWeight(2);
+        strokeWeight(1.5f);
         if(this.extensions[0] == 1) {
             line(left + (unit_width/2), top, left + unit_width/2, top - extended_len);
             line(left + (unit_width/4), top - extended_len, right - unit_width/4, top - extended_len);
@@ -225,10 +237,6 @@ public class DrawUnit {
 
         strokeWeight(1);
 
-        // draw rectangle, red for right now
-        fill(255, 0, 0);
-        rect(left, top, (width / num_w)/2, (height / num_h)/2);
-        fill(255, 255, 255);
 
     }
 
