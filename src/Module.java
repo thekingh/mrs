@@ -276,11 +276,8 @@ public class Module extends Node {
 
     // TODO: add checks to make sure edge exists
     public void expandExteriorEdges(int dir) {
-        List<Unit> sideUnits = getSideUnits(dir);
-
-        for (Unit u : sideUnits) {
-            Edge sideEdge = u.getEdge(dir);
-            sideEdge.setIsExtended(true);
+        for (Edge e : getExteriorSubEdges(dir)) {
+            e.setIsExtended(true);
         }
     }
 
