@@ -17,11 +17,15 @@ public class Robot {
 	private boolean isModuleGridCurrent;
 	private boolean isUnitGridCurrent;
 
+    private int stateCount;
+
 
 	public Robot(Graph moduleGraph) {
 		// what to use?
 		this.moduleGraph = moduleGraph;
         generateUnitGraph();
+
+        stateCount = 0;
 	}
 
     public Graph getModuleGraph() {
@@ -194,6 +198,7 @@ public class Robot {
     public void drawUnit() {
         delay(1000);
         System.out.println(unitGraph.toGrid());
+        exportToFile("states/state" + (stateCount++) + ".rbt");
     }
 
     private void delay(int millis) {
