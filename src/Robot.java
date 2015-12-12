@@ -70,6 +70,11 @@ public class Robot {
     }
 
 
+    /**
+     * performs half a contracted slide.
+     * NOTE: This redefines Aloupis' contracted slide by only moving the bottom
+     * layer of the sliding moduel
+     */
     public void performContractedHalfSlide(Module m, Unit u1, Unit u2, Unit u3,
                                  int dir, int neighborDir, int step) {
         List <Unit> mSide = m.getSideUnits(neighborDir);
@@ -86,6 +91,7 @@ public class Robot {
                 leadingEdge = leading.getEdge(neighborDir);
                 unitGraph.removeEdge(leadingEdge);
                 unitGraph.addEdge(trailing, u1, neighborDir);
+                leading.disconnect(opposite(neighborDir));
                 break;
             case 1:
                 m.expandInteriorEdges(dir % 2 == 0); //true if vertical 0, 2
@@ -100,6 +106,7 @@ public class Robot {
                 break;
             case 4:
                 unitGraph.addEdge(trailing, u2, neighborDir);
+                leading.connect(opposite(neighborDir));
                 break;
             default:
                 System.out.println("OMG");
