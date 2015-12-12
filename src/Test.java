@@ -78,31 +78,84 @@ public class Test {
         r.drawUnit();
         r.slide(m1, 1, true);
     }
+
+
+    private static boolean[][] orientArray(boolean[][] in) {
+        return mirrorArray(invertArray(in));
+    }
+
+    private static boolean[][] invertArray(boolean[][] in) {
+        int w = in.length;
+        int h = in[0].length;
+        boolean [][] out =  new boolean[h][w];
+        for (int i = 0; i < w; i++) {
+            for (int j = 0; j < h; j++) {
+                out[j][i] = in[i][j];
+            }
+        }
+        return out;
+    }
+    private static boolean[][] mirrorArray(boolean[][] in) {
+        int w = in.length;
+        int h = in[0].length;
+        boolean [][] out =  new boolean[w][h];
+        for (int i = 0; i < w; i++) {
+            for (int j = 0; j < h; j++) {
+                out[i][j] = in[i][h - j - 1];
+            }
+        }
+        return out;
+    }
+
     public static void slideTest1() {
         System.out.println("------------------------\n"
                          + "sliding module right\n"
                          + "------------------------");
-		Module m1 = new Module();
-		Module m2 = new Module();
-		Module m3 = new Module();
+        boolean[][] moduleBools = {{true, false, true},
+                                   {true, true, true}};
 
-		Edge e1_2 = m1.addNeighbor(m2, 2, false, true);
-		Edge e2_3 = m2.addNeighbor(m3, 1, false, true);
-
-		Set<Node> ms = new HashSet<Node>();
-        ms.add(m1);
-        ms.add(m2);
-        ms.add(m3);
-
-		Set<Edge> es = new HashSet<Edge>();
-		es.add(e1_2);
-		es.add(e2_3);
-		Graph moduleGraph = new Graph(ms, es);
-		Robot r = new Robot(moduleGraph);
-        //Robot r = Creator.produceLRobot();
+        
+		Robot r = new Robot(orientArray(moduleBools), false);
         r.drawUnit();
-        r.slide(m1, 1, false);
+        Module[][] modules = r.toModuleArray();
+        int w = modules.length;
+        int h = modules[0].length;
+        for (int j = h - 1; j >= 0; j--) {
+            for (int i = 0; i < w; i++) {
+                if (modules[i][j] == null) {
+                    System.out.print(" ");
+                } else {
+                    System.out.print(modules[i][j]);
+                }
+            }
+            System.out.println();
+        }
+        Module toSlide = modules[0][1];
+        r.slide(toSlide, 1, false);
+
     }
+        
+
+/*		Module m1 = new Module();*/
+/*		Module m2 = new Module();*/
+/*		Module m3 = new Module();*/
+/**/
+/*		Edge e1_2 = m1.addNeighbor(m2, 2, false, true);*/
+/*		Edge e2_3 = m2.addNeighbor(m3, 1, false, true);*/
+/**/
+/*		Set<Node> ms = new HashSet<Node>();*/
+/*        ms.add(m1);*/
+/*        ms.add(m2);*/
+/*        ms.add(m3);*/
+/**/
+/*		Set<Edge> es = new HashSet<Edge>();*/
+/*		es.add(e1_2);*/
+/*		es.add(e2_3);*/
+/*		Graph moduleGraph = new Graph(ms, es);*/
+/*		Robot r = new Robot(moduleGraph);*/
+/*        //Robot r = Creator.produceLRobot();*/
+/*        r.drawUnit();*/
+/*        r.slide(m1, 1, false);*/
     public static void slideTest0() {
         System.out.println("------------------------\n"
                          + "sliding module up\n"
@@ -199,8 +252,8 @@ public class Test {
 
 	public static void main(String[] args) {
         //printTest();
-        slideCarryTest1(false);
+/*        slideCarryTest1(false);*/
 //        slideCarryTest1(true);
-//        slideTest1();
+        slideTest1();
 	}
 }

@@ -19,6 +19,47 @@ public class Robot {
 
     private int stateCount;
 
+    public Robot(boolean[][] moduleBools, boolean expanded) {
+        //TODO check me
+        int w = moduleBools.length;
+        int h = moduleBools[0].length;
+
+        Module[][] modules = new Module[w][h];
+        Set<Node> moduleSet = new HashSet<Node>();
+        Set<Edge> edgeSet = new HashSet<Edge>();
+
+        for (int i = 0; i < w; i++) {
+            for (int j = 0; j < h; j++) {
+                if (moduleBools[i][j]) {
+                    modules[i][j] = new Module(expanded);
+                    moduleSet.add(modules[i][j]);
+                }
+            }
+        }
+
+        for (int i = 0; i < w; i++) {
+            for (int j = 0; j < h; j++) {
+                if (moduleBools[i][j]) {
+                    for (int dir = 0; dir < 4; dir++) {
+                        Coordinate c = new Coordinate(i, j);
+                        Coordinate r = c.calcRelativeLoc(dir);
+                        if (r.inBounds(w, h) && moduleBools[r.x()][r.y()]) {
+                            Edge e = modules[i][j].addNeighbor(modules[r.x()][r.y()], dir, expanded, true);
+                            edgeSet.add(e);
+                        }
+                    }
+                }
+            }
+        }
+
+        Graph g = new Graph(moduleSet, edgeSet);
+        this.moduleGraph = g;
+        generateUnitGraph();
+
+        stateCount = 0;
+    }
+
+
 
 	public Robot(Graph moduleGraph) {
 		// what to use?
@@ -35,6 +76,22 @@ public class Robot {
 	public Graph getUnitGraph() {
 		return unitGraph;
 	}
+
+    public Module[][] toModuleArray() {
+        Object[][] grid = moduleGraph.toGrid(true).getGrid();
+        int w = grid.length;
+        int h = grid[0].length;
+
+        Module[][] modules = new Module[w][h];
+
+        for (int i = 0; i < w; i++) {
+            for (int j = 0; j < h; j++) {
+                modules[i][j] = (Module) grid[i][j];
+            }
+        }
+
+        return modules;
+    }
 
 	// generates unit graph from module graph
 	// NEEDSWORK: want to return unit graph? record status?

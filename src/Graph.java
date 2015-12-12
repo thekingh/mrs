@@ -113,7 +113,7 @@ public class Graph {
      * @param V         Set of Nodes that have alread been processed
      * @param head      Index of the queue Q's head
      */
-    private void addNeighborsToQueue(List<GridObject> Q, List<GridObject> E, Set<Node> V, int head) {
+    private void addNeighborsToQueue(List<GridObject> Q, List<GridObject> E, Set<Node> V, int head, boolean useExtension) {
         GridObject curr = Q.get(head);
         Node currNode = (Node) curr.o();
         Coordinate currCoord = curr.c();
@@ -133,7 +133,7 @@ public class Graph {
 
             // Determine if there is an extended arm in given direction
             // and add to edge list
-            if (e.isExtended()) { 
+            if (!useExtension && e.isExtended()) { 
                 Coordinate ec = calcRelativeLocation(currCoord, dir, 0); 
                 GridObject eg = new GridObject(e, ec);
                 E.add(eg);
@@ -209,12 +209,16 @@ public class Graph {
         return toReturn;
     }
 
+	public Grid toGrid() {
+        return toGrid(false);
+    }
+
     /** 
      * Transform a graph into a Grid (Cartesian space)
      *
      * @return          The Cartesian respresentation of a Graph
      */
-	public Grid toGrid() {
+	public Grid toGrid(boolean useExtension) {
         if (nodes.isEmpty()) { //return default/empty grid
             return new Grid();
         }
@@ -232,7 +236,7 @@ public class Graph {
         V.add(start);
         while (i < Q.size()) {
             //GridObject curr = Q.get(i);
-            addNeighborsToQueue(Q, E, V, i);
+            addNeighborsToQueue(Q, E, V, i, useExtension);
             i++;
         }
         List<GridObject> all = new ArrayList<GridObject>();

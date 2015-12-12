@@ -288,7 +288,7 @@ public class Module extends Node {
 
 	// NEEDSWORK: print all of the units?
 	public String toString() {
-		//return "M";
-		return String.format("%d ", getId());
+		return "M";
+/*		return String.format("%d ", getId());*/
 	}
 }
