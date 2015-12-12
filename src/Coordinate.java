@@ -25,6 +25,13 @@ public class Coordinate {
 		return String.format("(%d, %d)", x(), y());
 	}
 
+    public boolean inBounds(int w, int h) {
+        return (x() >= 0) && (x() < w) && (y() >= 0) && (y() < h);
+    }
+
+    public Coordinate calcRelativeLoc(int dir) {
+        calcRelativeLoc(dir, 0);
+    }
     /**
      * Calculates a new coordinate relative to an input coordinate
      * Note that coordinate system is x pos is right and y pos is up
