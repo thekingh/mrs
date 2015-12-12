@@ -246,7 +246,7 @@ public class Robot {
     public void drawUnit() {
         delay(500);
         System.out.println(unitGraph.toGrid());
-        exportToFile("states/state" + (stateCount++) + ".rbt");
+        exportToFile("../viz/states/state" + (stateCount++) + ".rbt");
     }
 
     private void delay(int millis) {
