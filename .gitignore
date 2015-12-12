@@ -4,4 +4,5 @@ temp/*
 *.class
 src/src/*.class
 doc/
+*.rbt
 

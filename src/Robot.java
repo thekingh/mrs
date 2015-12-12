@@ -94,7 +94,7 @@ public class Robot {
                 leading.disconnect(opposite(neighborDir));
                 break;
             case 1:
-                m.expandInteriorEdges(dir % 2 == 0); //true if vertical 0, 2
+                trailing.extend(dir);
                 break;
             case 2:
                 trailingEdge = trailing.getEdge(neighborDir);
@@ -102,7 +102,7 @@ public class Robot {
                 unitGraph.removeEdge(trailingEdge);
                 break;
             case 3:
-                m.contractInteriorEdges(dir % 2 == 0); //true if vertical 0, 2
+                trailing.contract(dir);
                 break;
             case 4:
                 unitGraph.addEdge(trailing, u2, neighborDir);
