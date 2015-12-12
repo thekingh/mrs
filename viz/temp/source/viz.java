@@ -40,6 +40,7 @@ public void readData() {
         String[] lines = loadStrings(path); 
         ArrayList<DrawUnit> units = new ArrayList<DrawUnit>();
 
+        // TODO get rid of \n at end or don't read it at all
         for(int i = 1; i < lines.length; i++) {
             String[] robotString = split(lines[i], ",");
 
@@ -100,15 +101,20 @@ public void keyPressed() {
     if(key == 'l' && curState < stateCount-1) {
         curState++;
     }
+}
 
-
-
+public void drawFrameNumber() {
+    String s = "[" + curState + "/" + stateCount + "]";
+    textAlign(RIGHT);
+    fill(0);
+    text(s, 0, .95f * height, width, height);
 }
 
 public void draw() {
     background(200, 200, 200);
     drawGrid();
     drawRobots(curState);
+    drawFrameNumber();
 }
 public class DrawUnit {
     
@@ -143,107 +149,66 @@ public class DrawUnit {
         extensions[3]  = e3;
     }
 
-    public void render() {
+    public void drawArm(int dir, int ext, int con) {
 
-        // do some maths, center on axes
+        double ratio = 4.0f/5;
+
         int block_size =  width / num_w;
-/*        int unit_width = 2 * block_size/3;*/
-/*        int extended_len   = 2 *block_size/3;*/
-/*        int contracted_len = block_size/6;*/
-/*        int disconnect     = block_size/12;*/
+        int unit_width     = (int)((double)block_size * ratio);
 
-        
+        int margin         = (int)(((1 -  ratio)/2) * (double)block_size);
+        int arm_len        = (extensions[dir] == 1) ? (margin + block_size/2) : (margin);
+        int disconnect     = (connections[dir] == 1) ? 0 : margin/2;
+
+        int left   = ((block_size * (num_w/2 + x)) + (block_size - unit_width)/2);
+        int top    = ((block_size * (num_h/2 - y)) + (block_size - unit_width)/2);
+        int right  = (left + unit_width);
+        int bottom = (top  + unit_width);
+
+        stroke(0, 255);
+        strokeWeight(1);
+    
+        if(dir == 0) {
+            line(left + (unit_width/2), top, left + unit_width/2, top - arm_len + disconnect);
+            line(left + (unit_width/4), top - arm_len + disconnect, right - unit_width/4, top - arm_len + disconnect);
+        } else if(dir == 2) {
+            line(left + (unit_width/2), bottom, left + unit_width/2, bottom + arm_len - disconnect);
+            line(left + (unit_width/4), bottom + arm_len - disconnect, right - unit_width/4, bottom + arm_len - disconnect);
+        } else if (dir == 3 ) {
+            line(left, top + (unit_width/2), left - arm_len + disconnect , top + unit_width/2 );
+            line(left - arm_len + disconnect, top + (unit_width/4), left - arm_len + disconnect, bottom - (unit_width/4));
+        } else {
+            line(right, top + (unit_width/2), right + arm_len - disconnect, top + unit_width/2 );
+            line(right + arm_len - disconnect, top + (unit_width/4), right + arm_len - disconnect, bottom - (unit_width/4));
+        }
+    }
+
+    public void drawUnit() {
+
+        int block_size =  width / num_w;
         double ratio = 4.0f/5;
         int unit_width     = (int)((double)block_size * ratio);
-        println("uw: " + unit_width);
-        int margin         = (int)(((1 -  ratio)/2) * (double)block_size);
-        println("m: " + margin);
-
-        int extended_len   = margin + block_size/2;
-        int contracted_len = margin;
-        int disconnect     = margin/2;
 
         int left   = ((block_size * (num_w/2 + x)) + (block_size - unit_width)/2);
         int top    = ((block_size * (num_h/2 - y)) + (block_size - unit_width)/2);
         int right  = (left + unit_width);
         int bottom = (top  + unit_width);
         
-
-        // draw rectangle, red for right now
         fill(51, 204, 255);
-        rect(left, top, (int)unit_width, (int)unit_width);
+        stroke(1);
+        rect(left, top, unit_width, unit_width);
         fill(255, 255, 255);
-
-        //draw arms LOL
-        //TODO this code is ugly and I hate it 
-
-        //top
-        stroke(0, 255);
-        strokeWeight(1.5f);
-        if(this.extensions[0] == 1) {
-            line(left + (unit_width/2), top, left + unit_width/2, top - extended_len);
-            line(left + (unit_width/4), top - extended_len, right - unit_width/4, top - extended_len);
-        } else {
-            if(connections[0] == 1) {
-                line(left + (unit_width/2), top, left + unit_width/2, top - contracted_len);
-                line(left + (unit_width/4), top - contracted_len, right - unit_width/4, top - contracted_len);
-            } else {
-                line(left + (unit_width/2), top, left + unit_width/2, top - contracted_len + disconnect);
-                line(left + (unit_width/4), top - contracted_len + disconnect, right - unit_width/4, top - contracted_len + disconnect);
-            }
-        }
-
-        //bottom
-        if(this.extensions[2] == 1) {
-            line(left + (unit_width/2), top, left + unit_width/2, bottom + extended_len);
-            line(left + (unit_width/4), bottom + extended_len, right - unit_width/4, bottom + extended_len);
-        } else {
-            if(connections[2] == 1) {
-                line(left + (unit_width/2), bottom, left + unit_width/2, bottom + contracted_len);
-                line(left + (unit_width/4), bottom + contracted_len, right - unit_width/4, bottom + contracted_len);
-            } else {
-                line(left + (unit_width/2), bottom, left + unit_width/2, bottom + contracted_len - disconnect);
-                line(left + (unit_width/4), bottom + contracted_len - disconnect, right - unit_width/4, bottom + contracted_len - disconnect);
-            }
-        }
-
-        //left
-        if(this.extensions[3] == 1) {
-                line(left, top + (unit_width/2), left - extended_len , top + unit_width/2 );
-                line(left - extended_len, top + (unit_width/4), left - extended_len, bottom - (unit_width/4));
-        } else {
-            if(connections[3] == 1) {
-                line(left, top + (unit_width/2), left - contracted_len , top + unit_width/2 );
-                line(left - contracted_len, top + (unit_width/4), left - contracted_len, bottom - (unit_width/4));
-            } else {
-                line(left, top + (unit_width/2), left - contracted_len + disconnect , top + unit_width/2 );
-                line(left - contracted_len + disconnect, top + (unit_width/4), left - contracted_len + disconnect, bottom - (unit_width/4));
-            }
-        }
-
-        //right
-        if(this.extensions[1] == 1) {
-            line(right, top + (unit_width/2), right + extended_len , top + unit_width/2 );
-            line(right + extended_len, top + (unit_width/4), right + extended_len, bottom - (unit_width/4));
-        } else {
-            if(connections[1] == 1) {
-                line(right, top + (unit_width/2), right + contracted_len , top + unit_width/2 );
-                line(right + contracted_len, top + (unit_width/4), right + contracted_len, bottom - (unit_width/4));
-            } else {
-                line(right, top + (unit_width/2), right + contracted_len - disconnect, top + unit_width/2 );
-                line(right + contracted_len - disconnect, top + (unit_width/4), right + contracted_len - disconnect, bottom - (unit_width/4));
-            }
-        }
-
-        strokeWeight(1);
-
-
     }
 
+    public void render() {
 
+        drawUnit();
 
+        for(int dir = 0; dir < 4; dir++) {
+            drawArm(dir, extensions[dir], connections[dir]);
+        }
 
-
+    }
 }
   static public void main(String[] passedArgs) {
     String[] appletArgs = new String[] { "viz" };

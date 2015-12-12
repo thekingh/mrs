@@ -1,7 +1,6 @@
 String data_path = "states/state";
 
 ArrayList<ArrayList<DrawUnit>> states;
-/*ArrayList<DrawUnit> units;*/
 int stateCount = 0;
 int num_w = 10;
 int num_h = 10;
@@ -24,6 +23,7 @@ void readData() {
         String[] lines = loadStrings(path); 
         ArrayList<DrawUnit> units = new ArrayList<DrawUnit>();
 
+        // TODO get rid of \n at end or don't read it at all
         for(int i = 1; i < lines.length; i++) {
             String[] robotString = split(lines[i], ",");
 
@@ -84,13 +84,18 @@ void keyPressed() {
     if(key == 'l' && curState < stateCount-1) {
         curState++;
     }
+}
 
-
-
+void drawFrameNumber() {
+    String s = "[" + curState + "/" + stateCount + "]";
+    textAlign(RIGHT);
+    fill(0);
+    text(s, 0, .95 * height, width, height);
 }
 
 void draw() {
     background(200, 200, 200);
     drawGrid();
     drawRobots(curState);
+    drawFrameNumber();
 }
