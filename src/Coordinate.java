@@ -3,22 +3,26 @@ package src;
 import java.lang.Math;
 
 public class Coordinate {
-	private final Pair<Integer, Integer> coord;
+    private final int x;
+    private final int y;
 
+    // TODO do we use this constructor?
 	public Coordinate(Pair<Integer, Integer> coord) {
-		this.coord = coord;
+        this.x = coord.a;
+        this.y = coord.b;
 	}
 
 	public Coordinate(int x, int y) {
-		this.coord = new Pair<Integer, Integer>(x, y);
+        this.x = x;
+        this.y = y;
 	}
 
 	public int x() {
-		return coord.a;
+        return x;
 	}
 
 	public int y() {
-		return coord.b;
+        return y;
 	}
 
 	public String toString() {
@@ -30,7 +34,7 @@ public class Coordinate {
     }
 
     public Coordinate calcRelativeLoc(int dir) {
-        calcRelativeLoc(dir, 0);
+        return calcRelativeLoc(dir, 0);
     }
     /**
      * Calculates a new coordinate relative to an input coordinate
