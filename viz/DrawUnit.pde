@@ -32,8 +32,10 @@ public class DrawUnit {
 
     public void drawArm(int dir, int ext, int con) {
 
+        // how much of block length the unit width is
         double ratio = 4.0/5;
 
+        // calculate size variables
         int block_size =  width / num_w;
         int unit_width     = (int)((double)block_size * ratio);
 
@@ -41,6 +43,7 @@ public class DrawUnit {
         int arm_len    = (extensions[dir]  == 1) ? (margin + block_size/2) : (margin);
         int disconnect = (connections[dir] == 1) ? (0) : (margin/2);
 
+        // unit boundaries
         int left   = ((block_size * (num_w/2 + x)) + (block_size - unit_width)/2);
         int top    = ((block_size * (num_h/2 - y)) + (block_size - unit_width)/2);
         int right  = (left + unit_width);
@@ -49,6 +52,7 @@ public class DrawUnit {
         stroke(0, 255);
         strokeWeight(1);
     
+        // draw arm in given direction (arm + "hand")
         if(dir == 0) {
             line(left + (unit_width/2), top, left + unit_width/2, top - arm_len + disconnect);
             line(left + (unit_width/4), top - arm_len + disconnect, right - unit_width/4, top - arm_len + disconnect);
@@ -66,16 +70,18 @@ public class DrawUnit {
 
     public void drawUnit() {
 
+        // calculate sizes
         int block_size =  width / num_w;
         double ratio = 4.0/5;
         int unit_width     = (int)((double)block_size * ratio);
 
+        // unit boundaries
         int left   = ((block_size * (num_w/2 + x)) + (block_size - unit_width)/2);
         int top    = ((block_size * (num_h/2 - y)) + (block_size - unit_width)/2);
         int right  = (left + unit_width);
         int bottom = (top  + unit_width);
         
-        fill(51, 204, 255);
+        fill(51, 204, 255); // pretty blue
         stroke(1);
         rect(left, top, unit_width, unit_width);
         fill(255, 255, 255);
@@ -83,8 +89,10 @@ public class DrawUnit {
 
     public void render() {
 
+        // draw unit body
         drawUnit();
 
+        // draw unit arms
         for(int dir = 0; dir < 4; dir++) {
             drawArm(dir, extensions[dir], connections[dir]);
         }
