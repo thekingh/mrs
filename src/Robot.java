@@ -66,14 +66,13 @@ public class Robot {
     }
 
 
-    public void performHalfSlide(Module m, Unit u1, Unit u2, Unit u3,
+    public void performContractedHalfSlide(Module m, Unit u1, Unit u2, Unit u3,
                                  int dir, int neighborDir, int step) {
         List <Unit> mSide = m.getSideUnits(neighborDir);
         Unit trailing = m.getUnitInQuadrant(neighborDir, opposite(dir));
         Unit leading  = m.getUnitInQuadrant(neighborDir, dir);
         Edge leadingEdge;
         Edge trailingEdge;
-        
         
         //TODO REMOVE
         step = step % 5;
@@ -103,6 +102,57 @@ public class Robot {
                 break;
         }
     }
+    public void performExpandedHalfSlide(Module m, Unit u1, Unit u2, Unit u3,
+                                 int dir, int neighborDir, int step) {
+        List <Unit> mSide = m.getSideUnits(neighborDir);
+        Unit trailing = m.getUnitInQuadrant(neighborDir, opposite(dir));
+        Unit leading  = m.getUnitInQuadrant(neighborDir, dir);
+        Edge leadingEdge;
+        Edge trailingEdge;
+        //TODO REMOVE
+        step = step % 5;
+        switch(step) {
+            case 0:
+                unitGraph.removeEdge(leading.getEdge(neighborDir));
+                unitGraph.addEdge(trailing, u1, neighborDir, true);
+                u1.disconnect(neighborDir);
+                u2.disconnect(neighborDir);
+                u1.disconnect(opposite(dir));
+
+                break;
+            case 1:
+                u1.contract(dir);
+                u2.contract(dir);
+                break;
+            case 2:
+                trailingEdge = trailing.getEdge(neighborDir);
+                unitGraph.addEdge(leading, u3, neighborDir, true);
+                unitGraph.removeEdge(trailingEdge);
+                break;
+            case 3:
+                u1.extend(dir);
+                u2.extend(dir);
+                break;
+            case 4:
+                unitGraph.addEdge(trailing, u2, neighborDir, true);
+                u1.connect(neighborDir);
+                u2.connect(neighborDir);
+                u1.connect(opposite(dir));
+                break;
+            default:
+                System.out.println("OMG");
+                break;
+        }
+    }
+
+    public void performHalfSlide(Module m, Unit u1, Unit u2, Unit u3, int dir,
+                                 int neighborDir, int step, boolean expanded) {
+        if (expanded) {
+            performExpandedHalfSlide(m, u1, u2, u3, dir, neighborDir, step);
+        } else {
+            performContractedHalfSlide(m, u1, u2, u3, dir, neighborDir, step);
+        }
+    }
 
     /**
      * Performs slide operations in 10 steps.
@@ -117,7 +167,7 @@ public class Robot {
      * @param dir           Direction to slide module
      * @param neighborDir   Direction of neighboring modules to slide against
      */
-    private void performSlide(Module m, int dir, int neighborDir) {
+    private void performSlide(Module m, int dir, int neighborDir, boolean expanded) {
         Module m2 = (Module) m.getNeighbor(neighborDir);
         Module m3 = (Module) m2.getNeighbor(dir);
         print(String.format("neighbordir %d", neighborDir));
@@ -132,9 +182,9 @@ public class Robot {
         print(String.format("u4 %d", u4.getId()));
         for (int step = 0; step < 10; step++) {
             if (step < 5) {
-                performHalfSlide(m, u1, u2, u3, dir, neighborDir, step);
+                performHalfSlide(m, u1, u2, u3, dir, neighborDir, step, expanded);
             } else{ 
-                performHalfSlide(m, u2, u3, u4, dir, neighborDir, step);
+                performHalfSlide(m, u2, u3, u4, dir, neighborDir, step, expanded);
             }
             drawUnit();
         }
@@ -153,17 +203,16 @@ public class Robot {
      *
      * @return          Slide status, returns true if performed successfully
      */
-    public boolean slide(Module m, int dir) {
+    public boolean slide(Module m, int dir, boolean expanded) {
         int neighborDir = getNeighborDir(m, dir);
 
         if (neighborDir == -1) {
             System.out.println("ERROR SLIDE NOT POSSIBLE");
             return false;
         }
-        performSlide(m, dir, neighborDir);
+        performSlide(m, dir, neighborDir, expanded);
         return true;
     }
-
     /**
      * finds the neighbor direction to slide on if possible, returns -1 if
      * not possible to slide on either side.

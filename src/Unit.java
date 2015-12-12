@@ -40,7 +40,7 @@ public class Unit extends Node {
         Edge e;
         if (hasEdge(dir)) {
             e = getEdge(dir);
-            e.setIsExtended(true);
+            e.setIsExtended(false);
         }
     }
 

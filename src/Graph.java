@@ -64,6 +64,10 @@ public class Graph {
         addEdge(n1, n2, dir, false, true);
     }
 
+    public void addEdge(Node n1, Node n2, int dir, boolean isExtended) {
+        addEdge(n1, n2, dir, isExtended, true);
+    }
+
     // dir from 1 to 2
     // NEEDSWORK: default: maybe always contracted and connected
     public void addEdge(Node n1, Node n2, int dir, 
@@ -122,6 +126,10 @@ public class Graph {
 
             Edge e = currNode.getEdge(dir);
             final int ext;
+
+            if (!e.isConnected()) {
+                continue;
+            }
 
             // Determine if there is an extended arm in given direction
             // and add to edge list

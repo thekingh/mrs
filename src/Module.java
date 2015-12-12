@@ -13,7 +13,7 @@ import java.util.HashSet;
 
 public class Module extends Node {
 	// may want to take these in constructor for module
-	private static final boolean EXTENDED_EDGES = false;
+	private static boolean EXTENDED_EDGES = false;
 	private static final boolean CONNECTED_EDGES = true;
 
 	private static int size = 2;
@@ -22,10 +22,15 @@ public class Module extends Node {
     private final Set<Edge> verticalEdges;
 	private Unit[][] units;
 
+    public Module() {
+        this(false);
+    }
+
 	// TODO make constructor with isExtended, isConnected arguments
 	// then have this call it with defaults
-	public Module() {
+	public Module(boolean expanded) {
 		super();
+        EXTENDED_EDGES = expanded;
 		this.units = new Unit[size][size];
 
 		for (int i = 0; i < size; i++) {
