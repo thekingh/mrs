@@ -10,12 +10,13 @@ public abstract class Algorithm {
     private int step;
     private boolean success;
 
-    public Algorithm(boolean[][] in, boolean[][] out, int expanded) {
+    public Algorithm(boolean[][] in, boolean[][] out, boolean expanded) {
         inputRobot = in;
         outputRobot = out;
         currentState = new Robot(in, expanded);
         step = 0;
         success = false;
+        maxSteps = 5000;
     }
 
     /**
@@ -25,23 +26,21 @@ public abstract class Algorithm {
      * The algorithm for this function is as follows:
      *      determine which "part" of the combing algorithm we are on.
      */
-    public Set<Operation> determineParallelStep() {
+    protected abstract ParallelStep determineParallelStep();
 
-    }
-
-    public void performParallelStep(Set<Operation> stepsToPerform) {
+    public void performParallelStep(ParallelStep stepsToPerform) {
 
     }
 
     public void run() {
-        for (int i = 0; i < maxSteps; i++) {
-            Set<Operation> steps = determineParallelStep();
-            if (steps.isEmpty()) {
-                success = true;
-                break;
-            }
-            performParallelStep(steps);
-            step++;
-        }
+/*        for (int i = 0; i < maxSteps; i++) {*/
+/*            ParallelStep steps = determineParallelStep();*/
+/*            if (steps.peek() != null) {*/
+/*                success = true;*/
+/*                break;*/
+/*            }*/
+/*            performParallelStep(steps);*/
+/*            step++;*/
+/*        }*/
     }
 }

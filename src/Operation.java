@@ -18,7 +18,7 @@ public class Operation {
     private final int op;
     private final Module module;
     private final int dir;
-    public Operation(string op, Module module, int dir) {
+    public Operation(String op, Module module, int dir) {
         int opnum = -1;
         if (op.equals("slide")) {
             opnum = 0;

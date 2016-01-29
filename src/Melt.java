@@ -1,9 +1,12 @@
 package src;
 
+import java.util.Queue;
+import java.util.AbstractQueue;
+
 public class Melt extends Algorithm {
     private Wall wall;
     private final int dir;
-    private Queue<ParallelStep> stepQ;
+    private AbstractQueue<ParallelStep> stepQ;
 
 
 

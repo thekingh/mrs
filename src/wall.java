@@ -2,22 +2,19 @@ package src;
 
 public class Wall {
     private int level; // index of the wall
-    private boolean isVertical;
+    private boolean isDirVertical;
     private int dir;
-    private Set<Module> all;
-    private Set<Module> moving;
-
-    private boolean isVertical(dir) {
-        return ((dir % 2) == 0);
-    }
+    private Module[] wallModules;
+    private Boolean[] isMoving;
 
     /**
      * dir is the direction of melt, 
      */
     public Wall(Robot r, int dir) {
         this.dir = dir;
-        this.isVertical = isVertical(dir);
+        this.isDirVertical = ((dir % 2) == 0);
 
+        //2D arrays are width height
         Module[][] moduleArray = r.toModuleArray();
         //TODO check which is first
         int w = moduleArray.length;
@@ -26,22 +23,79 @@ public class Wall {
         //therefore we only need to look in the final column
         switch (dir) {
             case 0:
-                level = 
+                level = 0; 
                 break;
             case 1:
+                level = 0;
                 break;
             case 2:
-                level 
+                level = h - 1;
                 break;
             case 3:
+                level = w - 1;
                 break;
             default:
+                throw new RuntimeException("Invalid Wall direction");
                 break;
         }
+        populateWall();
+        markMoving();
+    }
 
-        
-        
-         
-     
+    /**
+     * 
+     */
+    private void markMoving() {
+        for (int i = 0; i < wallModules.length; i++) {
+            if (wallModules[i] == null) {
+                isMoving[i] = null;
+            }
+            isMoving[i] = wallModules[i].canSlide(dir);
+        }
+    }
+    /**
+     * updates level number dependent on direction of melt
+     */
+    private int updateLevel() {
+        switch (dir) {
+            case 0:
+            case 1:
+                level++;
+                break;
+            case 2:
+            case 3:
+                level--;
+                break;
+            default:
+                throw new RuntimeException("Invalid Wall direction");
+                break;
+        }
+    }
+    
+    private void populateWall() {
+        if (isDirVertical) {
+            for(int i = 0; i < w; i++ ) {
+                wallModules[i] = moduleArray[i][level];
+            }
+        } else {
+            for(int i = 0; i < h; i++ ) {
+                wallModules[i] = moduleArray[level][i];
+            }
+        }
+    }
+
+    public boolean update(Robot r) {
+        Module[][] moduleArray = r.toModuleArray();
+        int w = moduleArray.length;
+        int h = moduleArray[0].length;
+
+        int size = isVertical ? w : h;
+        wallModules = new Module[size];
+        isMoving = new Boolean[size];
+
+        level = updateLevel(); 
+
+        populateWall(); 
+        markMoving();
     }
 }

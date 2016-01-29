@@ -3,19 +3,20 @@ package src;
 
 public class Combing extends Algorithm {
     private Wall wall;
-    private isSlidVertical;
-    private isSlidHorizontal;
+    private boolean isSlidVertical;
+    private boolean isSlidHorizontal;
 
 
     /**
      * make wall
      */
     public Combing() {
+        super();
         wall = new Wall(r);
     }
 
     @Override
-    protected Set<Operation> determineParallelStep() {
+    protected ParallelStep determineParallelStep() {
         if (sliding) {
 
         }
