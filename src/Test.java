@@ -185,6 +185,7 @@ public class Test {
         //r.drawModule();
 
         //r.exportToFile("temp.rbt");
+        printModuleArray(r);
     }
     //slides in different direction (down)
     public static void slideTest2() {
@@ -250,10 +251,22 @@ public class Test {
         //r.exportToFile("temp.rbt");
     }
 
+    private static void printModuleArray(Robot r) {
+        System.out.println("Module Array");
+        Module[][] arr = r.toModuleArray();
+        for (int i = 0; i < arr.length; i++) {
+            for (int j = arr[i].length - 1; j >= 0; j--) {
+                System.out.print(arr[i][j]);
+                System.out.print(" ");
+            }
+            System.out.println();
+        }
+    }
+
 	public static void main(String[] args) {
         //printTest();
 /*        slideCarryTest1(false);*/
 //        slideCarryTest1(true);
-        slideTest1();
+        slideTest0();
 	}
 }
