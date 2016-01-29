@@ -188,6 +188,16 @@ public class Module extends Node {
         }
     }
 
+    /**
+     * Module can slide if neighbor in one of two adjacent directions of slide
+     * and if no module in direction of slide
+     */
+    public boolean canSlide(int dir) {
+        return (hasNeighborInDirection((dir + 1) % 4)
+               || hasNeighborInDirection((dir - 1) % 4))
+               && !hasNeighborInDirection(dir);
+    }
+
     public Edge addNeighbor(Module neighbor, int dir, boolean isExtended, boolean isConnected) {
         boolean isVertical;
         if (dir == 0 || dir == 2) { //NEEDSWORK is sort of poor form
