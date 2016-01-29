@@ -133,6 +133,8 @@ public class Graph {
 
             // Determine if there is an extended arm in given direction
             // and add to edge list
+
+            // NEEDSWORK: useExtension true if we are adding edges to grid?
             if (!useExtension && e.isExtended()) { 
                 Coordinate ec = calcRelativeLocation(currCoord, dir, 0); 
                 GridObject eg = new GridObject(e, ec);
