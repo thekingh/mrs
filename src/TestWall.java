@@ -4,7 +4,7 @@ public class TestWall {
     public TestHelper t;
 
     public TestWall() {
-        t = new TestHelper();
+/*        t = new TestHelper();*/
     }
 
     public static void makeWallTest1() {
@@ -13,9 +13,9 @@ public class TestWall {
         boolean[][] moduleBools = {{true, false, true},
                                    {true, true, true}};
 
-        r.drawUnit();
         
-        Robot r = new Robot(t.orientArray(moduleBools), false);
+        Robot r = new Robot(TestHelper.orientArray(moduleBools), false);
+        r.drawUnit();
         Wall w = new Wall(r, 2);
     }
 

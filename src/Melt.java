@@ -1,19 +1,20 @@
 package src;
 
 import java.util.Queue;
-import java.util.AbstractQueue;
+import java.util.LinkedList;
 
 public class Melt extends Algorithm {
     private Wall wall;
     private final int dir;
-    private AbstractQueue<ParallelStep> stepQ;
+    /* TODO made them all linkedlist, should be fine, has all same funcs */
+    private LinkedList<ParallelStep> stepQ;
 
 
 
     public Melt(int dir) {
-        wall = new Wall(r, dir);
+        wall = new Wall(currentState, dir);
         this.dir = dir;
-        stepQ = new Queue<ParallelStep>();
+        stepQ = new LinkedList<ParallelStep>();
         
     }
 

@@ -7,6 +7,9 @@ public class Wall {
     private Module[] wallModules;
     private Boolean[] isMoving;
 
+    /* TODO different names? redeclare vs class vars?*/
+    private int w;
+    private int h;
     /**
      * dir is the direction of melt, 
      */
@@ -17,8 +20,8 @@ public class Wall {
         //2D arrays are width height
         Module[][] moduleArray = r.toModuleArray();
         //TODO check which is first
-        int w = moduleArray.length;
-        int h = moduleArray[0].length;
+        w = moduleArray.length;
+        h = moduleArray[0].length;
         //there will always be something in every row and every column
         //therefore we only need to look in the final column
         switch (dir) {
@@ -35,10 +38,10 @@ public class Wall {
                 level = w - 1;
                 break;
             default:
-                throw new RuntimeException("Invalid Wall direction");
+/*                throw new RuntimeException("Invalid Wall direction");*/
                 break;
         }
-        populateWall();
+        populateWall(moduleArray);
         markMoving();
     }
 
@@ -67,12 +70,14 @@ public class Wall {
                 level--;
                 break;
             default:
-                throw new RuntimeException("Invalid Wall direction");
+/*                throw new RuntimeException("Invalid Wall direction");*/
                 break;
         }
+
+        return level;
     }
     
-    private void populateWall() {
+    private void populateWall(Module[][] moduleArray) {
         if (isDirVertical) {
             for(int i = 0; i < w; i++ ) {
                 wallModules[i] = moduleArray[i][level];
@@ -86,16 +91,20 @@ public class Wall {
 
     public boolean update(Robot r) {
         Module[][] moduleArray = r.toModuleArray();
-        int w = moduleArray.length;
-        int h = moduleArray[0].length;
+/*        int w = moduleArray.length;*/
+/*        int h = moduleArray[0].length;*/
 
-        int size = isVertical ? w : h;
+        int size = isDirVertical ? w : h;
         wallModules = new Module[size];
         isMoving = new Boolean[size];
 
         level = updateLevel(); 
 
-        populateWall(); 
+        populateWall(moduleArray); 
         markMoving();
+        
+        /* TODO when to mark false */
+
+        return true;
     }
 }

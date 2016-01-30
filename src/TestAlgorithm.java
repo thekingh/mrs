@@ -60,7 +60,8 @@ public class TestAlgorithm {
         boolean[][] in  = getInputRobot();
         boolean[][] out = getOutputRobot();
 
-        Algorithm a = new Algorithm(in, out);
+        /* TODO we made it abstract, can't instantiate one now */
+/*        Algorithm a = new Algorithm(in, out);*/
     }
 }
 

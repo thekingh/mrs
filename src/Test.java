@@ -89,7 +89,7 @@ public class Test {
                                    {true, true, true}};
 
         
-		Robot r = new Robot(orientArray(moduleBools), false);
+		Robot r = new Robot(TestHelper.orientArray(moduleBools), false);
         r.drawUnit();
         Module[][] modules = r.toModuleArray();
         int w = modules.length;

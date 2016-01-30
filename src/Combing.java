@@ -12,14 +12,22 @@ public class Combing extends Algorithm {
      */
     public Combing() {
         super();
-        wall = new Wall(r);
+/*        wall = new Wall(r);*/
     }
+
+    public Combing(boolean[][] in, boolean[][] out, boolean expanded, int dir) {
+        super(in, out, expanded);
+        wall = new Wall(currentState, dir);
+
+    }
+
 
     @Override
     protected ParallelStep determineParallelStep() {
-        if (sliding) {
-
-        }
+/*        if (sliding) {*/
+/**/
+/*        }*/
+        return null;
     }
     
 }

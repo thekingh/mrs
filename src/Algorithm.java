@@ -3,12 +3,21 @@ package src;
 
 public abstract class Algorithm {
 
-    private final boolean[][] inputRobot;
-    private final boolean[][] outputRobot;
-    private final int maxSteps;
-    private Robot currentState;
-    private int step;
-    private boolean success;
+    protected final boolean[][] inputRobot;
+    protected final boolean[][] outputRobot;
+    protected final int maxSteps;
+    protected Robot currentState;
+    protected int step;
+    protected boolean success;
+
+    public Algorithm() {
+        inputRobot  = null;
+        outputRobot = null;
+        currentState = null;
+        step = 0;
+        success = false;
+        maxSteps = 5000;
+    }
 
     public Algorithm(boolean[][] in, boolean[][] out, boolean expanded) {
         inputRobot = in;

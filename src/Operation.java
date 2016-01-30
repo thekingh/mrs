@@ -18,24 +18,28 @@ public class Operation {
     private final int op;
     private final Module module;
     private final int dir;
-    public Operation(String op, Module module, int dir) {
-        int opnum = -1;
-        if (op.equals("slide")) {
-            opnum = 0;
-        }
+
+    public Operation (int op, Module module, int dir) {
+        this.op = op;
+        this.module = module;
+        this.dir = dir;
+    }
+
+    /* TODO funkiness with op? */
+/*    public Operation(String op, Module module, int dir) {*/
+/*        int opnum = -1;*/
+/*        if (op.equals("slide")) {*/
+/*            opnum = 0;*/
+/*        }*/
         /*
         if (opp.equals("pushin") {
             oppnum = 1;
 
         */
-        if (opnum = -1) {
-            System.out.println("Unrecognized Operation");
-        }
-    }
+/*        if (opnum == -1) {*/
+/*            System.out.println("Unrecognized Operation");*/
+/*        }*/
+        
+/*    }*/
 
-    public Operation(int op, Module module, int dir) {
-        this.op = op;
-        this.module = module;
-        this.dir = dir;
-    }
 }
