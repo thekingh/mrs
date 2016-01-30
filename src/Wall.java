@@ -6,6 +6,7 @@ public class Wall {
     private int dir;
     private Module[] wallModules;
     private Boolean[] isMoving;
+    private boolean hasReachedEnd;
 
     /* TODO different names? redeclare vs class vars?*/
     private int w;
@@ -47,6 +48,10 @@ public class Wall {
         isMoving = new Boolean[size];
         populateWall(moduleArray);
         markMoving();
+    }
+
+    public boolean hasReachedEnd() {
+        return this.hasReachedEnd;
     }
 
     /**
@@ -94,11 +99,27 @@ public class Wall {
         }
     }
 
-    public boolean update(Robot r) {
-        Module[][] moduleArray = r.toModuleArray();
-/*        int w = moduleArray.length;*/
-/*        int h = moduleArray[0].length;*/
+    /**
+     * checks if the wall is at one of the edges of the robot, without regard
+     * to direction travelled.
+     * TODO UNTESTED
+     */
+    private boolean isEdgeWall() {
+        if (level == 0) {
+            return true;
+        }
+        if (isDirVertical) {
+            return (level == h - 1);
+        } else {
+            return (level == w - 1);
+        }
+    }
 
+    public boolean update(Robot r) {
+        if (hasReachedEnd) {
+            return false;
+        }
+        Module[][] moduleArray = r.toModuleArray();
         int size = isDirVertical ? w : h;
         wallModules = new Module[size];
         isMoving = new Boolean[size];
@@ -108,8 +129,8 @@ public class Wall {
         populateWall(moduleArray); 
         markMoving();
         
-        /* TODO when to mark false */
-
+        //check if this is the last possible update, update hasreachedend
+        hasReachedEnd = isEdgeWall();
         return true;
     }
 
@@ -132,11 +153,10 @@ public class Wall {
         return toReturn;
     }
 
-
     /**
      * Short Representation of Wall Object for Testing Purposes
      */
-	public String toString() {
+    public String toString() {
 		String toReturn = "<Wall moving in direction: " + dir + " Level: " + level + ">\n";
         toReturn += "<" + printWall() + ">";
         return toReturn;

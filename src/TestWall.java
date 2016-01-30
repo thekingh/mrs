@@ -20,8 +20,10 @@ public class TestWall {
         r.drawUnit();
         Wall w = new Wall(r, 2);
         System.out.println(w);
+        System.out.println("hasReachedEnd = " + w.hasReachedEnd());
         w.update(r);
         System.out.println(w);
+        System.out.println("hasReachedEnd = " + w.hasReachedEnd());
     }
 
     public static void main(String[] args) {
