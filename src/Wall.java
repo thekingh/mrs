@@ -41,19 +41,24 @@ public class Wall {
 /*                throw new RuntimeException("Invalid Wall direction");*/
                 break;
         }
+        /* TODO possibly duplicate code */
+        int size = isDirVertical ? w : h;
+        wallModules = new Module[size];
+        isMoving = new Boolean[size];
         populateWall(moduleArray);
         markMoving();
     }
 
     /**
-     * 
+     * marks as moving if a module can slide in a direction.
      */
     private void markMoving() {
         for (int i = 0; i < wallModules.length; i++) {
             if (wallModules[i] == null) {
                 isMoving[i] = null;
+            } else {
+                isMoving[i] = wallModules[i].canSlide(dir);
             }
-            isMoving[i] = wallModules[i].canSlide(dir);
         }
     }
     /**
@@ -107,4 +112,33 @@ public class Wall {
 
         return true;
     }
+
+    /**
+     * debug method to show which modules are moving, stationary, or non existant
+     */
+    public String printWall() {
+        String toReturn = "";
+        for (int i = 0; i < wallModules.length; i++) {
+            if (wallModules[i] != null) {
+                if (isMoving[i]) {
+                    toReturn += "M";
+                } else {
+                    toReturn += "S";
+                }
+            } else {
+                toReturn += " ";
+            }
+        }
+        return toReturn;
+    }
+
+
+    /**
+     * Short Representation of Wall Object for Testing Purposes
+     */
+	public String toString() {
+		String toReturn = "<Wall moving in direction: " + dir + " Level: " + level + ">\n";
+        toReturn += "<" + printWall() + ">";
+        return toReturn;
+	}
 }
