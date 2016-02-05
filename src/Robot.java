@@ -275,7 +275,7 @@ public class Robot {
      */
     public boolean slide(Module m, int dir, boolean expanded) {
         int neighborDir = getNeighborDir(m, dir);
-        return slide(m, dir, neighborDir, expanded)
+        return slide(m, dir, neighborDir, expanded);
     }
 
     public boolean slide(Module m, int dir, int neighborDir, boolean expanded) {

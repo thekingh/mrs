@@ -31,6 +31,11 @@ public class TestWall {
      * something really wrong
      */
     public static void combTestInDirWithBot(int dir, boolean[][] moduleBools) {
+        String out = String.format("Testing in direction: %d", dir);
+        System.out.println(out);
+        Robot r = new Robot(TestHelper.orientArray(moduleBools), false);
+        
+        r.drawUnit();
         boolean[][] temp = TestHelper.orientArray(moduleBools);
         Combing c = new Combing(temp, temp, false, dir);
     }
@@ -50,9 +55,18 @@ public class TestWall {
         combTestInDirWithBot(2, moduleBools);
     }
 
+    public static void combBase0() {
+        boolean[][] moduleBools = {{true, true , true },
+                                   {true, false, false}};
+        for (int i = 0; i < 4; i++) {
+            combTestInDirWithBot(i, moduleBools);
+        }
+    }
+
     public static void main(String[] args) {
 /*        makeWallTest1();*/
 /*        combTestDefault();*/
-        combTestCanSlide();
+/*        combTestCanSlide();*/
+        combBase0();
     }
 }

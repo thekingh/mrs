@@ -27,14 +27,10 @@ public class Wall {
         //therefore we only need to look in the final column
         switch (dir) {
             case 0:
-                level = 0; 
-                break;
-            case 1:
-                level = 0;
-                break;
             case 2:
                 level = h - 1;
                 break;
+            case 1:
             case 3:
                 level = w - 1;
                 break;
@@ -68,53 +64,39 @@ public class Wall {
             }
         }
     }
-    /**
-     * updates level number dependent on direction of melt
-     */
-    private int updateLevel() {
-        switch (dir) {
+
+    private int getWallIndex() {
+        switch(dir) {
             case 0:
+                return h - level - 1;
             case 1:
-                level++;
-                break;
+                return w - level - 1;
             case 2:
             case 3:
-                level--;
-                break;
+                return level;
             default:
-/*                throw new RuntimeException("Invalid Wall direction");*/
-                break;
+                return -1;
         }
-        return level;
     }
     
     /**
      * populates wall module array (class variable, with modules of the robot
      */
     private void populateWall(Module[][] moduleArray) {
+        int j = getWallIndex();
         if (isDirVertical) {
             for(int i = 0; i < w; i++ ) {
-                wallModules[i] = moduleArray[i][level];
+                wallModules[i] = moduleArray[i][j];
             }
         } else {
             for(int i = 0; i < h; i++ ) {
-                wallModules[i] = moduleArray[level][i];
+                wallModules[i] = moduleArray[j][i];
             }
         }
     }
 
     private boolean isFinalEdge() {
-        switch(dir) {
-            case 0:
-                return level == h - 1;
-            case 1:
-                return level == w - 1;
-            case 2:
-            case 3:
-                return level == 0;
-            default:
-                throw new RuntimeException("Invalid Wall direction");
-        }
+        return level == 0;
     }
 
     public boolean update(Robot r) {
@@ -126,12 +108,12 @@ public class Wall {
         wallModules = new Module[size];
         isMoving = new Boolean[size];
 
-        level = updateLevel(); 
+        level--;
         //check if this is the last possible update, update hasreachedend
         hasReachedEnd = isFinalEdge();
 
-        populateWall(moduleArray); 
-        markMoving(hasReachedEnd);
+        populateWall(moduleArray); //populates module Array
+        markMoving(hasReachedEnd); //populates ismoving
         
         return true;
     }
@@ -159,7 +141,7 @@ public class Wall {
         return wallModules;
     }
 
-    public Boolean[] getisMoving() {
+    public Boolean[] getIsMoving() {
         return isMoving;
     }
 
