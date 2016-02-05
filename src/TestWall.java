@@ -26,7 +26,33 @@ public class TestWall {
         System.out.println("hasReachedEnd = " + w.hasReachedEnd());
     }
 
+    /**
+     * Inits and runs a simple combing test to check for syntax errors or
+     * something really wrong
+     */
+    public static void combTestInDirWithBot(int dir, boolean[][] moduleBools) {
+        boolean[][] temp = TestHelper.orientArray(moduleBools);
+        Combing c = new Combing(temp, temp, false, dir);
+    }
+
+    public static void combTestDefault() {
+        boolean[][] moduleBools = {{true, false, true},
+                                   {true, true, true}};
+        for (int i = 0; i < 4; i++) {
+            combTestInDirWithBot(i, moduleBools);
+        }
+    }
+    public static void combTestCanSlide() {
+        boolean[][] moduleBools = {{true, true , true },
+                                   {true, false, false}};
+        Robot r = new Robot(TestHelper.orientArray(moduleBools), false);
+        r.drawUnit();
+        combTestInDirWithBot(2, moduleBools);
+    }
+
     public static void main(String[] args) {
-        makeWallTest1();
+/*        makeWallTest1();*/
+/*        combTestDefault();*/
+        combTestCanSlide();
     }
 }

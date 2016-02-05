@@ -273,7 +273,10 @@ public class Robot {
      */
     public boolean slide(Module m, int dir, boolean expanded) {
         int neighborDir = getNeighborDir(m, dir);
+        return slide(m, dir, neighborDir, expanded)
+    }
 
+    public boolean slide(Module m, int dir, int neighborDir, boolean expanded) {
         if (neighborDir == -1) {
             System.out.println("ERROR SLIDE NOT POSSIBLE");
             return false;
@@ -281,6 +284,7 @@ public class Robot {
         performSlide(m, dir, neighborDir, expanded);
         return true;
     }
+
     /**
      * finds the neighbor direction to slide on if possible, returns -1 if
      * not possible to slide on either side.

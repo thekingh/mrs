@@ -2,4 +2,4 @@
 echo "Starting MRS program"
 echo "===================="
 javac -g -d . *.java
-java src.Test
+java src.TestWall

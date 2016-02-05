@@ -47,7 +47,7 @@ public class Wall {
         wallModules = new Module[size];
         isMoving = new Boolean[size];
         populateWall(moduleArray);
-        markMoving();
+        markMoving(false);
     }
 
     public boolean hasReachedEnd() {
@@ -56,13 +56,15 @@ public class Wall {
 
     /**
      * marks as moving if a module can slide in a direction.
+     * Note that at the last row/col in the direction of movement, none of the
+     * modules can slide.
      */
-    private void markMoving() {
+    private void markMoving(boolean hasReachedEnd) {
         for (int i = 0; i < wallModules.length; i++) {
             if (wallModules[i] == null) {
                 isMoving[i] = null;
             } else {
-                isMoving[i] = wallModules[i].canSlide(dir);
+                isMoving[i] = !hasReachedEnd && wallModules[i].canSlide(dir);
             }
         }
     }
@@ -83,10 +85,12 @@ public class Wall {
 /*                throw new RuntimeException("Invalid Wall direction");*/
                 break;
         }
-
         return level;
     }
     
+    /**
+     * populates wall module array (class variable, with modules of the robot
+     */
     private void populateWall(Module[][] moduleArray) {
         if (isDirVertical) {
             for(int i = 0; i < w; i++ ) {
@@ -99,19 +103,17 @@ public class Wall {
         }
     }
 
-    /**
-     * checks if the wall is at one of the edges of the robot, without regard
-     * to direction travelled.
-     * TODO UNTESTED
-     */
-    private boolean isEdgeWall() {
-        if (level == 0) {
-            return true;
-        }
-        if (isDirVertical) {
-            return (level == h - 1);
-        } else {
-            return (level == w - 1);
+    private boolean isFinalEdge() {
+        switch(dir) {
+            case 0:
+                return level == h - 1;
+            case 1:
+                return level == w - 1;
+            case 2:
+            case 3:
+                return level == 0;
+            default:
+                throw new RuntimeException("Invalid Wall direction");
         }
     }
 
@@ -125,12 +127,12 @@ public class Wall {
         isMoving = new Boolean[size];
 
         level = updateLevel(); 
+        //check if this is the last possible update, update hasreachedend
+        hasReachedEnd = isFinalEdge();
 
         populateWall(moduleArray); 
-        markMoving();
+        markMoving(hasReachedEnd);
         
-        //check if this is the last possible update, update hasreachedend
-        hasReachedEnd = isEdgeWall();
         return true;
     }
 
@@ -152,6 +154,17 @@ public class Wall {
         }
         return toReturn;
     }
+
+    /**
+     * Moves wall down one level
+     */
+    public void move() {
+        for (int i = 0; i < wallModules.length; i++) {
+            if (isMoving[i]) {
+                wallModules[i].slide
+
+
+
 
     /**
      * Short Representation of Wall Object for Testing Purposes
