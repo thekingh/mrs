@@ -155,16 +155,13 @@ public class Wall {
         return toReturn;
     }
 
-    /**
-     * Moves wall down one level
-     */
-    public void move() {
-        for (int i = 0; i < wallModules.length; i++) {
-            if (isMoving[i]) {
-                wallModules[i].slide
+    public Module[] getWallModules() {
+        return wallModules;
+    }
 
-
-
+    public Boolean[] getisMoving() {
+        return isMoving;
+    }
 
     /**
      * Short Representation of Wall Object for Testing Purposes

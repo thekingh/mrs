@@ -231,6 +231,8 @@ public class Robot {
      *
      * 1) must have edges between them (not necessarily connected)
      *
+     * Slides can be made in parallel on the same module
+     *
      * @param M             Module to slide
      * @param dir           Direction to slide module
      * @param neighborDir   Direction of neighboring modules to slide against
@@ -264,7 +266,7 @@ public class Robot {
     }
 
     /**
-     * Performs a unit slide if possible on a module in a given direction
+     * Performs a unit slide if possible on a module in a given direction.
      *
      * @param M         Module to slide, note type Module not Node
      * @param dir       direction to slide relative to rest of robot

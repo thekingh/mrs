@@ -2,7 +2,6 @@ package src;
 
 
 public class Combing extends Algorithm {
-    private Wall wall;
     private boolean isSlidVertical;
     private boolean isSlidHorizontal;
 
@@ -29,6 +28,19 @@ public class Combing extends Algorithm {
             System.out.println(w);
         }
     }
+
+    /**
+     * Moves wall down one level.
+     *
+     * There is a case where we must slide a module down on both sides
+     *
+     * If a module has 2 neighbors to slide on, we will slide on both, with
+     *   one half of the module sliding on each (in parallel)
+     */
+    public void moveWall(Wall w) {
+        for (int i = 0; i < wallModules.length; i++) {
+            if (isMoving[i]) {
+                wallModules[i].slide
 
 
     @Override
