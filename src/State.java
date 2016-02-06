@@ -1,32 +1,24 @@
 package src;
 
-//TODO
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.*;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.List;
 
 /** 
  * State is a snapshot of a robot state
  */
 public class State {
 
-    private Graph unitGraph;
-    private Graph moduleGraph;
+    private JSONArray jsonArr;
 
     public State(Robot r) {
-        this.unitGraph = r.getUnitGraph();
-        this.moduleGraph = r.getModuleGraph();
+        jsonArr = generateJSONRobots(r.getUnitGraph());
     }
 
-    public Graph getUnitGraph() {
-        return unitGraph;
-    }
-
-    public Graph getModuleGraph() {
-        return moduleGraph;
-    }
-
-    public JSONArray generateJSONRobots() {
+    public JSONArray generateJSONRobots(Graph unitGraph) {
 
         JSONArray robots = new JSONArray();
 
@@ -75,8 +67,7 @@ public class State {
         
         try {
             FileWriter file = new FileWriter("../viz/json_states/state" + stateNum + ".json");
-            JSONArray robots = generateJSONRobots();
-            file.write(robots.toJSONString());
+            file.write(jsonArr.toJSONString());
             file.flush();
             file.close();
         } catch (IOException e) {
