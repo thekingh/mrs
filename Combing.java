@@ -11,7 +11,6 @@ public class Combing extends Algorithm {
      */
     public Combing() {
         super();
-/*        wall = new Wall(r);*/
     }
 
     /**
@@ -50,7 +49,7 @@ public class Combing extends Algorithm {
     }
 
     @Override
-    protected ParallelStep determineParallelStep() {
+    protected ParallelMove determinePMove() {
 /*        if (sliding) {*/
 /**/
 /*        }*/

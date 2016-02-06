@@ -26,4 +26,16 @@ public class TestHelper {
         }
         return out;
     }
+
+    public static boolean[][] convertIntToBool(int[][] in) {
+        int w = in.length;
+        int h = in[0].length;
+        boolean [][] out =  new boolean[w][h];
+        for (int i = 0; i < w; i++) {
+            for (int j = 0; j < h; j++) {
+                out[i][j] = (in[i][j] == 1);
+            }
+        }
+        return out;
+    }
 }

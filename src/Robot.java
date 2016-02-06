@@ -396,5 +396,10 @@ public class Robot {
         System.out.println(o);
     }
 
+    //TODO make this work
+    public State getState() {
+        return null;
+    }
+
 
 }

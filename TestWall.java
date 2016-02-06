@@ -1,11 +1,6 @@
 package src;
 
 public class TestWall {
-    public TestHelper t;
-
-    public TestWall() {
-/*        t = new TestHelper();*/
-    }
 
     /**
      * Tests a wall by printing out the wall after construction and updating it once
@@ -47,11 +42,10 @@ public class TestWall {
             combTestInDirWithBot(i, moduleBools);
         }
     }
+
     public static void combTestCanSlide() {
         boolean[][] moduleBools = {{true, true , true },
                                    {true, false, false}};
-        Robot r = new Robot(TestHelper.orientArray(moduleBools), false);
-        r.drawUnit();
         combTestInDirWithBot(2, moduleBools);
     }
 
@@ -63,10 +57,18 @@ public class TestWall {
         }
     }
 
+    public static void combHorseShoe() {
+        int [][] m = {{1,1,0,1,1},
+                      {1,0,0,0,1},
+                      {1,1,1,1,1}};
+        combTestInDirWithBot(2, TestHelper.convertIntToBool(m));
+    }
+
     public static void main(String[] args) {
 /*        makeWallTest1();*/
 /*        combTestDefault();*/
 /*        combTestCanSlide();*/
-        combBase0();
+/*        combBase0();*/
+        combHorseShow();
     }
 }

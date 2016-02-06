@@ -1,55 +1,35 @@
 
 package src;
 
+import java.util.List;
+import java.util.ArrayList;
+
+/**
+ * Abstract class for algorithms involving reconfiguration of Robot Objects.
+ *
+ * Designed in to be parallelizable in steps. An algorithm can have a number of
+ * functional steps for each reconfiguration. For example a "slide" step is broken
+ * up into a bunch of machine processable steps. 
+ */
 public abstract class Algorithm {
 
-    protected final boolean[][] inputRobot;
-    protected final boolean[][] outputRobot;
-    protected final int maxSteps;
-    protected Robot currentState;
-    protected int step;
-    protected boolean success;
+    private final Robot r;
 
-    public Algorithm() {
-        inputRobot  = null;
-        outputRobot = null;
-        currentState = null;
-        step = 0;
-        success = false;
-        maxSteps = 5000;
+    Algorithm(Robot r) {
+        this.r = r;
     }
 
-    public Algorithm(boolean[][] in, boolean[][] out, boolean expanded) {
-        inputRobot = in;
-        outputRobot = out;
-        currentState = new Robot(in, expanded);
-        step = 0;
-        success = false;
-        maxSteps = 5000;
-    }
+    public abstract boolean isComplete();
 
-    /**
-     * determineParallelStep builds a queue of all opperations to perform in the
-     * next parallel step.
-     *
-     * The algorithm for this function is as follows:
-     *      determine which "part" of the combing algorithm we are on.
-     */
-    protected abstract ParallelStep determineParallelStep();
+    protected abstract ParallelMove determinePMove();
 
-    public void performParallelStep(ParallelStep stepsToPerform) {
-
-    }
-
-    public void run() {
-/*        for (int i = 0; i < maxSteps; i++) {*/
-/*            ParallelStep steps = determineParallelStep();*/
-/*            if (steps.peek() != null) {*/
-/*                success = true;*/
-/*                break;*/
-/*            }*/
-/*            performParallelStep(steps);*/
-/*            step++;*/
-/*        }*/
+    public List<State> run() {
+        List<State> allStates = new ArrayList<State>();
+        ParallelMove pm;
+        while (!isComplete()) {
+            pm = determinePMove();
+            allStates.addAll(pm.pmove());
+        }
+        return allStates;
     }
 }
