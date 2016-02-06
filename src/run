@@ -3,4 +3,4 @@ echo "Starting MRS program"
 echo "===================="
 javac -cp ./json-simple-1.1.1.jar -g -d . *.java
 #java -cp ./json-simple-1.1.1.jar src.TestSlide
-java src.TestSlide
+java src.TestParallelMove

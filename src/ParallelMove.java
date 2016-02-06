@@ -38,6 +38,12 @@ public class ParallelMove {
                 moveFinished = false;
             }
         }
-        return moveFinished ? null : r.getState();
+        if (!moveFinished) {
+            r.drawUnit();
+/*            return r.getState();*/
+            return new State(r);
+        } else {
+            return null;
+        }
     }
 }

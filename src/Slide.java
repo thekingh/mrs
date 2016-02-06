@@ -60,8 +60,7 @@ public class Slide implements Movement {
             r.getModuleGraph().addEdge(m, m3, neighborDir);
             r.drawModule();
         }
-        //TODO remove after testing;
-        r.drawUnit();
+/*        r.drawUnit();*/
         currStep++;
     }
 
