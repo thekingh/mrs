@@ -1,5 +1,5 @@
 #!/bin/bash
 echo "Starting MRS program"
 echo "===================="
-javac -g -d . *.java
+javac -cp ./json-simple-1.1.1.jar -g -d . *.java
 java src.TestWall

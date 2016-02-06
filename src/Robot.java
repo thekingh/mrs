@@ -10,6 +10,8 @@ import java.util.HashSet;
 import java.io.PrintWriter;
 import java.io.IOException;
 
+import org.json.simple.*;
+
 public class Robot {
 	private Graph moduleGraph;
 	private Graph unitGraph;
@@ -314,7 +316,8 @@ public class Robot {
     public void drawUnit() {
         delay(500);
         System.out.println(unitGraph.toGrid());
-        exportToFile("../viz/states/state" + (stateCount++) + ".rbt");
+/*        exportToFile("../viz/states/state" + (stateCount++) + ".rbt");*/
+        exportToFile("../viz/json_states/state" + (stateCount++) + ".json");
     }
 
     private void delay(int millis) {
@@ -330,57 +333,60 @@ public class Robot {
         System.out.println(moduleGraph.toGrid());
     }
 
-    public String getRobotString() {
+/*    public String getRobotString() {*/
+/**/
+/*        String robot = "x, y, ext0, con0, ext1, con1, ext2, con2, ext3, con3\n";*/
+/**/
+/*        Grid grid = unitGraph.toGrid();*/
+/*        */
+/*        List<GridObject> nodes = grid.getNodes();*/
+/*        for(GridObject g : nodes) {*/
+/*            */
+/*            //x, y*/
+/*            Coordinate c = g.c();*/
+/*            robot += Integer.toString(c.x()) + "," + Integer.toString(c.y());*/
+/**/
+/*            Node n = (Node)g.o();*/
+/*            for(int dir = 0; dir < 4; dir++ ) {*/
+/*                Edge e = n.getEdge(dir);*/
+/*                */
+/*                if( e == null) {*/
+/*                    robot += ",-1,-1";*/
+/*                } else {*/
+/*                    if(e.isExtended()) {*/
+/*                        robot += ",1";*/
+/*                    } else {*/
+/*                        robot += ",0";*/
+/*                    }*/
+/**/
+/*                    if(e.isConnected()) {*/
+/*                        robot += ",1";*/
+/*                    } else {*/
+/*                        robot += ",0";*/
+/*                    }*/
+/*                }*/
+/*            }*/
+/**/
+/*            robot += "\n";*/
+/*        }*/
+/**/
+/*        return robot;*/
+/**/
+/*    }*/
 
-        String robot = "x, y, ext0, con0, ext1, con1, ext2, con2, ext3, con3\n";
-
-        Grid grid = unitGraph.toGrid();
-        
-        List<GridObject> nodes = grid.getNodes();
-        for(GridObject g : nodes) {
-            
-            //x, y
-            Coordinate c = g.c();
-            robot += Integer.toString(c.x()) + "," + Integer.toString(c.y());
-
-            Node n = (Node)g.o();
-            for(int dir = 0; dir < 4; dir++ ) {
-                Edge e = n.getEdge(dir);
-                
-                if( e == null) {
-                    robot += ",-1,-1";
-                } else {
-                    if(e.isExtended()) {
-                        robot += ",1";
-                    } else {
-                        robot += ",0";
-                    }
-
-                    if(e.isConnected()) {
-                        robot += ",1";
-                    } else {
-                        robot += ",0";
-                    }
-                }
-            }
-
-            robot += "\n";
-        }
-
-        return robot;
-
-    }
 
     public void exportToFile(String file) {
+
+        //TODO make a json object and write it to file
         
-        try {
-            PrintWriter writer = new PrintWriter(file);
-            String robot = getRobotString();
-            writer.println(robot);
-            writer.close();
-        } catch ( IOException e) {
-            e.printStackTrace();
-        }
+/*        try {*/
+/*            PrintWriter writer = new PrintWriter(file);*/
+/*            String robot = getRobotString();*/
+/*            writer.println(robot);*/
+/*            writer.close();*/
+/*        } catch ( IOException e) {*/
+/*            e.printStackTrace();*/
+/*        }*/
     }
 
     //TODO remove me
