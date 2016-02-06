@@ -8,37 +8,37 @@ int curState = 0;
 
 void setup() {
     states = new ArrayList<ArrayList<DrawUnit>>();
-    readData();
+    readJData();
 
     size(700, 700);
 }
 
-void readData() {
+void readJData() {
 
-    // read in states from states/ directory
-    String path = "states/state" + stateCount + ".rbt";
+    String path = "json_states/state" + stateCount + ".json";
     File f = new File(path);
 
-    // check to see if state exists, allows for dynamic num states
     while(f.exists()) {
-    
-        String[] lines = loadStrings(path); 
+
+        // load json array of robots
         ArrayList<DrawUnit> units = new ArrayList<DrawUnit>();
+        JSONArray robotArray = loadJSONArray(path);
 
-        // TODO get rid of \n at end or don't read it at all
-        for(int i = 1; i < lines.length - 1; i++) {
-            String[] robotString = split(lines[i], ",");
+        // for each robot, make a draw unit and add to state
+        for(int i = 0; i < robotArray.size(); i++) {
+            JSONObject robot = robotArray.getJSONObject(i);
+            
+            DrawUnit u = new DrawUnit(robot.getInt("x"),
+                                      robot.getInt("y"),
+                                      robot.getInt("ext0"),
+                                      robot.getInt("con0"),
+                                      robot.getInt("ext1"),
+                                      robot.getInt("con1"),
+                                      robot.getInt("ext2"),
+                                      robot.getInt("con2"),
+                                      robot.getInt("ext3"),
+                                      robot.getInt("con3"));
 
-            // convert read in strings to ints
-            int[] robotInt    = new int[robotString.length];
-            for(int j = 0; j < robotString.length; j++) {
-                robotInt[j] = parseInt(robotString[j]);
-            }
-
-            DrawUnit u = new DrawUnit(robotInt[0], robotInt[1], robotInt[2], 
-                                      robotInt[3], robotInt[4], robotInt[5], 
-                                      robotInt[6], robotInt[7], robotInt[8], 
-                                      robotInt[9]);
             units.add(u);
         }
 
@@ -46,10 +46,11 @@ void readData() {
         stateCount++;
 
         // try getting next enumerated state
-        path = "states/state" + stateCount + ".rbt";
+        path = "json_states/state" + stateCount + ".json";
         f = new File(path);
     }
 }
+
 
 void drawGrid() {
 
@@ -104,7 +105,7 @@ void keyPressed() {
 void drawFrameNumber() {
 
     // [cur / total]
-    String s = "[" + curState + "/" + stateCount + "]";
+    String s = "[" + (curState+1) + "/" + stateCount + "]";
 
     // draw in bottom right of window
     textAlign(RIGHT);
