@@ -13,7 +13,7 @@ import java.util.ArrayList;
  */
 public abstract class Algorithm {
 
-    private final Robot r;
+    protected final Robot r;
 
     Algorithm(Robot r) {
         this.r = r;
