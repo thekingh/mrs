@@ -39,7 +39,7 @@ public class ParallelMove {
             }
         }
         if (!moveFinished) {
-            r.drawUnit();
+/*            r.drawUnit();*/
 /*            return r.getState();*/
             return new State(r);
         } else {

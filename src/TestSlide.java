@@ -2,34 +2,6 @@
 package src;
 
 public class TestSlide {
-    public static void test1() {
-        boolean[][] moduleBools = {{true, false},
-                                   {true, true }};
-        Robot r = new Robot(TestHelper.orientArray(moduleBools), false);
-        r.drawUnit();
-
-        Module[][] ms = r.toModuleArray();
-
-
-        Slide s = new Slide(r, ms[0][1], 1, 2);
-        runSlide(s);
-    }
-
-    public static void test2() {
-        int [][] m = {{1,1,0,1,1},
-                      {1,0,0,0,1},
-                      {1,1,1,1,1}};
-        boolean[][] moduleBools = TestHelper.convertIntToBool(m);
-        Robot r = new Robot(TestHelper.orientArray(moduleBools), false);
-        r.drawUnit();
-
-        Module[][] ms = r.toModuleArray();
-
-        Slide s1 = new Slide(r, ms[1][2], 2, 3);
-        runSlide(s1);
-        Slide s2 = new Slide(r, ms[3][2], 2, 1);
-        runSlide(s2);
-    }
 
     public static void runSlide(Slide s) {
         while (!s.reachedEnd()) {
@@ -37,9 +9,66 @@ public class TestSlide {
         }
     }
 
+    public static void slideTest(Robot r, int[][] finish, Slide s) {
+        Robot f = TestHelper.makeBot(finish);
+
+        System.out.println("=====================================");
+        System.out.println("Sliding");
+        r.drawModule();
+        System.out.println("=====================================");
+
+        runSlide(s);
+
+        r.drawModule();
+        TestHelper.validateOutput(r, f);
+    }
+
+
+    public static void test1() {
+        int [][] s = {{1,0,0},
+                      {1,1,1}};
+        int [][] f0 = {{0,1,0},
+                       {1,1,1}};
+        int [][] f1 = {{0,0,1},
+                       {1,1,1}};
+
+        Robot r = TestHelper.makeBot(s);
+
+        Module[][] ms0 = r.toModuleArray();
+        Slide s0 = new Slide(r, ms0[0][1], 1, 2);
+
+        slideTest(r, f0, s0);
+
+        Module[][] ms1 = r.toModuleArray();
+        Slide s1 = new Slide(r, ms1[1][1], 1, 2);
+
+        slideTest(r, f1, s1);
+
+    }
+
+    public static void test2() {
+        int [][] s = {{1,1,0,1,1},
+                      {1,0,0,0,1},
+                      {1,1,1,1,1}};
+        int [][] f0 = {{1,0,0,1,1},
+                       {1,1,0,0,1},
+                       {1,1,1,1,1}};
+        int [][] f1 = {{1,0,0,0,1},
+                       {1,1,0,1,1},
+                       {1,1,1,1,1}};
+
+        Robot r = TestHelper.makeBot(s);
+
+        Module[][] ms = r.toModuleArray();
+        Slide s1 = new Slide(r, ms[1][2], 2, 3);
+        slideTest(r, f0, s1);
+        Slide s2 = new Slide(r, ms[3][2], 2, 1);
+        slideTest(r, f1, s2);
+    }
+
 
     public static void main(String[] args) {
-/*        test1();*/
+        test1();
         test2();
     }
 

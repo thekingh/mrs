@@ -1,0 +1,7 @@
+#!/bin/bash
+echo "Starting MRS program"
+echo "===================="
+echo "Running java -cp .:./json-simple-1.1.1.jar src.Test${1}"
+
+javac -cp ./json-simple-1.1.1.jar -g -d . *.java
+java -cp .:./json-simple-1.1.1.jar src.Test$1

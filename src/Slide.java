@@ -23,6 +23,9 @@ public class Slide implements Movement {
         this.m = m;
         this.dir = dir;
         this.neighborDir = neighborDir;
+        if (m == null) {
+            throw new RuntimeException("Trying to slide with null module");
+        }
 
         m2 = (Module) m.getNeighbor(neighborDir);
         m3 = (Module) m2.getNeighbor(dir);
@@ -48,17 +51,14 @@ public class Slide implements Movement {
      * @param neighborDir   Direction of neighboring modules to slide against
      */
     public void step() {
-        System.out.println("currstep is: " + currStep);
-        if (!reachedEnd()) {
-            if (currStep < 5) {
-                performHalfSlide(u1, u2, u3, currStep);
-            } else{ 
-                performHalfSlide(u2, u3, u4, currStep);
-            }
-        } else { 
+        if (currStep < 5) {
+            performHalfSlide(u1, u2, u3, currStep);
+        } else{ 
+            performHalfSlide(u2, u3, u4, currStep);
+        }
+        if (currStep == NUMSTEPS - 1) {
             r.getModuleGraph().removeEdge(m.getEdge(neighborDir));
             r.getModuleGraph().addEdge(m, m3, neighborDir);
-            r.drawModule();
         }
 /*        r.drawUnit();*/
         currStep++;

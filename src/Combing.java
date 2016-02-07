@@ -40,7 +40,7 @@ public class Combing extends Algorithm {
     }
 
     @Override
-    protected ParallelMove determinePMove() {
+    public ParallelMove determinePMove() {
 /*        moveWall(w);*/
 /*        w.update(r);*/
 /*        if (sliding) {*/

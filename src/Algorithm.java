@@ -21,7 +21,7 @@ public abstract class Algorithm {
 
     public abstract boolean isComplete();
 
-    protected abstract ParallelMove determinePMove();
+    public abstract ParallelMove determinePMove();
 
     public List<State> run() {
         List<State> allStates = new ArrayList<State>();

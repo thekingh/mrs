@@ -248,5 +248,34 @@ public class Robot {
         return null;
     }
 
+    /**
+     * Tests Robot Equality.
+     * Two robots are equal if:
+     *      All modules in moduleArray are in same location
+     */
+    public boolean equals(Robot other) {
+        Module[][] ms1 = this.toModuleArray();
+        Module[][] ms2 = other.toModuleArray();
+
+        int w = ms1.length;
+        int h = ms1[0].length;
+
+        //check dims
+        if (w != ms2.length || h != ms2[0].length) {
+            return false;
+        }
+
+        for (int i = 0; i < w; i++) {
+            for (int j = 0; j < h; j++) {
+                if (ms1[i][j] != null && ms2[i][j] == null) {
+                    return false;
+                } else  if (ms1[i][j] == null && ms2[i][j] != null) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
 
 }

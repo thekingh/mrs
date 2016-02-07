@@ -6,7 +6,6 @@ public class Wall {
     private int dir;
     private Module[] wallModules;
     private Boolean[] isMoving;
-    private boolean hasReachedEnd;
 
     /* TODO different names? redeclare vs class vars?*/
     private int w;
@@ -21,18 +20,18 @@ public class Wall {
         //2D arrays are width height
         Module[][] moduleArray = r.toModuleArray();
         //TODO check which is first
-        w = moduleArray.length;
-        h = moduleArray[0].length;
+        w = getWidth(moduleArray);
+        h = getHeight(moduleArray);
         //there will always be something in every row and every column
         //therefore we only need to look in the final column
         switch (dir) {
             case 0:
             case 2:
-                level = h - 1;
+                level = h;
                 break;
             case 1:
             case 3:
-                level = w - 1;
+                level = w;
                 break;
             default:
 /*                throw new RuntimeException("Invalid Wall direction");*/
@@ -42,12 +41,17 @@ public class Wall {
         int size = isDirVertical ? w : h;
         wallModules = new Module[size];
         isMoving = new Boolean[size];
-        populateWall(moduleArray);
-        markMoving(false);
+    }
+
+    public int getHeight(Module[][] ms) {
+        return ms[0].length;
+    }
+    public int getWidth(Module[][] ms) {
+        return ms.length;
     }
 
     public boolean hasReachedEnd() {
-        return this.hasReachedEnd;
+        return isFinalEdge();
     }
 
     /**
@@ -60,7 +64,7 @@ public class Wall {
             if (wallModules[i] == null) {
                 isMoving[i] = null;
             } else {
-                isMoving[i] = !hasReachedEnd && wallModules[i].canSlide(dir);
+                isMoving[i] = !hasReachedEnd && !wallModules[i].hasNeighborInDirection(dir);
             }
         }
     }
@@ -100,20 +104,17 @@ public class Wall {
     }
 
     public boolean update(Robot r) {
-        if (hasReachedEnd) {
-            return false;
-        }
         Module[][] moduleArray = r.toModuleArray();
+        w = getWidth(moduleArray);
+        h = getHeight(moduleArray);
+        
         int size = isDirVertical ? w : h;
         wallModules = new Module[size];
         isMoving = new Boolean[size];
-
+        
         level--;
-        //check if this is the last possible update, update hasreachedend
-        hasReachedEnd = isFinalEdge();
-
         populateWall(moduleArray); //populates module Array
-        markMoving(hasReachedEnd); //populates ismoving
+        markMoving(isFinalEdge()); //populates ismoving
         
         return true;
     }
