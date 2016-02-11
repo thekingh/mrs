@@ -66,8 +66,6 @@ public class Robot {
         stateCount = 0;
     }
 
-
-
 	public Robot(Graph moduleGraph) {
 		// what to use?
 		this.moduleGraph = moduleGraph;
@@ -76,13 +74,35 @@ public class Robot {
         stateCount = 0;
 	}
 
-    public Graph getModuleGraph() {
-        return moduleGraph;
-    }
 
 	public Graph getUnitGraph() {
 		return unitGraph;
 	}
+    public Graph getModuleGraph() {
+        return moduleGraph;
+    }
+
+    public void extend(Unit u, int dir) {
+        u.extend(dir);
+    }
+
+    public void contract(Unit u, int dir) {
+        u.contract(dir);
+    }
+
+    public void connect(Unit u1, Unit u2, int dir) {
+        unitGraph.addEdge(u1, u2, dir);
+    }
+    public void connect(Module m1, Module m2, int dir) {
+        moduleGraph.addEdge(m1, m2, dir);
+    }
+
+    public void disconnect(Unit u1, Unit u2) {
+        unitGraph.removeEdge(u1, u2);
+    }
+    public void disconnect(Module m1, Module m2) {
+        moduleGraph.removeEdge(m1, m2);
+    }
 
     public Module[][] toModuleArray() {
         Object[][] grid = moduleGraph.toGrid(true).getGrid();
@@ -128,101 +148,10 @@ public class Robot {
 		unitGraph = new Graph(uNodes, uEdges);
 	}
 
-    //TODO this should live somewhere else
-    public boolean directionIsValid(int dir) {
-        return 0 <= dir && dir < 4;
-    }
-
-
-    /**
-     * finds the neighbor direction to slide on if possible, returns -1 if
-     * not possible to slide on either side.
-     */
-    private int getNeighborDir(Module M, int dir) {
-        int leftDir = (dir + 3) % 4; //THIS IS REALLY DUMB but -1 doesnt work
-        int rightDir = (dir + 1) % 4;
-        if (M.hasNeighborInDirection(leftDir)) {
-            Module M2 = (Module) M.getNeighbor(leftDir);
-            if (M2.hasNeighborInDirection(dir)) {
-                return leftDir;
-            }
-        }
-        if (M.hasNeighborInDirection(rightDir)) {
-            Module M2 = (Module) M.getNeighbor(rightDir);
-            if (M2.hasNeighborInDirection(dir)) {
-                return rightDir;
-            }
-        }
-        return -1;
-    }
-
     public void drawUnit() {
-        
         delay(500);
         System.out.println(unitGraph.toGrid());
-/*        exportToFile("../viz/states/state" + (stateCount++) + ".rbt");*/
-/*        exportToFile("../viz/json_states/state" + (stateCount++) + ".json");*/
     }
-
-/*    public void exportToFile(String path) {*/
-/*        */
-/*        try {*/
-/*            FileWriter file = new FileWriter(path);*/
-/*            JSONArray robots = generateJSONRobots();*/
-/*            file.write(robots.toJSONString());*/
-/*            file.flush();*/
-/*            file.close();*/
-/*        } catch (IOException e) {*/
-/*            e.printStackTrace();*/
-/*        }*/
-/**/
-/*    }*/
-
-/*    public JSONArray generateJSONRobots() {*/
-/**/
-/*        JSONArray robots = new JSONArray();*/
-/**/
-/*        Grid grid = unitGraph.toGrid();*/
-/**/
-/*        List<GridObject> nodes = grid.getNodes();*/
-/*        for(GridObject g : nodes) {*/
-/**/
-/*            JSONObject rbt = new JSONObject();*/
-/**/
-/*            Coordinate c = g.c();*/
-/**/
-/*            rbt.put("x", c.x());*/
-/*            rbt.put("y", c.y());*/
-/**/
-/*            Node n = (Node)g.o();*/
-/*            for(int dir = 0; dir < 4; dir++) {*/
-/**/
-/*                Edge e = n.getEdge(dir);*/
-/*                */
-/*                if( e == null) {*/
-/*                    rbt.put(("ext" + Integer.toString(dir)), -1);*/
-/*                    rbt.put(("con" + Integer.toString(dir)), -1);*/
-/*                } else {*/
-/**/
-/*                    if(e.isExtended()) {*/
-/*                        rbt.put(("ext" + Integer.toString(dir)), 1);*/
-/*                    } else {*/
-/*                        rbt.put(("ext" + Integer.toString(dir)), 0);*/
-/*                    }*/
-/**/
-/*                    if(e.isConnected()) {*/
-/*                        rbt.put(("con" + Integer.toString(dir)), 1);*/
-/*                    } else {*/
-/*                        rbt.put(("con" + Integer.toString(dir)), 0);*/
-/*                    }*/
-/*                }*/
-/*            } */
-/**/
-/*            robots.add(rbt);*/
-/*            System.out.println("added a robot object");*/
-/*        }*/
-/*        return robots;*/
-/*    }*/
 
     private void delay(int millis) {
         try {

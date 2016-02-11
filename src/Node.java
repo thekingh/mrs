@@ -129,6 +129,21 @@ public abstract class Node {
         return neighborDir;
     }
 
+    // // TODO: same functions for connection and vertical?
+    // private void modifyEdgeExtension(int dir, boolean isExtended) {
+    //     Edge e = connections.get(dir);
+    //     e.setIsExtended(true);
+    //     connections.put(dir, e);
+    // }
+
+    // public void extendArm(int dir) {
+    //     modifyEdgeExtension(dir, true);
+    // }
+
+    // public void contractArm(int dir) {
+    //     modifyEdgeExtension(dir, false);
+    // }
+
 	public boolean equals(Node n) {
 		return (this.id == n.getId());
 	}
