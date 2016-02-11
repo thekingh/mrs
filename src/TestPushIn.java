@@ -4,7 +4,7 @@ public class TestPushIn {
 
     public static void runPushIn(Robot r, PushIn p) {
         while (!p.reachedEnd()) {
-        // for (int i = 0; i < 6; i++) {
+        // for (int i = 0; i < 7; i++) {
             p.step();
             r.drawUnit();
         }

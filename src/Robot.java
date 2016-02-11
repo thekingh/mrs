@@ -85,9 +85,15 @@ public class Robot {
     public void extend(Unit u, int dir) {
         u.extend(dir);
     }
+    public void extend(Unit u1, Unit u2) {
+        u1.extend(u1.findNeighborDirection(u2));
+    }
 
     public void contract(Unit u, int dir) {
         u.contract(dir);
+    }
+    public void contract(Unit u1, Unit u2) {
+        u1.contract(u1.findNeighborDirection(u2));
     }
 
     public void connect(Unit u1, Unit u2, int dir) {
@@ -100,8 +106,14 @@ public class Robot {
     public void disconnect(Unit u1, Unit u2) {
         unitGraph.removeEdge(u1, u2);
     }
+    public void disconnect(Unit u, int dir) {
+        unitGraph.removeEdge(u, dir);
+    }
     public void disconnect(Module m1, Module m2) {
         moduleGraph.removeEdge(m1, m2);
+    }
+    public void disconnect(Module m, int dir) {
+        moduleGraph.removeEdge(m, dir);
     }
 
     public Module[][] toModuleArray() {

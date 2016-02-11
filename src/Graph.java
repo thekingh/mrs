@@ -94,6 +94,13 @@ public class Graph {
         removeEdge(e);
     }
 
+    public void removeEdge(Node n, int dir) {
+        Edge e = n.getEdge(dir);
+        if (e != null) {
+            removeEdge(e);
+        }
+    }
+
     /**
      * Calculates a new coordinate relative to an input coordinate
      * Note that coordinate system is x pos is right and y pos is up

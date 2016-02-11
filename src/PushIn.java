@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 public class PushIn implements Movement {
 	private int currStep = 0;
-    private static final int NUMSTEPS = 7; //TODO ????
+    private static final int NUMSTEPS = 8; //TODO ????
 
     private final Robot r;
     private final Module m1;
@@ -40,7 +40,48 @@ public class PushIn implements Movement {
     public void step() {
         switch (currStep) {
             case 0:
+                // disconnect from everything on the outside
+                r.disconnect(units1[1], (pushDir + 2) % 4);
+                r.disconnect(units1[2], (pushDir + 2) % 4);
+                r.disconnect(units1[3], pushDir);
+                r.disconnect(units2[0], dir);
+                r.disconnect(units2[1], (pushDir + 2) % 4);
+                r.disconnect(units2[2], (pushDir + 2) % 4);
+
+                // disconnect inside modules
+                r.disconnect(units1[0], units2[3]);
+                r.disconnect(units2[2], units2[3]);
                 break;
+            case 1:
+                r.extend(units2[0], units2[1]);
+                break;
+            case 2:
+                r.disconnect(units1[0], pushDir);
+                r.disconnect(units1[0], units1[1]);
+                r.disconnect(units2[1], dir);
+                // TODO: need to get the units to connect to
+                // r.connect(units2[0], dir);
+                // r.connect(units2[3], (dir + 2) % 4);
+                break;
+            case 3:
+                r.extend(units1[0], units1[3]);
+                break;
+            case 4:
+                r.connect(units1[0], units2[3], pushDir);
+                r.disconnect(units2[1], units2[2]);
+                break;
+            case 5:
+                r.contract(units2[0], units2[1]);
+                break;
+            case 6:
+                r.contract(units1[0], units1[3]);
+            case 7:
+                // TODO: need to connect to outsides
+                r.connect(units1[0], units1[1], (pushDir + 2) % 4);
+                r.connect(units2[1], units2[2], (pushDir + 2) % 4);
+                r.connect(units1[0], units2[1], dir);
+                break;
+
         }
 
         currStep++;
