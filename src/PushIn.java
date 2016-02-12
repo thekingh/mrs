@@ -24,15 +24,15 @@ public class PushIn implements Movement {
 
         units1 = new Unit[4];
         units1[0] = m1.getUnitInQuadrant(dir, pushDir);
-        units1[1] = m1.getUnitInQuadrant(dir, (pushDir + 2) % 4);
-        units1[2] = m1.getUnitInQuadrant((dir + 2) % 4, (pushDir + 2) % 4);
-        units1[3] = m1.getUnitInQuadrant((dir + 2) % 4, pushDir);
+        units1[1] = m1.getUnitInQuadrant(dir, Direction.opposite(pushDir));
+        units1[2] = m1.getUnitInQuadrant(Direction.opposite(dir), Direction.opposite(pushDir));
+        units1[3] = m1.getUnitInQuadrant(Direction.opposite(dir), pushDir);
 
         units2 = new Unit[4];
         units2[0] = m2.getUnitInQuadrant(dir, pushDir);
-        units2[1] = m2.getUnitInQuadrant(dir, (pushDir + 2) % 4);
-        units2[2] = m2.getUnitInQuadrant((dir + 2) % 4, (pushDir + 2) % 4);
-        units2[3] = m2.getUnitInQuadrant((dir + 2) % 4, pushDir);
+        units2[1] = m2.getUnitInQuadrant(dir, Direction.opposite(pushDir));
+        units2[2] = m2.getUnitInQuadrant(Direction.opposite(dir), Direction.opposite(pushDir));
+        units2[3] = m2.getUnitInQuadrant(Direction.opposite(dir), pushDir);
     }
 
     // TODO: make sure to set Module.hasInside and add to testing
@@ -41,12 +41,12 @@ public class PushIn implements Movement {
         switch (currStep) {
             case 0:
                 // disconnect from everything on the outside
-                r.disconnect(units1[1], (pushDir + 2) % 4);
-                r.disconnect(units1[2], (pushDir + 2) % 4);
+                r.disconnect(units1[1], Direction.opposite(pushDir));
+                r.disconnect(units1[2], Direction.opposite(pushDir));
                 r.disconnect(units1[3], pushDir);
                 r.disconnect(units2[0], dir);
-                r.disconnect(units2[1], (pushDir + 2) % 4);
-                r.disconnect(units2[2], (pushDir + 2) % 4);
+                r.disconnect(units2[1], Direction.opposite(pushDir));
+                r.disconnect(units2[2], Direction.opposite(pushDir));
 
                 // disconnect inside modules
                 r.disconnect(units1[0], units2[3]);
@@ -77,8 +77,8 @@ public class PushIn implements Movement {
                 r.contract(units1[0], units1[3]);
             case 7:
                 // TODO: need to connect to outsides
-                r.connect(units1[0], units1[1], (pushDir + 2) % 4);
-                r.connect(units2[1], units2[2], (pushDir + 2) % 4);
+                r.connect(units1[0], units1[1], Direction.opposite(pushDir));
+                r.connect(units2[1], units2[2], Direction.opposite(pushDir));
                 r.connect(units1[0], units2[1], dir);
                 break;
 
@@ -106,9 +106,6 @@ public class PushIn implements Movement {
         return null;
     }
 
-    public int opposite(int dir) {
-        return (dir + 2) % 4;
-    }
 
                 // case 0:
             

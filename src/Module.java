@@ -198,8 +198,8 @@ public class Module extends Node {
      */
     public boolean canSlide(int dir) {
         
-        Node m1 = getNeighbor((dir + 1) % 4);
-        Node m2 = getNeighbor((dir + 4 - 1) % 4);
+        Node m1 = getNeighbor(Direction.right(dir));
+        Node m2 = getNeighbor(Direction.left(dir));
 
         boolean moveOnM1 = (m1 != null) && (m1.hasNeighborInDirection(dir));
         boolean moveOnM2 = (m2 != null) && (m2.hasNeighborInDirection(dir));
@@ -208,15 +208,10 @@ public class Module extends Node {
     }
 
     public Edge addNeighbor(Module neighbor, int dir, boolean isExtended, boolean isConnected) {
-        boolean isVertical;
-        if (dir == 0 || dir == 2) { //NEEDSWORK is sort of poor form
-            isVertical = true;
-        } else {
-            isVertical = false;
-        }
+        boolean isVertical = Direction.isVertical(dir);
         Edge e = new Edge(this, neighbor, isExtended, isConnected, isVertical);
         putEdge(dir, e);
-        neighbor.putEdge((dir + 2) % 4, e);
+        neighbor.putEdge(Direction.opposite(dir), e);
         addExteriorSubEdges(neighbor, dir, isExtended, isConnected);
         return e;
     }
@@ -239,7 +234,7 @@ public class Module extends Node {
         e = getEdge(dir);
 
         List<Unit> thisSideUnits     = getSideUnits(dir);
-        List<Unit> neighborSideUnits = neighbor.getSideUnits((dir + 2) % 4);
+        List<Unit> neighborSideUnits = neighbor.getSideUnits(Direction.opposite(dir));
         Unit u;
         Unit n;
         Edge newe;

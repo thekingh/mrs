@@ -1,5 +1,5 @@
 package src;
-public class TestHelper {
+public final class TestHelper {
     public static void printRobot(Robot r) {
         Module[][] modules = r.toModuleArray();
         int w = modules.length;

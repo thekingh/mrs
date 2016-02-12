@@ -29,10 +29,10 @@ public class Slide implements Movement {
 
         m2 = (Module) m.getNeighbor(neighborDir);
         m3 = (Module) m2.getNeighbor(dir);
-        u1 = m2.getUnitInQuadrant(opposite(neighborDir), opposite(dir));
-        u2 = m2.getUnitInQuadrant(opposite(neighborDir), dir);
-        u3 = m3.getUnitInQuadrant(opposite(neighborDir), opposite(dir));
-        u4 = m3.getUnitInQuadrant(opposite(neighborDir), dir);
+        u1 = m2.getUnitInQuadrant(Direction.opposite(neighborDir), Direction.opposite(dir));
+        u2 = m2.getUnitInQuadrant(Direction.opposite(neighborDir), dir);
+        u3 = m3.getUnitInQuadrant(Direction.opposite(neighborDir), Direction.opposite(dir));
+        u4 = m3.getUnitInQuadrant(Direction.opposite(neighborDir), dir);
     }
 
     /**
@@ -76,10 +76,6 @@ public class Slide implements Movement {
         return null;
     }
 
-    public int opposite(int dir) {
-        return (dir + 2) % 4;
-    }
-
     /**
      * performs half a contracted slide.
      * NOTE: This redefines Aloupis' contracted slide by only moving the bottom
@@ -87,7 +83,7 @@ public class Slide implements Movement {
      */
     public void performHalfSlide(Unit u1, Unit u2, Unit u3, int step) {
         List<Unit> mSide = m.getSideUnits(neighborDir);
-        Unit trailing = m.getUnitInQuadrant(neighborDir, opposite(dir));
+        Unit trailing = m.getUnitInQuadrant(neighborDir, Direction.opposite(dir));
         Unit leading  = m.getUnitInQuadrant(neighborDir, dir);
         Edge leadingEdge;
         Edge trailingEdge;
@@ -100,7 +96,7 @@ public class Slide implements Movement {
                 leadingEdge = leading.getEdge(neighborDir);
                 r.getUnitGraph().removeEdge(leadingEdge);
                 r.getUnitGraph().addEdge(trailing, u1, neighborDir);
-                leading.disconnect(opposite(neighborDir));
+                leading.disconnect(Direction.opposite(neighborDir));
                 break;
             case 1:
                 trailing.extend(dir);
@@ -115,7 +111,7 @@ public class Slide implements Movement {
                 break;
             case 4:
                 r.getUnitGraph().addEdge(trailing, u2, neighborDir);
-                leading.connect(opposite(neighborDir));
+                leading.connect(Direction.opposite(neighborDir));
                 break;
             default:
                 System.out.println("OMG");

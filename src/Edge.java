@@ -117,7 +117,7 @@ public class Edge {
     public boolean removeFromNodes() {
         //TODO perhaps faster? garbage collection?
         int n1dir = n1.findNeighborDirection(n2);
-        int n2dir = (n1dir + 2) % 4;
+        int n2dir = Direction.opposite(n1dir);
         n1.removeEdge(n1dir);
         n2.removeEdge(n2dir);
         return true;

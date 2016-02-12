@@ -85,7 +85,7 @@ public abstract class Node {
         }
         Edge e = new Edge(this, neighbor, isExtended, isConnected, isVertical);
         putEdge(direction, e);
-        neighbor.putEdge((direction + 2) % 4, e);
+        neighbor.putEdge(Direction.opposite(direction), e);
         return e;
     }
 

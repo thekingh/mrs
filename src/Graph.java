@@ -73,12 +73,12 @@ public class Graph {
     public void addEdge(Node n1, Node n2, int dir, 
                         boolean isExtended, boolean isConnected) {
 
-        boolean isVertical = ((dir % 2) == 0);
+        boolean isVertical = (Direction.isVertical(dir));
 
         Edge e = new Edge(n1, n2, isExtended, isConnected, isVertical);
 
         n1.putEdge(dir, e);
-        n2.putEdge((dir + 2) % 4, e);
+        n2.putEdge(Direction.opposite(dir), e);
 
         edges.add(e);
     }
@@ -308,7 +308,7 @@ public class Graph {
                     continue;
                 }
                 int dist = coord.mDist(neighbor.c());
-                isVertical  = (dir % 2 == 0);
+                isVertical  = (Direction.isVertical(dir));
                 isConnected = false;
                 isExtended  = (dist == 2);
                 e = new Edge(obj, (Node)neighbor.o(), isExtended, isConnected, isVertical);

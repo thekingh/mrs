@@ -15,7 +15,7 @@ public class Wall {
      */
     public Wall(Robot r, int dir) {
         this.dir = dir;
-        this.isDirVertical = ((dir % 2) == 0);
+        this.isDirVertical = Direction.isVertical(dir);
 
         //2D arrays are width height
         Module[][] moduleArray = r.toModuleArray();

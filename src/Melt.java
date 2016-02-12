@@ -17,9 +17,6 @@ public class Melt extends Algorithm {
         return w.hasReachedEnd();
     }
 
-    private boolean isVertical(int dir) {
-        return dir % 2 == 0;
-    }
 
     @Override
     public ParallelMove determinePMove() {
@@ -37,10 +34,10 @@ public class Melt extends Algorithm {
             }
             if (isMoving[i] && !isMoving[i + 1]) {
                 //wall determins neighbor dir, right or down if MS blocks
-                neighborDir = isVertical(dir) ? 1 : 0; 
+                neighborDir = Direction.isVertical(dir) ? 1 : 0; 
                 moves.add(new Slide(r, wallModules[i], dir, neighborDir));
             } else if (!isMoving[i] && isMoving[i + 1]) {
-                neighborDir = isVertical(dir) ? 3 : 2; 
+                neighborDir = Direction.isVertical(dir) ? 3 : 2; 
                 moves.add(new Slide(r, wallModules[i + 1], dir, neighborDir));
             }
         }

@@ -46,8 +46,4 @@ public class KTunnel implements Movement {
     public Movement invert() {
         return null;
     }
-
-    public int opposite(int dir) {
-        return (dir + 2) % 4;
-    }
 }
