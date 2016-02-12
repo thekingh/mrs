@@ -16,6 +16,35 @@ public final class TestHelper {
         }
     }
 
+    public static void runAndDisplayMove(Robot r, Movement m) {
+        while (!m.reachedEnd()) {
+            m.step();
+            r.drawUnit();
+        }
+        r.drawModule();
+    }
+
+    public static void runAndDisplayMoveForSteps(Robot r, Movement m, int s) {
+        for (int i = 0; i < s; i++) {
+            System.out.println(i);
+            m.step();
+            r.drawUnit();
+        }
+        r.drawModule();
+    }
+
+    public static void runMove(Movement m) {
+        while (!m.reachedEnd()) {
+            m.step();
+        }
+    }
+
+    public static void runMoveForSteps(Movement m, int s) {
+        for (int i = 0; i < s; i++) {
+            m.step();
+        }
+    }
+
     public static Robot makeBot(int[][] in) {
         return new Robot(orientArray(in), false); 
     }

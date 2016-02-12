@@ -32,11 +32,12 @@ import java.util.ArrayList;
  */
 public class PushIn implements Movement {
 	private int currStep = 0;
-    private static final int NUMSTEPS = 8; //TODO ????
+    private static final int NUMSTEPS = 30; //TODO ????
 
     private final Robot r;
     private final Module mA;
     private final Module mB;
+    private final Module[] outerMs;
     private final int dir;
     private final int pushDir;
     private final Unit[] unitsA;
@@ -53,7 +54,7 @@ public class PushIn implements Movement {
         unitsA = mA.getUnitsClockwiseFrom(dir, pushDir);
         unitsB = mB.getUnitsClockwiseFrom(dir, pushDir);
 
-        Module[] outerMs = new Module[7];
+        outerMs = new Module[7];
         outerMs[0] = (Module) mA.getNeighbor(Direction.opposite(pushDir));
         outerMs[1] = (Module) mB.getNeighbor(Direction.opposite(pushDir));
         outerMs[2] = (Module) mB.getNeighbor(dir);
@@ -227,7 +228,31 @@ public class PushIn implements Movement {
                 r.connect(unitsA[3], unitsB[2], pushDir);
                 r.connect(unitsA[2], outerUs[1][3], Direction.opposite(pushDir));
                 break;
+            case 29:
+                // Updating module graph for surrounding mods
+                r.disconnect(outerMs[0], pushDir);
+                r.disconnect(outerMs[1], pushDir);
+                r.disconnect(outerMs[2], Direction.opposite(dir));
+                r.disconnect(outerMs[3], Direction.opposite(dir));
+                r.disconnect(outerMs[4], Direction.opposite(dir));
+                r.disconnect(outerMs[5], Direction.opposite(pushDir));
+                r.disconnect(outerMs[6], pushDir);
+                r.disconnect(outerMs[6], Direction.opposite(pushDir));
+                r.disconnect(mA, dir);
+
+                r.connect(outerMs[0], outerMs[6], pushDir);
+                r.connect(outerMs[0], outerMs[1], dir);
+                r.connect(outerMs[1], mA, pushDir);
+                r.connect(outerMs[5], mB, dir);
+                r.connect(outerMs[6], outerMs[5], pushDir);
+                r.connect(mA, mB, pushDir);
+                r.connect(mA, outerMs[2], dir);
+                r.connect(mB, outerMs[3], dir);
+
         }
+        //TODO: tunnel out sliding path somehow (don't worry about chunks that
+        //may be disconnected, that should be taken care of by alg)
+        //TODO: change module graph at the end to reflect the tunnel;
 
         currStep++;
     }

@@ -3,11 +3,6 @@ package src;
 
 public class TestSlide {
 
-    public static void runSlide(Slide s) {
-        while (!s.reachedEnd()) {
-            s.step();
-        }
-    }
 
     public static void slideTest(Robot r, int[][] finish, Slide s) {
         Robot f = TestHelper.makeBot(finish);
@@ -17,7 +12,7 @@ public class TestSlide {
         r.drawModule();
         System.out.println("=====================================");
 
-        runSlide(s);
+        TestHelper.runMove(s);
 
         r.drawModule();
         TestHelper.validateOutput(r, f);
