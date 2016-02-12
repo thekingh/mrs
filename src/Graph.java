@@ -129,7 +129,7 @@ public class Graph {
         GridObject curr = Q.get(head);
         Node currNode = (Node) curr.o();
         Coordinate currCoord = curr.c();
-        for(int dir = 0; dir < 4; dir++) {// TODO revisit
+        for(int dir = 0; dir < Direction.MAX_DIR; dir++) {// TODO revisit
             Node n = currNode.getNeighbor(dir); // n is neighbor TODO WRONG
             // No neighbor in given direction
             if (n == null) {
@@ -300,7 +300,7 @@ public class Graph {
             }
             obj   = (Node) V.o();
             coord = V.c();
-            for(int dir = 0; dir < 4; dir++) {
+            for(int dir = 0; dir < Direction.MAX_DIR; dir++) {
                 e = obj.getEdge(dir);
                 neighbor = g.findClosestNode(coord, dir);
                 if (neighbor == null) {

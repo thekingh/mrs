@@ -3,16 +3,17 @@ package src;
 public class TestPushIn {
 
     public static void runPushIn(Robot r, PushIn p) {
-        while (!p.reachedEnd()) {
-        // for (int i = 0; i < 7; i++) {
+        //while (!p.reachedEnd()) {
+        for (int i = 0; i < 29; i++) {
+            System.out.println(i);
             p.step();
             r.drawUnit();
         }
     }
 
     public static void test1() {
-        int[][] s = {{1},
-                     {1}};
+        int[][] s = {{1,1},
+                     {1,0}};
         Robot r = TestHelper.makeBot(s);
 
         Module[][] ms0 = r.toModuleArray();

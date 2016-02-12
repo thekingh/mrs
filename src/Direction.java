@@ -1,6 +1,8 @@
 package src;
 
 public final class Direction {
+    public static final int MAX_DIR = 4;
+    
 	// private final int dir;
 
 	// public Direction(int dir) {
@@ -16,15 +18,15 @@ public final class Direction {
 	}
 
 	public static int opposite(int dir) {
-		return (dir + 2) % 4;
+		return (dir + MAX_DIR / 2) % MAX_DIR;
 	}
 
 	public static int right(int dir) {
-		return (dir + 1) % 4;
+		return (dir + 1) % MAX_DIR;
 	}
 
 	public static int left(int dir) {
-		return (dir - 1 + 4) % 4;
+		return (dir - 1 + MAX_DIR) % MAX_DIR;
 	}
 
 	// public int hashCode() {

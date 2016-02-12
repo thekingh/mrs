@@ -119,7 +119,7 @@ public abstract class Node {
     public int findNeighborDirection(Node neighbor) {
         Node potentialn;
         int neighborDir = -1;
-        for (int dir = 0; dir < 4; dir++) { //check for correct direction
+        for (int dir = 0; dir < Direction.MAX_DIR; dir++) { //check for correct direction
             potentialn = getNeighbor(dir);
             if (potentialn != null && potentialn.equals(neighbor)) {
                 neighborDir = dir;

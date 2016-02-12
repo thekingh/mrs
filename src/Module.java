@@ -147,10 +147,23 @@ public class Module extends Node {
         return toReturn;
     }
 
+
+    /**
+     * Returns array of units from a starting quadrant in clockwise order.
+     */
+    public Unit[] getUnitsClockwiseFrom(int dir1, int dir2) {
+        Unit[] units = new Unit[4];
+        units[0] = getUnitInQuadrant(dir1, dir2);
+        units[1] = getUnitInQuadrant(dir1, Direction.opposite(dir2));
+        units[2] = getUnitInQuadrant(Direction.opposite(dir1), Direction.opposite(dir2));
+        units[3] = getUnitInQuadrant(Direction.opposite(dir1), dir2);
+        return units;
+    }
+
     public Unit getUnitInQuadrant(int dir1, int dir2) {
         assert (size == 2);
         //TODO fix or get rid super ugly
-        switch(4 * dir1 + dir2) {
+        switch(Direction.MAX_DIR * dir1 + dir2) {
             case 3:
             case 12:
                 return getUnit(0,0);

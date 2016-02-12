@@ -47,7 +47,7 @@ public class Robot {
         for (int i = 0; i < w; i++) {
             for (int j = 0; j < h; j++) {
                 if (moduleBools[i][j]) {
-                    for (int dir = 0; dir < 4; dir++) {
+                    for (int dir = 0; dir < Direction.MAX_DIR; dir++) {
                         Coordinate c = new Coordinate(i, j);
                         Coordinate r = c.calcRelativeLoc(dir);
                         if (r.inBounds(w, h) && moduleBools[r.x()][r.y()]) {
@@ -82,38 +82,74 @@ public class Robot {
         return moduleGraph;
     }
 
+
+    /**
+     * In the robot operations silently fail, the graph throws errors
+     */
     public void extend(Unit u, int dir) {
-        u.extend(dir);
+        if (u != null) {
+            u.extend(dir);
+        }
     }
     public void extend(Unit u1, Unit u2) {
-        u1.extend(u1.findNeighborDirection(u2));
+        if (u1 != null && u2 != null) {
+            u1.extend(u1.findNeighborDirection(u2));
+        }
     }
 
     public void contract(Unit u, int dir) {
-        u.contract(dir);
+        if (u != null) {
+            u.contract(dir);
+        }
     }
     public void contract(Unit u1, Unit u2) {
-        u1.contract(u1.findNeighborDirection(u2));
+        if (u1 != null && u2 != null) {
+            u1.contract(u1.findNeighborDirection(u2));
+        }
     }
+    
 
     public void connect(Unit u1, Unit u2, int dir) {
-        unitGraph.addEdge(u1, u2, dir);
+        if (u1 != null && u2 != null) {
+            unitGraph.addEdge(u1, u2, dir);
+        }
+    }
+    public void connect(Unit u1, Unit u2, int dir, boolean isExtended) {
+        if (u1 != null && u2 != null) {
+            unitGraph.addEdge(u1, u2, dir, isExtended);
+        }
     }
     public void connect(Module m1, Module m2, int dir) {
-        moduleGraph.addEdge(m1, m2, dir);
+        if (m1 != null && m2 != null) {
+            moduleGraph.addEdge(m1, m2, dir);
+        }
+    }
+    public void connect(Module m1, Module m2, int dir, boolean isExtended) {
+        if (m1 != null && m2 != null) {
+            moduleGraph.addEdge(m1, m2, dir, isExtended);
+        }
     }
 
+
     public void disconnect(Unit u1, Unit u2) {
-        unitGraph.removeEdge(u1, u2);
+        if (u1 != null && u2 != null) {
+            unitGraph.removeEdge(u1, u2);
+        }
     }
     public void disconnect(Unit u, int dir) {
-        unitGraph.removeEdge(u, dir);
+        if (u != null) {
+            unitGraph.removeEdge(u, dir);
+        }
     }
     public void disconnect(Module m1, Module m2) {
-        moduleGraph.removeEdge(m1, m2);
+        if (m1 != null && m2 != null) {
+            moduleGraph.removeEdge(m1, m2);
+        }
     }
     public void disconnect(Module m, int dir) {
-        moduleGraph.removeEdge(m, dir);
+        if (m != null) {
+            moduleGraph.removeEdge(m, dir);
+        }
     }
 
     public Module[][] toModuleArray() {

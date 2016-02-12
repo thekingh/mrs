@@ -35,7 +35,7 @@ public class State {
             rbt.put("y", c.y());
 
             Node n = (Node)g.o();
-            for(int dir = 0; dir < 4; dir++) {
+            for(int dir = 0; dir < Direction.MAX_DIR; dir++) {
 
                 Edge e = n.getEdge(dir);
                 
