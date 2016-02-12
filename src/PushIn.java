@@ -191,6 +191,7 @@ public class PushIn implements Movement {
             case 22:
                 r.disconnect(unitsB[3], dir);
                 r.disconnect(unitsB[3], Direction.opposite(dir));
+                r.connect(unitsB[2], unitsA[1], dir);
                 break;
             case 23:
                 r.extend(unitsA[2], unitsA[0]);
@@ -200,6 +201,7 @@ public class PushIn implements Movement {
                 r.disconnect(unitsB[2], Direction.opposite(dir));
                 r.connect(unitsA[0], unitsA[1], pushDir);
                 r.connect(unitsB[0], unitsB[3], Direction.opposite(dir));
+                r.disconnect(unitsB[2], dir);
                 break;
             case 25:
                 r.contract(unitsB[3], unitsB[2]);
