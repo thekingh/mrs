@@ -179,26 +179,6 @@ public class Module extends Node {
                 return getUnit(1,1);
             default:
                 return null;
-/*
-            case 1:
-                return getUnit(0,1);
-            case 3: 
-                return getUnit(0,0);
-            case 4:
-                return getUnit(0,1);
-            case 6:
-                return getUnit(1,1);
-            case 9:
-                return getUnit(1,1);
-            case 11:
-                return getUnit(1,0);
-            case 12:
-                return getUnit(0,0);
-            case 14:
-                return getUnit(1,0);
-            default:
-                return null;
-*/
         }
     }
 
@@ -312,6 +292,30 @@ public class Module extends Node {
         for (Edge e : getExteriorSubEdges(dir)) {
             e.setIsExtended(true);
         }
+    }
+
+    public void swapUnits(Unit u1, Unit u2) {
+        Coordinate a = findCoordinate(u1);
+        Coordinate b = findCoordinate(u2);
+        swapUnitsFromCoords(a.x(), a.y(), b.x(), b.y());
+    }
+
+    private Coordinate findCoordinate(Unit u) {
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                if (units[i][j].equals(u)) {
+                    return new Coordinate(i, j);
+                }
+            }
+        }
+
+        return new Coordinate(-1, -1);
+    }
+
+    private void swapUnitsFromCoords(int x1, int y1, int x2, int y2) {
+        Unit temp = units[x1][y1];
+        units[x1][y1] = units[x2][y2];
+        units[x2][y2] = temp;
     }
 
 	// NEEDSWORK: print all of the units?

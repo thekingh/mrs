@@ -51,8 +51,8 @@ public class OneTunnel implements Movement {
         this.dir = dir;
         this.pushDir = pushDir;
 
-        unitsA = mA.getUnitsClockwiseFrom(dir, pushDir);
-        unitsB = mB.getUnitsClockwiseFrom(dir, pushDir);
+        unitsA = mA.getUnitsFrom(dir, pushDir);
+        unitsB = mB.getUnitsFrom(dir, pushDir);
 
         outerMs = new Module[7];
         outerMs[0] = (Module) mA.getNeighbor(Direction.opposite(pushDir));
@@ -66,7 +66,7 @@ public class OneTunnel implements Movement {
         outerUs = new Unit[7][4];
         for (int i = 0; i < outerMs.length; i++) {
             if (outerMs[i] != null) {
-                outerUs[i] = outerMs[i].getUnitsClockwiseFrom(dir, pushDir);
+                outerUs[i] = outerMs[i].getUnitsFrom(dir, pushDir);
             }
         }
     }
@@ -176,6 +176,7 @@ public class OneTunnel implements Movement {
                 r.connect(unitsB[2], unitsA[3], Direction.opposite(dir), true);
                 r.connect(unitsA[0], unitsA[2], Direction.opposite(dir));
                 r.connect(unitsA[0], unitsA[1], dir);
+                r.connect(unitsA[1], outerUs[2][2], dir);
                 break;
             case 19:
                 r.contract(unitsA[3], unitsB[2]);
@@ -185,6 +186,7 @@ public class OneTunnel implements Movement {
                 r.connect(unitsA[1], unitsB[1], pushDir, true);
                 r.disconnect(unitsA[1], Direction.opposite(pushDir));
                 r.disconnect(unitsA[0], dir);
+                r.disconnect(unitsA[1], dir);
                 break;
             case 21:
                 r.contract(unitsA[1], unitsB[1]);
@@ -248,6 +250,9 @@ public class OneTunnel implements Movement {
                 r.connect(mA, mB, pushDir);
                 r.connect(mA, outerMs[2], dir);
                 r.connect(mB, outerMs[3], dir);
+
+                mA.swapUnits(unitsA[0], unitsA[1]);
+                break;
 
         }
         //TODO: tunnel out sliding path somehow (don't worry about chunks that
