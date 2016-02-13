@@ -80,7 +80,7 @@ public class TestOneTunnel {
         Robot r = TestHelper.makeBot(s);
 
         Module[][] ms0 = r.toModuleArray();
-        OneTunnel p0 = new OneTunnel(r, ms0[1][1], 2, 1);
+        OneTunnel p0 = new OneTunnel(r, ms0[1][2], 2, 1);
 
         oneTunnelTest(r, f, p0);
     }
@@ -89,8 +89,8 @@ public class TestOneTunnel {
         // testSimpleDR();
         // testSimpleDL();
         // testSimpleUR();
-        testSimpleUL();
-        // test2();
+        // testSimpleUL();
+        test3();
     }
 
 }
