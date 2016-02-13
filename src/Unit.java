@@ -45,7 +45,8 @@ public class Unit extends Node {
     }
 
 	public String toString() {
-		//return String.format("%d ",getId());
+
+		// return String.format("%3d ",getId());
         return "o";
 	}
 }
