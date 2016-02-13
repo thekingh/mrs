@@ -295,21 +295,9 @@ public class Module extends Node {
     }
 
     public void swapUnits(Unit u1, Unit u2) {
-        Coordinate a = findCoordinate(u1);
-        Coordinate b = findCoordinate(u2);
+        Coordinate a = u1.findSelfInArray(units);
+        Coordinate b = u2.findSelfInArray(units);
         swapUnitsFromCoords(a.x(), a.y(), b.x(), b.y());
-    }
-
-    private Coordinate findCoordinate(Unit u) {
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                if (units[i][j].equals(u)) {
-                    return new Coordinate(i, j);
-                }
-            }
-        }
-
-        return new Coordinate(-1, -1);
     }
 
     private void swapUnitsFromCoords(int x1, int y1, int x2, int y2) {

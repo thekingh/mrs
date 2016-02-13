@@ -64,6 +64,22 @@ public abstract class Node {
 	public int getId() {
 		return id;
 	}
+    
+    /**
+     * Given a 2d array finds own coordinate in array.
+     */
+    public Coordinate findSelfInArray(Node[][] nodes) {
+        int w = nodes.length;
+        int h = nodes[0].length;
+        for (int i = 0; i < w; i++) {
+            for (int j = 0; j < h; j++) {
+                if (this.equals(nodes[i][j])) {
+                    return new Coordinate(i, j);
+                }
+            }
+        }
+        return new Coordinate(-1, -1);
+    }
 
     /**
      * Creates and returns an edge making a neighbor in a relative direction

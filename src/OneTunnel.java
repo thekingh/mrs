@@ -32,7 +32,7 @@ import java.util.ArrayList;
  */
 public class OneTunnel implements Movement {
 	private int currStep = 0;
-    private static final int NUMSTEPS = 30; //TODO ????
+    private static final int NUMSTEPS = 29; //TODO ????
 
     private final Robot r;
     private final Module mA;
@@ -70,6 +70,65 @@ public class OneTunnel implements Movement {
             }
         }
     }
+
+    /**
+     * Initializes a 1-tunnel move from a start coordinate to an end coordinate
+     * in the module graph.
+     * To figure out the actual tunnel position, we rely on the fact that the start
+     * node is a leaf node, and therefore only has a single neighbor direction 
+     * which we use to determine the tunnel path of the 2 possiblities.
+     */
+    public static OneTunnel initFromCoords(Robot r, Coordinate start, Coordinate end) {
+        Module[][] ms = r.toModuleArray();
+        //find startM
+        Module startM = ms[start.x()][start.y()];
+        int dX = end.x() - start.x();
+        int dY = end.y() - start.y();
+
+        //find dir
+        int dir = -1;
+        for (int i = 0; i < Direction.MAX_DIR; i++) {
+            if (startM.hasNeighborInDirection(i)) { 
+                dir = i;
+            }
+        }
+        if (dir == -1) {
+            throw new RuntimeException("start node has no neighbors");
+        }
+
+        //find pushDir
+        int pushDir;
+        if (Direction.isVertical(dir)) {
+            pushDir = dX > 0 ? 1 : 3;
+        } else {
+            pushDir = dY > 0 ? 0 : 2;
+        }
+
+        //find turning module
+        Module m;
+        switch (dir) {
+            case 0:
+                m = ms[start.x()][end.y() - 1];
+                break;
+            case 1:
+                m = ms[start.x() - 1][end.y()];
+                break;
+            case 2:
+                m = ms[start.x()][end.y() + 1];
+                break;
+            case 3:
+                m = ms[start.x() + 1][end.y()];
+                break;
+            default:
+                m = null;
+                break;
+        }
+        System.out.println("dir: " + dir);
+        System.out.println("pushDir: " + pushDir);
+        
+        return new OneTunnel(r, m, dir, pushDir);
+    }
+
 
     // TODO: make sure to set Module.hasInside and add to testing
     // (also add has inside for robot equality)
@@ -230,36 +289,35 @@ public class OneTunnel implements Movement {
                 r.connect(unitsA[3], unitsB[2], pushDir);
                 r.connect(unitsA[2], outerUs[1][3], Direction.opposite(pushDir));
                 break;
-            case 29:
-                // Updating module graph for surrounding mods
-                r.disconnect(outerMs[0], pushDir);
-                r.disconnect(outerMs[1], pushDir);
-                r.disconnect(outerMs[2], Direction.opposite(dir));
-                r.disconnect(outerMs[3], Direction.opposite(dir));
-                r.disconnect(outerMs[4], Direction.opposite(dir));
-                r.disconnect(outerMs[5], Direction.opposite(pushDir));
-                r.disconnect(outerMs[6], pushDir);
-                r.disconnect(outerMs[6], Direction.opposite(pushDir));
-                r.disconnect(mA, dir);
-
-                r.connect(outerMs[0], outerMs[6], pushDir);
-                r.connect(outerMs[0], outerMs[1], dir);
-                r.connect(outerMs[1], mA, pushDir);
-                r.connect(outerMs[5], mB, dir);
-                r.connect(outerMs[6], outerMs[5], pushDir);
-                r.connect(mA, mB, pushDir);
-                r.connect(mA, outerMs[2], dir);
-                r.connect(mB, outerMs[3], dir);
-
-                mA.swapUnits(unitsA[0], unitsA[1]);
-                break;
-
         }
         //TODO: tunnel out sliding path somehow (don't worry about chunks that
         //may be disconnected, that should be taken care of by alg)
         //TODO: change module graph at the end to reflect the tunnel;
 
         currStep++;
+    }
+
+    public void finalize() {
+        r.disconnect(outerMs[0], pushDir);
+        r.disconnect(outerMs[1], pushDir);
+        r.disconnect(outerMs[2], Direction.opposite(dir));
+        r.disconnect(outerMs[3], Direction.opposite(dir));
+        r.disconnect(outerMs[4], Direction.opposite(dir));
+        r.disconnect(outerMs[5], Direction.opposite(pushDir));
+        r.disconnect(outerMs[6], pushDir);
+        r.disconnect(outerMs[6], Direction.opposite(pushDir));
+        r.disconnect(mA, dir);
+
+        r.connect(outerMs[0], outerMs[6], pushDir);
+        r.connect(outerMs[0], outerMs[1], dir);
+        r.connect(outerMs[1], mA, pushDir);
+        r.connect(outerMs[5], mB, dir);
+        r.connect(outerMs[6], outerMs[5], pushDir);
+        r.connect(mA, mB, pushDir);
+        r.connect(mA, outerMs[2], dir);
+        r.connect(mB, outerMs[3], dir);
+
+        mA.swapUnits(unitsA[0], unitsA[1]);
     }
 
     // /**
@@ -281,4 +339,7 @@ public class OneTunnel implements Movement {
         return null;
     }
 
+    public Robot getRobot() {
+        return r;
+    }
 }

@@ -16,33 +16,43 @@ public final class TestHelper {
         }
     }
 
-    public static void runAndDisplayMove(Robot r, Movement m) {
+    public static void runAndDisplayMove(Movement m) {
+        Robot r = m.getRobot();
         while (!m.reachedEnd()) {
             m.step();
+            assert r.isConnected();
             r.drawUnit();
         }
+        m.finalize();
         r.drawModule();
     }
 
-    public static void runAndDisplayMoveForSteps(Robot r, Movement m, int s) {
+    public static void runAndDisplayMoveForSteps(Movement m, int s) {
+        Robot r = m.getRobot();
         for (int i = 0; i < s; i++) {
             System.out.println(i);
             m.step();
+            assert r.isConnected();
             r.drawUnit();
         }
+        m.finalize();
         r.drawModule();
     }
 
     public static void runMove(Movement m) {
         while (!m.reachedEnd()) {
             m.step();
+            assert m.getRobot().isConnected();
         }
+        m.finalize();
     }
 
     public static void runMoveForSteps(Movement m, int s) {
         for (int i = 0; i < s; i++) {
             m.step();
+            assert m.getRobot().isConnected();
         }
+        m.finalize();
     }
 
     public static Robot makeBot(int[][] in) {

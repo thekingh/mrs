@@ -3,32 +3,27 @@ package src;
 import java.util.List;
 import java.util.ArrayList;
 
+/**
+ * KTunnel is a O(k) movement of a single block through the robot with k turns
+ */
 public class KTunnel implements Movement {
 	private int currStep = 0;
-    private static final int NUMSTEPS = 10; //TODO ????
+    private int k;
+    private final Robot r;
 
-    // TODO: this is an implementation of a 1-tunnel, can be extended
-    // to kTunnel with a list of coords in the kdirections
-    public KTunnel(Robot r, Module m, int xDelta, int yDelta) {
-    	Module[][] ms = r.toModuleArray();
-        int mX;
-        int mY;
-        // finds location of m in ms
-        for (int i = 0; i < ms.length; i++) {
-            for (int j = 0; j < ms[0].length; j++) {
-                if (ms[i][j].equals(m)) {
-                    mX = i;
-                    mY = j;
-                    break;
-                }
-            }
-        }
+    /**
+     * KTunnel finds a tunnel with at most k turns through the robot.
+     * Note that we may find a tunnel with fewer than k turns, however k we 
+     * find must have the same parity as the given k (as start and end must be
+     * leaf nodes)
+     */
+    public KTunnel(Robot r, int k, Coordinate start, Coordinate end) {
+        //get Start Module
 
         // need to determine which direction to tunnel??
-
-
         // determine module to push in and direction
         // then determine which way to push out
+        this.r = r;
     }
 
     public void step() {
@@ -36,8 +31,12 @@ public class KTunnel implements Movement {
         currStep++;
     }
 
+    public void finalize() {
+
+    }
+
     public boolean reachedEnd() {
-        return currStep == NUMSTEPS;
+        return false;
     }
 
     /**
@@ -45,5 +44,9 @@ public class KTunnel implements Movement {
      */
     public Movement invert() {
         return null;
+    }
+
+    public Robot getRobot() {
+        return r;
     }
 }

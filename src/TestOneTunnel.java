@@ -10,7 +10,7 @@ public class TestOneTunnel {
         r.drawModule();
         System.out.println("=====================================");
 
-        TestHelper.runAndDisplayMoveForSteps(r, p, 30);
+        TestHelper.runAndDisplayMoveForSteps(p, 30);
 
         r.drawModule();
         TestHelper.validateOutput(r, f);
@@ -85,12 +85,27 @@ public class TestOneTunnel {
         oneTunnelTest(r, f, p0);
     }
 
+    public static void testCoordinateConstructor() {
+        int[][] s = {{1,0},
+                     {1,1},
+                     {1,1}};
+        int[][] f = {{1,1,0},
+                     {1,1,1}};
+        Robot r = TestHelper.makeBot(s);
+
+        Module[][] ms0 = r.toModuleArray();
+        OneTunnel p0 = OneTunnel.initFromCoords(r, new Coordinate(0,2), new Coordinate(2,0));
+
+        oneTunnelTest(r, f, p0);
+    }
+
     public static void main(String[] args) {
         // testSimpleDR();
         // testSimpleDL();
         // testSimpleUR();
         // testSimpleUL();
-        test3();
+        // test3();
+        testCoordinateConstructor();
     }
 
 }

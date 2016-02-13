@@ -56,12 +56,13 @@ public class Slide implements Movement {
         } else{ 
             performHalfSlide(u2, u3, u4, currStep);
         }
-        if (currStep == NUMSTEPS - 1) {
-            r.getModuleGraph().removeEdge(m.getEdge(neighborDir));
-            r.getModuleGraph().addEdge(m, m3, neighborDir);
-        }
 /*        r.drawUnit();*/
         currStep++;
+    }
+
+    public void finalize() {
+        r.getModuleGraph().removeEdge(m.getEdge(neighborDir));
+        r.getModuleGraph().addEdge(m, m3, neighborDir);
     }
 
     public boolean reachedEnd() {
@@ -117,5 +118,9 @@ public class Slide implements Movement {
                 System.out.println("OMG");
                 break;
         }
+    }
+
+    public Robot getRobot() {
+        return r;
     }
 }
