@@ -149,9 +149,10 @@ public class Module extends Node {
 
     // TODO: change name: not always clockwise
     /**
-     * Returns array of units from a starting quadrant in clockwise order.
+     * Returns array of units from a starting quadrant, going in direction starting
+     * in dir1, and moving towards dir2 i.e. either clocwise or counter clockwise.
      */
-    public Unit[] getUnitsClockwiseFrom(int dir1, int dir2) {
+    public Unit[] getUnitsFrom(int dir1, int dir2) {
         Unit[] units = new Unit[4];
         units[0] = getUnitInQuadrant(dir1, dir2);
         units[1] = getUnitInQuadrant(dir1, Direction.opposite(dir2));
