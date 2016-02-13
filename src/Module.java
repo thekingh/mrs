@@ -147,7 +147,7 @@ public class Module extends Node {
         return toReturn;
     }
 
-
+    // TODO: change name: not always clockwise
     /**
      * Returns array of units from a starting quadrant in clockwise order.
      */

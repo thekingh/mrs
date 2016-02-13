@@ -30,7 +30,7 @@ import java.util.ArrayList;
  *      0, 1, 2, 3, 5
  * 
  */
-public class PushIn implements Movement {
+public class OneTunnel implements Movement {
 	private int currStep = 0;
     private static final int NUMSTEPS = 30; //TODO ????
 
@@ -44,7 +44,7 @@ public class PushIn implements Movement {
     private final Unit[] unitsB;
     private final Unit[][] outerUs;
 
-    public PushIn(Robot r, Module m, int dir, int pushDir) {
+    public OneTunnel(Robot r, Module m, int dir, int pushDir) {
     	this.r = r;
         this.mA = m;
         this.mB = (Module) m.getNeighbor(dir);
