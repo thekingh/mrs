@@ -1,31 +1,24 @@
-/*
- * Casey Gowrie, Kabir Singh, Alex Tong
- *
- */
 
 package rgraph;
 
 import rutils.*;
-
 
 import java.util.Set;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-
-
 /**
  * Graph represents a relational network between modular robots. 
+ * <p/>
  * A Modular robot graph has state containing a nodelist and an edgelist
  * Nodes must subclass the Node abstract class and edges must do the same for 
  * the edge class.
  *
- *
  * @author Alex Tong
  * @author Kabir Singh
  * @author Casey Gowrie
- * @version 1.0
+ * @version 2.0
  *
  */
 public class Graph {
@@ -33,75 +26,79 @@ public class Graph {
 	private final Set<Node> nodes;
 	private Set<Edge> edges;
 
-	public Graph() {
-		//Graph(new HashMap<Integer, Node>(), new HashMap<Integer, Edge>());
-		this.nodes = new HashSet<Node>();
-		this.edges = new HashSet<Edge>();
-	}
-
-	public Graph(Set<Node> nodes, Set<Edge> edges) {
-		this.nodes = nodes;
-		this.edges = edges;
+    /**
+     * Constructs a graph with a set of vertices and edges.
+     */
+	public Graph(Set<Node> V, Set<Edge> E) {
+		this.nodes = V;
+		this.edges = E;
 	}
 
     public Set<Node> getNodes() {
         return nodes;
     }
 
-    public Set<Edge> getEdges() {
+    protected Set<Edge> getEdges() {
         return edges;
     }
 
+    /**
+     * Returns the number of nodes in this graph.
+     */
     public int size() {
         return nodes.size();
     }
 
-
-    // public void addEdge(Edge e) {
-    //     edges.add(e);
-    // }
-
-    public void addNeighbor(Node n, Node neighbor, int dir, boolean isExtended, 
-        boolean isConnected) {
-
-        Edge e = n.addNeighbor(neighbor, dir, isExtended, isConnected);
-        edges.add(e);
-    }
-
+    /**
+     * Default edge constructor, adds a contracted edge.
+     * @param n1            Start node
+     * @param n2            End node
+     * @param dir           direction from start node to end node to add the edge
+     */
     public void addEdge(Node n1, Node n2, int dir) {
         addEdge(n1, n2, dir, false, true);
     }
 
+    /**
+     * Edge constructor, adds an edge given extension between the nodes.
+     * @param n1            Start node
+     * @param n2            End node
+     * @param dir           direction from start node to end node to add the edge
+     * @param isExtended    true if edge added is 1 unit long 
+     */
     public void addEdge(Node n1, Node n2, int dir, boolean isExtended) {
         addEdge(n1, n2, dir, isExtended, true);
     }
 
-    // dir from 1 to 2
-    // NEEDSWORK: default: maybe always contracted and connected
-    public void addEdge(Node n1, Node n2, int dir, 
+    private void addEdge(Node n1, Node n2, int dir, 
                         boolean isExtended, boolean isConnected) {
-
         boolean isVertical = (Direction.isVertical(dir));
-
         Edge e = new Edge(n1, n2, isExtended, isConnected, isVertical);
-
         n1.putEdge(dir, e);
         n2.putEdge(Direction.opposite(dir), e);
-
         edges.add(e);
     }
 
-    public void removeEdge(Edge e) {
-        // NEEDSWORK: do we want to leave this in the edge class? make remove here
+    private void removeEdge(Edge e) {
         e.removeFromNodes();
         edges.remove(e);
     }
 
+    /**
+     * Removes the edge between two nodes.
+     * @param n1 one node in the edge
+     * @param n2 other node in the edge
+     */
     public void removeEdge(Node n1, Node n2) {
         Edge e = new Edge(n1, n2, false, false, false);
         removeEdge(e);
     }
 
+    /**
+     * Removes the edge from a node in a given direction.
+     * @param n     the reference node who owns the edge
+     * @param dir   the direction of the edge relative to the reference node to remove
+     */
     public void removeEdge(Node n, int dir) {
         Edge e = n.getEdge(dir);
         if (e != null) {
@@ -111,7 +108,7 @@ public class Graph {
 
     /**
      * Calculates a new coordinate relative to an input coordinate
-     * Note that coordinate system is x pos is right and y pos is up
+     * Note that coordinate system is x pos is right and y pos is up.
      *
      * @param curr      The current coordinate in (x,y) representation
      * @param dir       The relative direction of the new point relative to the
@@ -235,11 +232,13 @@ public class Graph {
     }
 
     /** 
-     * Transform a graph into a Grid (Cartesian space)
+     * Transform a graph into a Grid (Cartesian space).
      *
-     * @return          The Cartesian respresentation of a Graph
+     * @param includeEdges if true, then grid includes unit length edges in
+     *                     representation otherwise edges are ignored.
+     * @return             The Cartesian respresentation of a Graph
      */
-	public Grid toGrid(boolean useExtension) {
+	public Grid toGrid(boolean includeEdges) {
         if (nodes.isEmpty()) { //return default/empty grid
             return new Grid();
         }
@@ -276,20 +275,21 @@ public class Graph {
     /**
      * Updates a relational graph neighbors taking into account spatial
      * considerations.
-     *
-     * Note that we remove all old edges
-     *
-     *  Clear previous EdgeSet
-     *  For node N:
-     *      for direction d:
-     *          findClosestNeighbor (in the grid)
-     *
-     *          if there is no neighbor, delete N's Edge
-     *          
+     * <p>
+     * The graph represents a robot as relations between nodes, however
      *
      * @param g         spatial representation used in edge update
+     * @deprecated      version 2.0
      */
-    public boolean updateGraph(Grid g) {
+    private boolean updateGraph(Grid g) {
+        /*
+         * Note that we remove all old edges
+         *  Clear previous EdgeSet
+         *  For node N:
+         *      for direction d:
+         *          findClosestNeighbor (in the grid)
+         *          if there is no neighbor, delete N's Edge
+         */
         List<GridObject> nodeList = g.getNodes();
         Set<Edge>        edgeSet  = new HashSet<Edge>();
         Node obj;
