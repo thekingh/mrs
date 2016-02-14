@@ -256,7 +256,7 @@ public class Graph {
         V.add(start);
         while (i < Q.size()) {
             //GridObject curr = Q.get(i);
-            addNeighborsToQueue(Q, E, V, i, useExtension);
+            addNeighborsToQueue(Q, E, V, i, includeEdges);
             i++;
         }
         List<GridObject> all = new ArrayList<GridObject>();

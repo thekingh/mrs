@@ -1,4 +1,3 @@
-
 package ralgorithm;
 
 import rgraph.*;
@@ -7,74 +6,117 @@ import rutils.*;
 import java.util.List;
 import java.util.ArrayList;
 
+/**
+ * The Slide is a movement sliding one module along two adjacent modules.
+ *
+ *******************************************************************************
+ * <p>Visual Aid: Modules are labeled with either a letter or number. Where A is
+ *    the module of interest, and other modules are not part of the move, but important
+ *    for handling connectedness and carrying.
+ * <p>    START      END
+ * <p>     4           4
+ * <p>    0A3         0A3
+ * <p>     12         12 
+ * <p>
+ * Requirements:
+ * <ul>
+ *      <li>1 exists iff 1 is connected to A and not connected to C</li>
+ *      <li>if 2 exists and is connected to A, then it can slide with A</li>
+ *      <li>if 0 exists and is connected to A, then it can slide with A</li>
+ * </ul>
+ *
+ * @author Casey Gowrie
+ * @author Kabir Singh
+ * @author Alex Tong
+ * @version 1.0
+ * @since 2/14/2016 
+ */
 public class Slide implements Movement {
     private int currStep = 0;
-    private static final int NUMSTEPS = 10; //TODO ????
+    private static final int NUMSTEPS = 10;
     private final Robot r;
-    private final Module m;
+
+    private final Module mA;
+    private final Unit[] uA;
+
     private final int dir;
     private final int neighborDir;
-    private final Unit u1;
-    private final Unit u2;
-    private final Unit u3;
-    private final Unit u4;
-    private final Module m2;
-    private final Module m3;
 
+    private final Module[] outerMs;
+    private final Unit[][] outerUs;
+
+    /**
+     * Constructs a new slide movement given a module, a direction to slide, and
+     * the direction of modules to slide on.
+     *
+     * @param  r             Robot to perform the slide on
+     * @param  m             Module to slide
+     * @param  dir           Direction to slide m
+     * @param  neighborDir   Direction of neighbors to slide m on, i.e. direction
+     *                       of B relative to A.
+     * @throws RuntimeException given null module
+     */
     public Slide(Robot r, Module m, int dir, int neighborDir) {
-        this.r = r;
-        this.m = m;
-        this.dir = dir;
+        this.r           = r;
+        this.mA          = m;
+        this.uA          = mA.getUnitsFrom(dir, neighborDir);
+        this.dir         = dir;
         this.neighborDir = neighborDir;
+
         if (m == null) {
             throw new RuntimeException("Trying to slide with null module");
         }
 
-        m2 = (Module) m.getNeighbor(neighborDir);
-        m3 = (Module) m2.getNeighbor(dir);
-        u1 = m2.getUnitInQuadrant(Direction.opposite(neighborDir), Direction.opposite(dir));
-        u2 = m2.getUnitInQuadrant(Direction.opposite(neighborDir), dir);
-        u3 = m3.getUnitInQuadrant(Direction.opposite(neighborDir), Direction.opposite(dir));
-        u4 = m3.getUnitInQuadrant(Direction.opposite(neighborDir), dir);
+
+        outerMs = new Module[5];
+        this.outerMs[1] = (Module) mA.getNeighbor(neighborDir);
+        this.outerMs[2] = (Module) outerMs[1].getNeighbor(dir);
+
+        outerUs = new Unit[7][4];
+        for (int i = 0; i < outerMs.length; i++) {
+            if (outerMs[i] != null) {
+                outerUs[i] = outerMs[i].getUnitsFrom(dir, neighborDir);
+            }
+        }
     }
 
     /**
      * Performs slide operations in 10 steps.
+     * <p>
      * Assumptions made:
-     * 1) all modules are in a contracted state between move phases
-     * 2) module size is 2
-     * 3) dir and neighbor are adjacent directions
-     *
-     * 1) must have edges between them (not necessarily connected)
-     *
+     * <ol>
+     *  <li>all modules are in a contracted state between move phases</li>
+     *  <li>module size is 2</li>
+     *  <li>dir and neighbor are adjacent directions</li>
+     *  <li>B, C must have an edge between them</li>
+     * <p>
      * Slides can be made in parallel on the same module
-     *
-     * @param M             Module to slide
-     * @param dir           Direction to slide module
-     * @param neighborDir   Direction of neighboring modules to slide against
+     * <p>Visual Aid: Units are labeled with either a letter or number. Where A is
+     *    the module of interest, and other modules are not part of the move, but important
+     *    for handling connectedness and carrying.
+     * <p>    START        END
+     * <p>    A2 A3              A2 A3
+     * <p>    A1 A0              A1 A0
+     * <p>    12 13 22 23  12 13 22 23
      */
     public void step() {
         if (currStep < 5) {
-            performHalfSlide(u1, u2, u3, currStep);
+            performHalfSlide(outerUs[1][2], outerUs[1][3], outerUs[2][2], currStep % 5);
         } else{ 
-            performHalfSlide(u2, u3, u4, currStep);
+            performHalfSlide(outerUs[1][3], outerUs[2][2], outerUs[2][3], currStep % 5);
         }
-/*        r.drawUnit();*/
         currStep++;
     }
 
     public void finalize() {
-        r.getModuleGraph().removeEdge(m.getEdge(neighborDir));
-        r.getModuleGraph().addEdge(m, m3, neighborDir);
+        r.disconnect(mA, neighborDir);
+        r.connect   (mA, outerMs[2], neighborDir);
     }
 
     public boolean reachedEnd() {
         return currStep == NUMSTEPS;
     }
 
-    /**
-     * returns an opposite movement
-     */
     //TODO IMPLEMENT
     public Movement invert() {
         return null;
@@ -82,44 +124,43 @@ public class Slide implements Movement {
 
     /**
      * performs half a contracted slide.
-     * NOTE: This redefines Aloupis' contracted slide by only moving the bottom
+     * Note this redefines Aloupis' contracted slide by only moving the bottom
      * layer of the sliding moduel
+     *
+     * <p>Visual Aid: Units are labeled with either a letter or number. Where A is
+     *    the module of interest, and other modules are not part of the move, but important
+     *    for handling connectedness and carrying.
+     * <p>    START     END
+     * <p>    A2 A3        A2 A3
+     * <p>    A1 A0        A1 A0
+     * <p>    u1 u2 u3  u1 u2 u3
      */
     public void performHalfSlide(Unit u1, Unit u2, Unit u3, int step) {
-        List<Unit> mSide = m.getSideUnits(neighborDir);
-        Unit trailing = m.getUnitInQuadrant(neighborDir, Direction.opposite(dir));
-        Unit leading  = m.getUnitInQuadrant(neighborDir, dir);
-        Edge leadingEdge;
-        Edge trailingEdge;
-        
-        //TODO REMOVE
-        step = step % 5;
+        Unit trailing = uA[1];
+        Unit leading  = uA[0];
     
         switch(step) {
             case 0:
-                leadingEdge = leading.getEdge(neighborDir);
-                r.getUnitGraph().removeEdge(leadingEdge);
-                r.getUnitGraph().addEdge(trailing, u1, neighborDir);
-                leading.disconnect(Direction.opposite(neighborDir));
+                r.disconnect(uA[0], neighborDir);
+                r.connect   (uA[1], u1, neighborDir);
+                r.disconnect(uA[0], Direction.opposite(neighborDir));
                 break;
             case 1:
-                trailing.extend(dir);
+                r.extend(uA[1], dir);
                 break;
             case 2:
-                trailingEdge = trailing.getEdge(neighborDir);
-                r.getUnitGraph().addEdge(leading, u3, neighborDir);
-                r.getUnitGraph().removeEdge(trailingEdge);
+                r.connect   (uA[0], u3, neighborDir);
+                r.disconnect(uA[1], neighborDir);
                 break;
             case 3:
-                trailing.contract(dir);
+                r.contract  (uA[1], dir);
                 break;
             case 4:
-                r.getUnitGraph().addEdge(trailing, u2, neighborDir);
-                leading.connect(Direction.opposite(neighborDir));
+                r.connect   (uA[1], u2, neighborDir);
+                r.connect   (uA[0], uA[3], Direction.opposite(neighborDir));
                 break;
             default:
-                System.out.println("OMG");
-                break;
+                throw new RuntimeException("Invalid step number in performing slide");
         }
     }
 
