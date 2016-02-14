@@ -13,10 +13,16 @@ import java.util.ArrayList;
  * <p>Visual Aid: Modules are labeled with either a letter or number. Where A is
  *    the module of interest, and other modules are not part of the move, but important
  *    for handling connectedness and carrying.
- * <p>    START      END
- * <p>     4           4
- * <p>    0A3         0A3
- * <p>     12         12 
+ * <p>    
+ * START <br>
+ * 4     <br>
+ * 0A3   <br>
+ * 12    
+ * <p>
+ * END     <br>
+ * &nbsp 4 <br>
+ *      0A3<br>
+ *      12
  * <p>
  * Requirements:
  * <ul>
@@ -94,10 +100,17 @@ public class Slide implements Movement {
      * <p>Visual Aid: Units are labeled with either a letter or number. Where A is
      *    the module of interest, and other modules are not part of the move, but important
      *    for handling connectedness and carrying.
-     * <p>    START        END
-     * <p>    A2 A3              A2 A3
-     * <p>    A1 A0              A1 A0
-     * <p>    12 13 22 23  12 13 22 23
+     * <p>
+     * START<br>      
+     * A2 A3<br>        
+     * A1 A0<br>       
+     * 12 13 22 23
+     * <p>
+     *
+     * END<br>
+     * &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp     A2 A3 <br>
+     * &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp     A1 A0 <br>
+     *                                        12 13 22 23 <br>
      */
     public void step() {
         if (currStep < 5) {
@@ -130,10 +143,16 @@ public class Slide implements Movement {
      * <p>Visual Aid: Units are labeled with either a letter or number. Where A is
      *    the module of interest, and other modules are not part of the move, but important
      *    for handling connectedness and carrying.
-     * <p>    START     END
-     * <p>    A2 A3        A2 A3
-     * <p>    A1 A0        A1 A0
-     * <p>    u1 u2 u3  u1 u2 u3
+     * <p>    
+     * START<br>
+     * A2 A3<br>
+     * A1 A0<br>
+     * u1 u2 u3
+     * <p>
+     * END<br>
+     * &nbsp&nbsp&nbsp&nbsp   A2 A3<br>
+     * &nbsp&nbsp&nbsp&nbsp   A1 A0<br>
+     * u1 u2 u3<br>
      */
     public void performHalfSlide(Unit u1, Unit u2, Unit u3, int step) {
         Unit trailing = uA[1];
