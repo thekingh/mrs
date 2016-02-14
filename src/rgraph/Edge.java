@@ -2,8 +2,8 @@ package rgraph;
 
 import rutils.*;
 
-
 import java.lang.Math;
+//TODO get rid of isconnected
 
 public class Edge {
 	private static int counter = 0;
@@ -13,7 +13,6 @@ public class Edge {
 	private final boolean isVertical;
 	private final Node n1;
 	private final Node n2;
-
 
 	// NEEDWORK: change ordering of args?
 	public Edge(Node n1, Node n2, boolean isExtended, boolean isConnected, boolean isVertical) {
@@ -25,36 +24,68 @@ public class Edge {
 		this.n2 = n2;
 	}
 
+    /**
+     * @return integer id of edge
+     */
 	public int getId() {
 		return id;
 	}
 
+    /**Returns true if edge is extended */
 	public boolean isExtended() {
 	    return isExtended;
 	}
+
+    /**Sets the edge extension
+     * @param isExtended new value for is extended
+     */
 	public void setIsExtended(boolean isExtended) {
 	    this.isExtended = isExtended;
 	}
 
+    /**Returns true if edge is connected */
 	public boolean isConnected() {
 	    return isConnected;
 	}
+
+    /**Sets the edge connectedness
+     * @param isConnected new value for is connected
+     */
 	public void setIsConnected(boolean isConnected) {
 	    this.isConnected = isConnected;
 	}
 
+    /**Returns true if edge is vertical */
 	public boolean isVertical() {
 	    return isVertical;
 	}
 
-	public Node getN1() {
-	    return n1;
-	}
+    /**
+     * returns both endpoints of the edge.
+     * <p>
+     * While the order of the nodes is not specified, the order of the nodes for
+     * a given edge object will never change.
+     * @return A pair of nodes representing the endpoints of the edge
+     */
+    public Pair<Node, Node> getNodes() {
+        return new Pair<Node, Node>(n1, n2);
+    }
 
-	public Node getN2() {
-	    return n2;
-	}
+    /**returns first node of edge*/
+    public Node getN1() {
+        return n1;
+    }
 
+    /**returns second node of edge*/
+    public Node getN2() {
+        return n2;
+    }
+
+    /**
+     * Given a node, returns the node on the other end of the edge.
+     * @param n Reference node
+     * @return Node object to return
+     */
 	public Node getOpposite(Node n) {
 		if (n.equals(n1)) {
 			return n2;
@@ -63,6 +94,13 @@ public class Edge {
 		}
 	}
 
+    /**
+     * Returns edge equality.
+     * <p>
+     * Returns true iff o is of type edge and both connect the same two nodes.
+     * @param o object to compare equality
+     * @return true if edges are equal
+     */
     @Override
     public boolean equals(final Object o) {
         if(o == null) {
@@ -79,9 +117,15 @@ public class Edge {
 				(n1.equals(e.getN2()) && n2.equals(e.getN1())));
     }
 
+    /**
+     * Returns a hashcode for the edge object, unique for two given nodes.
+     * <p>
+     * Two edges have the same hashcode iff the both edges connect the same
+     * two nodes.
+     * @return hashcode
+     */
     @Override
     public int hashCode() {
-        
         String n1_s = Integer.toString(n1.getId());
         String n2_s = Integer.toString(n2.getId());
 
@@ -92,12 +136,6 @@ public class Edge {
         }
     }
 
-	// edge equality is nodes on either side are same between two edges
-/*	public boolean equals(Edge e) {*/
-/*		return ((n1.equals(e.getN1()) && n2.equals(e.getN2())) ||*/
-/*				(n1.equals(e.getN2()) && n2.equals(e.getN1())));*/
-/*	}*/
-
 	public String toString() {
 		if (isVertical) {
 			return "|";
@@ -107,15 +145,12 @@ public class Edge {
 	}
 
     private int getExtensionLength() {
-        if (isExtended) {
-            return 1;
-        } else {
-            return 0;
-        }
+        return isExtended ? 1 : 0;
     }
 
     /**
-     * removes references to an edge from nodes, does not delete the edge
+     * removes references to an edge from nodes, does not delete the edge.
+     * @return true if successful
      */
     public boolean removeFromNodes() {
         //TODO perhaps faster? garbage collection?
@@ -140,7 +175,8 @@ public class Edge {
      *    same space. This function does NOT check for this intersection
      *    and will return valid in this case
      */
-    public boolean isValidEdge(GridObject g1, GridObject g2) {
+    //TODO remove
+    private boolean isValidEdge(GridObject g1, GridObject g2) {
         Node       n1 = getN1();
         Node       n2 = getN2();
         Coordinate c1 = g1.c();
@@ -171,7 +207,9 @@ public class Edge {
         return true;
     }
 
-    public boolean isValidEdge(GridObject g1, Grid g) {
+
+    //TODO remove
+    private boolean isValidEdge(GridObject g1, Grid g) {
         Node n = null;
         Node np = null;
         //find out which node (n) is associated with the coordinate g1
@@ -194,7 +232,4 @@ public class Edge {
         GridObject g2    = g.getGridObject(c2);
         return isValidEdge(g1, g2);
     }
-
-        
-
 }

@@ -70,13 +70,12 @@ public class ModuleGraph extends Graph {
 		Set<Node> mNodes = this.getNodes();
 		Set<Edge> mEdges = this.getEdges();
 
-		Module m1, m2;
-
+        Module m1, m2;
         // NEEDSWORK: could do with only nodes and getExteriorSubEdges in all direc
 		for (Edge mEdge : mEdges) {
-			m1 = (Module) mEdge.getN1();
-			m2 = (Module) mEdge.getN2();
-
+            Pair<Node, Node> ms = mEdge.getNodes();
+            m1 = (Module) ms.a;
+            m2 = (Module) ms.b;
 			uEdges.addAll(m1.getExteriorSubEdges(m2));
 		}
 
