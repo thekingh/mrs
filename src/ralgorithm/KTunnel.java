@@ -7,7 +7,10 @@ import java.util.List;
 import java.util.ArrayList;
 
 /**
- * KTunnel is a O(k) movement of a single block through the robot with k turns
+ * Implementation of KTunnel, which tunnels block trhoguh robot using 90 degree turns
+ * <p>
+ * KTunnel is a O(k) movement that moves a block from a start position to an
+ * end position by
  */
 public class KTunnel implements Movement {
 	private int currStep = 0;
