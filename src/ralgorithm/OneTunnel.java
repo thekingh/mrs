@@ -14,11 +14,17 @@ import java.util.ArrayList;
  *******************************************************************************
  * <p>Visual Aid: Modules are labeled with either a letter or number. Where A, B, C
  * are the modules being 1-tunneled.
- * <p>    START      END
- * <p>     6          
- * <p>    0A5        065
- * <p>    1B4        1AB4
- * <p>     23         23
+ * <p>    
+ * START <br>
+ * &nbsp 6    <br>
+ * 0A5   <br>
+ * 1B4   <br>
+ * &nbsp 23   <p>
+ *
+ * END   <br>
+ * 065   <br>
+ * 1AB4  <br>
+ * &nbsp 23
  * <p>
  * Requirements:
  * <ul>

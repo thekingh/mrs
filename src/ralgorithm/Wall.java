@@ -3,7 +3,31 @@ package ralgorithm;
 import rgraph.*;
 import rutils.*;
 
+/**
+ * Wall class that represents a level of Modules in a robot
+ * <p>
+ * The wall is used to move in a direction, while bringing Modules that
+ * can be moved in that direction with it, as it updates.
+ * <p>
+ * An example of a Wall level can be seen as follows:
+ * <p>
+ * ABCD<br>
+ * EF GH 
+ * <p> With the above robot if the wall was at level 1, with dir 2 (down)
+ * the wall would consist of modules {A,B,C,D,null} and then we could
+ * mark the moving modules as {false,false,true,false,false} because C
+ * is the only Module that can move down with the wall. 
+ * One could then use this information to slide Module C down and update
+ * the wall
+ *  
+ * @author Casey Gowrie
+ * @author Kabir Singh
+ * @author Alex Tong
+ * @version 1.0
+ * @since 2/14/2016
+ */
 public class Wall {
+    // TODO: make Robot part of class? or want to update it every time??
     private int level; // index of the wall
     private boolean isDirVertical;
     private int dir;
@@ -13,8 +37,12 @@ public class Wall {
     /* TODO different names? redeclare vs class vars?*/
     private int w;
     private int h;
+
     /**
-     * dir is the direction of melt, 
+     * Instantiates a wall class on a robot with a wall that can move in a direction
+     * 
+     * @param r the Robot on which the wall will be setup
+     * @param dir the Direction the wall can move 
      */
     public Wall(Robot r, int dir) {
         this.dir = dir;
@@ -46,19 +74,23 @@ public class Wall {
         isMoving = new Boolean[size];
     }
 
-    public int getHeight(Module[][] ms) {
+    private int getHeight(Module[][] ms) {
         return ms[0].length;
     }
-    public int getWidth(Module[][] ms) {
+    private int getWidth(Module[][] ms) {
         return ms.length;
     }
 
+    /**
+     * @return True if the wall has been moved all the way in one direction
+     */
     public boolean hasReachedEnd() {
         return isFinalEdge();
     }
 
     /**
      * marks as moving if a module can slide in a direction.
+     *
      * Note that at the last row/col in the direction of movement, none of the
      * modules can slide.
      */
@@ -72,6 +104,9 @@ public class Wall {
         }
     }
 
+    /**
+     * keeps track of where in the Robot the wall is?
+     */
     private int getWallIndex() {
         switch(dir) {
             case 0:
@@ -106,6 +141,12 @@ public class Wall {
         return level == 0;
     }
 
+    /**
+     * Updates the robot by moving the wall down and recalculating Wall
+     *
+     * @param r Robot which wall is in
+     * @return True if update was successful
+     */
     public boolean update(Robot r) {
         Module[][] moduleArray = r.toModuleArray();
         w = getWidth(moduleArray);
@@ -124,8 +165,10 @@ public class Wall {
 
     /**
      * debug method to show which modules are moving, stationary, or non existant
+     *
+     * @return Long String representation of Movement in Wall
      */
-    public String printWall() {
+    private String printWall() {
         String toReturn = "";
         for (int i = 0; i < wallModules.length; i++) {
             if (wallModules[i] != null) {
@@ -141,16 +184,29 @@ public class Wall {
         return toReturn;
     }
 
+    /**
+     * Gets an array of Modules in the wall
+     *
+     * @return the Module array for the wall (or null if no Module exists at index)
+     */
     public Module[] getWallModules() {
         return wallModules;
     }
 
+    /**
+     * Gets boolean array with information on which Modules can move
+     *
+     * @return Boolean array with null where no Moduel exists
+     */
+    // NEEDSWORK: do we want null or fale where no module exists
     public Boolean[] getIsMoving() {
         return isMoving;
     }
 
     /**
      * Short Representation of Wall Object for Testing Purposes
+     *
+     * @return String representation of wall
      */
     public String toString() {
 		String toReturn = "<Wall moving in direction: " + dir + " Level: " + level + ">\n";

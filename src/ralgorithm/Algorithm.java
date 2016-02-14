@@ -22,6 +22,9 @@ import java.util.ArrayList;
  */
 public abstract class Algorithm {
 
+    /**
+     * Robot algorithm is being run on
+     */
     protected final Robot r;
 
     /**

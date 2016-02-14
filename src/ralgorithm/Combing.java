@@ -8,10 +8,10 @@ import rutils.*;
  * <p>
  * Basic outline of Algorithm is as follows:
  * <ol>
- * <li> 1.) Melt S down and right </li>
- * <li> 2.) Tranform S to common comb through a series of kTunnels </li>
- * <li> 3.) Do a reverse transformation of T to common comb from </li>
- * common comb </ol>
+ * <li>Melt S down and right </li>
+ * <li>Tranform S to common comb through a series of kTunnels </li>
+ * <li>Do a reverse transformation of T to common comb from
+ * common comb </li></ol>
  * <p>
  * Combing Algorithm was created by Greg Aloupis, et. al.
  *
