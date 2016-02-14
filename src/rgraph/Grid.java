@@ -1,18 +1,22 @@
-/*
- * Casey Gowrie, Kabir Singh, Alex Tong
- *
- * grid representation of a robot
- */
-
 package rgraph;
 
 import rutils.*;
 
-
 import java.util.List;
 import java.util.ArrayList;
 
-
+/**
+ * Grid Objects are a spatial representation of the nodes in a robot.
+ * <p>
+ * A grid holds a 2D array of objects, it is constructed by giving coordinates
+ * and objects in a nodes list and an edge list format.
+ *
+ * @author Casey Gowrie
+ * @author Kabir Singh
+ * @author Alex Tong
+ * @version 1.0
+ * @since 2/14/2016
+ */
 public class Grid {
 
 	private final List<GridObject> nodes;  
@@ -20,13 +24,12 @@ public class Grid {
 	private final int w;
 	private final int h;
 
-	public Grid() {
-		nodes = new ArrayList<GridObject>();
-		grid = null;
-		w = 0;
-		h = 0;
-	}
-
+    /**Constructs a grid from nodes, edges with a width and a height
+     * @param nodes List of grid object type nodes to insert
+     * @param edges List of grid object type edges to insert
+     * @param w     width of grid to create
+     * @param h     height of grid to create
+     */
 	public Grid(List<GridObject> nodes, List<GridObject> edges, int w, int h) {
 		this.nodes = nodes;
 		this.w = w;
@@ -48,6 +51,7 @@ public class Grid {
     /**
      * Produces string representation of the grid, with positive x right
      * positive y up.
+     * @return String representation of grid
      */
 	public String toString() {
 		String str = "";
@@ -65,61 +69,96 @@ public class Grid {
 		return str;
 	}
 
+    /**Returns a list of the nodes within the grid*/
     public List<GridObject> getNodes() {
         return nodes;
     }
 
+    /**Returns a 2D representation of the Grid*/
     public Object[][] getGrid() {
         return grid;
     }
 
-    public boolean inBounds(int x, int y) {
-        return (x >= 0) && (x < w) && (y >= 0) && (y < h);
-    }
-
-    public boolean inBounds(Coordinate c) {
-        return inBounds(c.x(), c.y());
-    }
-
+    /**
+     * Returns true if object at specified x, y location is type node
+     * @param x x coordinate in the grid
+     * @param y y coordinate in the grid
+     * @return true object at location is node
+     */
     public boolean isNode(int x, int y) {
-        return inBounds(x, y) && grid[x][y] instanceof Node;
-    }
-
-    public boolean isNode(Coordinate c) {
-        return isNode(c.x(), c.y());
-    }
-
-    public boolean isEdge(int x, int y) {
-        return inBounds(x, y) && grid[x][y] instanceof Edge;
-    }
-
-    public boolean isEdge(Coordinate c) {
-        return isEdge(c.x(), c.y());
-    }
-
-    public Object at(int x, int y) {
-        if (!inBounds(x, y)) {
-            return null;
-        }
-        return grid[x][y];
-    }
-
-    public Object at(Coordinate c) {
-        return at(c.x(), c.y());
+        return isNode(new Coordinate(x, y));
     }
 
     /**
-     * produces a new GridObject, returns null if out of bounds, or no object
+     * Returns true if object at specified x, y location is type node
+     * @param c coordinate to search
+     * @return true object at location is node
      */
-    public GridObject getGridObject(int x, int y) {
-        if (!inBounds(x, y)) {
-            return null;
-        }
-        return new GridObject(grid[x][y], new Coordinate(x, y));
+    public boolean isNode(Coordinate c) {
+        return c.inBounds(w, h) && grid[c.x()][c.y()] instanceof Node;
     }
 
+    /**
+     * Returns true if object at specified x, y location is type edge
+     * @param x x coordinate in the grid
+     * @param y y coordinate in the grid
+     * @return true object at location is edge
+     */
+    public boolean isEdge(int x, int y) {
+        return isEdge(new Coordinate(x, y));
+    }
+
+    /**
+     * Returns true if object at specified x, y location is type edge
+     * @param c coordinate to search
+     * @return true object at location is edge
+     */
+    public boolean isEdge(Coordinate c) {
+        return c.inBounds(w, h) && grid[c.x()][c.y()] instanceof Edge;
+    }
+
+    /**
+     * Returns object at specified x, y location
+     * @param x x coordinate in the grid
+     * @param y y coordinate in the grid
+     * @return object at location in grid
+     */
+    public Object at(int x, int y) {
+        return at(new Coordinate(x,y));
+    }
+
+    /**
+     * Returns object at specified coordinate
+     * @param c coordinate to search
+     * @return object at coordinate in grid
+     */
+    public Object at(Coordinate c) {
+        if (!c.inBounds(w, h)) {
+            return null;
+        }
+        return grid[c.x()][c.y()];
+    }
+
+    /**
+     * produces a new GridObject, returns null if out of bounds, or no object.
+     * @param x x coordinate in the grid
+     * @param y y coordinate in the grid
+     * @return grid object containing the object at the specified location in the grid
+     */
+    public GridObject getGridObject(int x, int y) {
+        return getGridObject(new Coordinate(x, y));
+    }
+
+    /**
+     * produces a new GridObject, returns null if out of bounds, or no object.
+     * @param c coordinate to find in the grid
+     * @return grid object containing the object at the specified location in the grid
+     */
     public GridObject getGridObject(Coordinate c) {
-        return getGridObject(c.x(), c.y());
+        if (!c.inBounds(w, h)) {
+            return null;
+        }
+        return new GridObject(grid[c.x()][c.y()], c);
     }
 
     /**

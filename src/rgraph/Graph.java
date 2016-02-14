@@ -239,8 +239,8 @@ public class Graph {
      * @return             The Cartesian respresentation of a Graph
      */
 	public Grid toGrid(boolean includeEdges) {
-        if (nodes.isEmpty()) { //return default/empty grid
-            return new Grid();
+        if (nodes.isEmpty()) { //return null
+            return null;
         }
         List<GridObject> Q;
         List<GridObject> E;
