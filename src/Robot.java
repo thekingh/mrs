@@ -18,8 +18,8 @@ import org.json.simple.JSONObject;
 import org.json.simple.*;
 
 public class Robot {
-	private Graph moduleGraph;
-	private Graph unitGraph;
+	private ModuleGraph moduleGraph;
+	private UnitGraph unitGraph;
 
 	private boolean isModuleGridCurrent;
 	private boolean isUnitGridCurrent;
@@ -27,49 +27,15 @@ public class Robot {
     private int stateCount;
 
     public Robot(boolean[][] moduleBools, boolean expanded) {
-        //TODO check me
-        int w = moduleBools.length;
-        int h = moduleBools[0].length;
-
-        Module[][] modules = new Module[w][h];
-        Set<Node> moduleSet = new HashSet<Node>();
-        Set<Edge> edgeSet = new HashSet<Edge>();
-
-        for (int i = 0; i < w; i++) {
-            for (int j = 0; j < h; j++) {
-                if (moduleBools[i][j]) {
-                    modules[i][j] = new Module(expanded);
-                    moduleSet.add(modules[i][j]);
-                }
-            }
-        }
-
-        for (int i = 0; i < w; i++) {
-            for (int j = 0; j < h; j++) {
-                if (moduleBools[i][j]) {
-                    for (int dir = 0; dir < Direction.MAX_DIR; dir++) {
-                        Coordinate c = new Coordinate(i, j);
-                        Coordinate r = c.calcRelativeLoc(dir);
-                        if (r.inBounds(w, h) && moduleBools[r.x()][r.y()]) {
-                            Edge e = modules[i][j].addNeighbor(modules[r.x()][r.y()], dir, expanded, true);
-                            edgeSet.add(e);
-                        }
-                    }
-                }
-            }
-        }
-
-        Graph g = new Graph(moduleSet, edgeSet);
-        this.moduleGraph = g;
-        generateUnitGraph();
+        this.moduleGraph = ModuleGraph.initFromBools(moduleBools, expanded);
+        this.unitGraph = this.moduleGraph.generateUnitGraph();
 
         stateCount = 0;
     }
 
-	public Robot(Graph moduleGraph) {
-		// what to use?
+	public Robot(ModuleGraph moduleGraph) {
 		this.moduleGraph = moduleGraph;
-        generateUnitGraph();
+        this.unitGraph = this.moduleGraph.generateUnitGraph();
 
         stateCount = 0;
 	}
@@ -153,48 +119,12 @@ public class Robot {
     }
 
     public Module[][] toModuleArray() {
-        Object[][] grid = moduleGraph.toGrid(true).getGrid();
-        int w = grid.length;
-        int h = grid[0].length;
-
-        Module[][] modules = new Module[w][h];
-
-        for (int i = 0; i < w; i++) {
-            for (int j = 0; j < h; j++) {
-                modules[i][j] = (Module) grid[i][j];
-            }
-        }
-
-        return modules;
+        return moduleGraph.toModuleArray();
     }
 
-	// generates unit graph from module graph
-	// NEEDSWORK: want to return unit graph? record status?
-	private void generateUnitGraph() {
-		Set<Node> uNodes = new HashSet<Node>(); 
-		Set<Edge> uEdges = new HashSet<Edge>();
-		Set<Node> mNodes = moduleGraph.getNodes();
-		Set<Edge> mEdges = moduleGraph.getEdges();
-
-		Module m1, m2;
-
-        // NEEDSWORK: could do with only nodes and getExteriorSubEdges in all direc
-		for (Edge mEdge : mEdges) {
-			m1 = (Module) mEdge.getN1();
-			m2 = (Module) mEdge.getN2();
-
-			uEdges.addAll(m1.getExteriorSubEdges(m2));
-		}
-
-		Module m;
-		for (Node n : mNodes) {
-			m = (Module) n;
-			uEdges.addAll(m.getInteriorEdges());
-			uNodes.addAll(m.getUnitSet());
-		}
-
-		unitGraph = new Graph(uNodes, uEdges);
-	}
+    public Unit[][] toUnitArray() {
+        return unitGraph.toUnitArray();
+    }
 
     public void drawUnit() {
         delay(500);
