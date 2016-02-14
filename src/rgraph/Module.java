@@ -1,36 +1,48 @@
-/*
- * Casey Gowrie, Kabir Singh, Alex Tong
- *
- * robot module with n*n
- */
-
 package rgraph;
 
 import rutils.*;
-
 
 import java.util.Set;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+/**
+ * Represents a logical grouping of units, restricted to 4 units in version 1.0.
+ * <p>
+ * A module is a logical grouping of a 2x2 set of nodes. This is the building
+ * block for all known reconfiguration algorithms as modules are a very helpful
+ * abstraction allowing movements that single units cannot accomplish on their
+ * own i.e. slides etc.
+ * <p>
+ * Modules extend the class Node, as it is helpful to view modules as belonging
+ * to a graph representation of those modules.
+ *
+ * @author Casey Gowrie
+ * @author Kabir Singh
+ * @author Alex Tong
+ * @version 1.0
+ * @since 2/14/2016
+ */
 public class Module extends Node {
-	// may want to take these in constructor for module
+	// TODO may want to take these in constructor for module
 	private static boolean EXTENDED_EDGES = false;
 	private static final boolean CONNECTED_EDGES = true;
 
 	private static int size = 2;
-	private Module inside;
 	private final Set<Edge> horizontalEdges;
     private final Set<Edge> verticalEdges;
 	private Unit[][] units;
 
+    /** Default module constructor, defaults to contracted.*/
     public Module() {
         this(false);
     }
 
-	// TODO make constructor with isExtended, isConnected arguments
-	// then have this call it with defaults
+    /** Constructs a 2x2 module.
+     * @param expanded true value creates a module which is size 3x3 with
+     *                 extended arms between units
+     */
 	public Module(boolean expanded) {
 		super();
         EXTENDED_EDGES = expanded;
@@ -72,20 +84,9 @@ public class Module extends Node {
 		}
 	}
 
+    /** Returns size of the module.*/
 	public int getSize() {
 		return size;
-	}
-
-	public Module getInside() {
-		return inside;
-	}
-
-	public void putInside(Module m) {
-		inside = m;
-	}
-
-	public boolean hasInside() {
-		return (inside != null);
 	}
 
 	public Set<Edge> getInteriorEdges() {
