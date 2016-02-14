@@ -1,7 +1,6 @@
 package rgraph;
 
 import rutils.*;
-import tst.*;
 
 public class TestRobot {
     private static void testConnectedness(Robot r, boolean connected) {

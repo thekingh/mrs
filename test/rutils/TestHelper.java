@@ -1,6 +1,5 @@
-package tst;
+package rutils;
 
-import rutils.*;
 import rgraph.*;
 import ralgorithm.*;
 
