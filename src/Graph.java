@@ -49,6 +49,11 @@ public class Graph {
         return edges;
     }
 
+    public int size() {
+        return nodes.size();
+    }
+
+
     // public void addEdge(Edge e) {
     //     edges.add(e);
     // }
@@ -198,7 +203,6 @@ public class Graph {
         Coordinate max = new Coordinate(maxx, maxy);
         return new Pair<Coordinate, Coordinate>(min, max);
     }
-
 
     /** 
      * Given a list of nodes, perform transformation so that all coordinates

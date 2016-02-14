@@ -144,15 +144,29 @@ public class Robot {
         System.out.println(moduleGraph.toGrid());
     }
 
-
-    //TODO remove me
-    private void print(Object o) {
-        System.out.println(o);
-    }
-
     //TODO make this work
     public State getState() {
         return null;
+    }
+
+    /**
+     * returns true if the robot is connected (through units).
+     */
+    public boolean isConnected() {
+        int size = unitGraph.size();
+        int count = 0;
+        Object[][] grid = unitGraph.toGrid(true).getGrid();
+        int w = grid.length;
+        int h = grid[0].length;
+
+        for (int i = 0; i < w; i++) {
+            for (int j = 0; j < h; j++) {
+                if (grid[i][j] != null) {
+                    count++;
+                }
+            }
+        }
+        return count == size;
     }
 
     /**

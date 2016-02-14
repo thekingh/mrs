@@ -25,4 +25,15 @@ public interface Movement {
      * returns an opposite movement
      */
     public Movement invert();
+
+    /**
+     * runs final cleanup to update robot, switch units in modules etc.
+     */
+    public void finalize();
+
+    /**
+     * returns the robot associated with the movement
+     */
+    public Robot getRobot();
+
 }
