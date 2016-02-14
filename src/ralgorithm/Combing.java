@@ -7,10 +7,11 @@ import rutils.*;
  * Transforms a Source Robot, S, into a Target Robot, T, in O(n) parallel steps
  * <p>
  * Basic outline of Algorithm is as follows:
- * <p> 1.) Melt S down and right
- * <p> 2.) Tranform S to common comb through a series of kTunnels
- * <p> 3.) Do a reverse transformation of T to common comb from
- * common comb
+ * <ol>
+ * <li> 1.) Melt S down and right </li>
+ * <li> 2.) Tranform S to common comb through a series of kTunnels </li>
+ * <li> 3.) Do a reverse transformation of T to common comb from </li>
+ * common comb </ol>
  * <p>
  * Combing Algorithm was created by Greg Aloupis, et. al.
  *

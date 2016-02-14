@@ -7,35 +7,45 @@ import java.util.List;
 import java.util.ArrayList;
 
 /**
- * The pushin movement is a 1-tunnel.
+ * The OneTunnel is the most primitive kTunnel from Start to End in one turn.
+ * <p>
+ * The OneTunnel is the building block for more complex kTunnels, which
+ * are effectively a series of 1-Tunnels.
  *******************************************************************************
- * Visual Aid: Modules are labeled with either a letter or number. Where A, B, C
+ * <p>Visual Aid: Modules are labeled with either a letter or number. Where A, B, C
  * are the modules being 1-tunneled.
- *     START      END
- *      6          
- *     0A5        065
- *     1B4        1AB4
- *      23         23
- *
+ * <p>    START      END
+ * <p>     6          
+ * <p>    0A5        065
+ * <p>    1B4        1AB4
+ * <p>     23         23
+ * <p>
  * Requirements:
- *      0 exists iff 1 exists
- *      2 exists iff 3 exists
- *      To keep connectedness throughout the pushin the following at least one
+ * <ul>
+ *      <li>0 exists iff 1 exists</li>
+ *      <li>2 exists iff 3 exists</li>
+ *      <li><ul>To keep connectedness throughout the pushin the following at least one
  *      of the following must be true:
- *          Module 5 exists
- *          Module 0, 1 exist and are connected, and Module 2,3 exist and are connected
- *
- *
+ *          <li>Module 5 exists</li>
+ *          <li>Module 0, 1 exist and are connected, and Module 2,3 exist and are connected</li></li>
+ *</ul>
+ *<p>
  * Invarients:
- *      Module A will always be connected to Module 6 through 2 connections
- *      Module C will always be connected to Module 4 through 2 connections
- *      Connectedness will be maintained throughout the 1-tunnel between modules
- *      0, 1, 2, 3, 5
- * 
+ * <ul>
+ *      <li>Module A will always be connected to Module 6 through 2 connections</li>
+ *      <li>Module C will always be connected to Module 4 through 2 connections</li>
+ *      <li>Connectedness will be maintained throughout the 1-tunnel between modules
+ *      0, 1, 2, 3, 5</li>
+ *
+ * @author Casey Gowrie
+ * @author Kabir Singh
+ * @author Alex Tong
+ * @version 1.0
+ * @since 2/14/2016 
  */
 public class OneTunnel implements Movement {
 	private int currStep = 0;
-    private static final int NUMSTEPS = 29; //TODO ????
+    private static final int NUMSTEPS = 29;
 
     private final Robot r;
     private final Module mA;
@@ -47,6 +57,16 @@ public class OneTunnel implements Movement {
     private final Unit[] unitsB;
     private final Unit[][] outerUs;
 
+    /**
+     * Instantiate a OneTunnel movement in a simple form of which Module being tunneled
+     * <p>
+     * Tunnels around a Turning module, which is at the corner or only turn
+     *
+     * @param r the Robot to tunnel through
+     * @param m Module right next to the Turning module which will be pushed in
+     * @param dir First direction of tunnel (to mush m in)
+     * @param pushDir Second direction of tunnel (push Turning module out)
+     */
     public OneTunnel(Robot r, Module m, int dir, int pushDir) {
     	this.r = r;
         this.mA = m;
@@ -77,9 +97,15 @@ public class OneTunnel implements Movement {
     /**
      * Initializes a 1-tunnel move from a start coordinate to an end coordinate
      * in the module graph.
+     * <p>
      * To figure out the actual tunnel position, we rely on the fact that the start
      * node is a leaf node, and therefore only has a single neighbor direction 
      * which we use to determine the tunnel path of the 2 possiblities.
+     *
+     * @param r Robot tunneling through
+     * @param start The starting location of the tunneling Module in r (x,y)
+     * where y+ is up and x+ is right
+     * @param end Final location, where the module is tunneling to
      */
     public static OneTunnel initFromCoords(Robot r, Coordinate start, Coordinate end) {
         Module[][] ms = r.toModuleArray();
@@ -132,9 +158,9 @@ public class OneTunnel implements Movement {
         return new OneTunnel(r, m, dir, pushDir);
     }
 
-
-    // TODO: make sure to set Module.hasInside and add to testing
-    // (also add has inside for robot equality)
+    /**
+     * Steps through the OneTunnel by incrementally connecting, etc. units
+     */
     public void step() {
         switch (currStep) {
             case 0:
@@ -300,6 +326,12 @@ public class OneTunnel implements Movement {
         currStep++;
     }
 
+    /**
+     * Finalizes the OneTunnel movement
+     * <p>
+     * Connects all of the modules to the appropriate neighbors, given the
+     * tunnel performed
+     */
     public void finalize() {
         r.disconnect(outerMs[0], pushDir);
         r.disconnect(outerMs[1], pushDir);
@@ -336,7 +368,9 @@ public class OneTunnel implements Movement {
     }
 
     /**
-     * returns an opposite movement
+     * Inverts the OneTunnel
+     *
+     * @return OneTunnel from end to start of the same robot
      */
     public Movement invert() {
         return null;
