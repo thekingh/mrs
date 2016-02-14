@@ -1,2 +1,4 @@
 #!/bin/bash
-javac -cp ./json-simple-1.1.1.jar -g -d . *.java
+
+# put .class files in bin/
+javac -cp ./json-simple-1.1.1.jar -g -d ./../bin */*.java ./../test/*.java ./../test/*/*.java

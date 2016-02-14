@@ -3,7 +3,7 @@ echo "Starting MRS program"
 echo "===================="
 
 
-javac -cp ./json-simple-1.1.1.jar -g -d . *.java
+sh compile
 #java -cp .:./json-simple-1.1.1.jar src.TestSlide
-java -cp .:./json-simple-1.1.1.jar src.TestMelt
+java -cp .:./json-simple-1.1.1.jar tst.TestMelt
 #java -cp .:./json-simple-1.1.1.jar src.TestParallelMove
