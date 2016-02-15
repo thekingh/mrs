@@ -2,7 +2,6 @@ package rgraph;
 
 import rutils.*;
 
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.*;
@@ -11,16 +10,31 @@ import java.io.IOException;
 import java.util.List;
 
 /** 
- * State is a snapshot of a robot state
+ * State is a snapshot of a robot state.
+ * <p>
+ * State is used for the visualization of a robot, by storing state objects
+ * we can replay algorithms.
+ * @author Alex Tong
+ * @author Kabir Singh
+ * @author Casey Gowrie
+ * @version 1.0
  */
 public class State {
 
     private JSONArray jsonArr;
 
+    /**Constructs state given a robot
+     * @param r     Robot to capture
+     */ 
     public State(Robot r) {
         jsonArr = generateJSONRobots(r.getUnitGraph());
     }
 
+    /**
+     * Generates json object representation of a robot.
+     * @param unitGraph unitgraph representation to capture in json
+     * @return          jsonarray containing unitgraph information
+     */
     public JSONArray generateJSONRobots(Graph unitGraph) {
 
         JSONArray robots = new JSONArray();
@@ -66,6 +80,10 @@ public class State {
         return robots;
     }
 
+    /**
+     * Writes state to a specified state file.
+     * @param stateNum  statefile to write to
+     */
     public void writeToFile(int stateNum) {
         
         try {

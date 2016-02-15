@@ -10,7 +10,7 @@ import java.util.HashSet;
 
 /**
  * Graph represents a relational network between modular robots. 
- * <p/>
+ * <p>
  * A Modular robot graph has state containing a nodelist and an edgelist
  * Nodes must subclass the Node abstract class and edges must do the same for 
  * the edge class.
@@ -18,8 +18,7 @@ import java.util.HashSet;
  * @author Alex Tong
  * @author Kabir Singh
  * @author Casey Gowrie
- * @version 2.0
- *
+ * @version 1.0
  */
 public class Graph {
 
