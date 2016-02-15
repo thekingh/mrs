@@ -89,17 +89,14 @@ public class Module extends Node {
 		return size;
 	}
 
+    /** Returns all edges between units in the module*/
 	public Set<Edge> getInteriorEdges() {
         Set<Edge> interiorEdges = new HashSet<Edge>(horizontalEdges);
         interiorEdges.addAll(verticalEdges);
 		return interiorEdges;
 	}
 
-	public Unit getUnit(int i, int j) {
-		return units[i][j];
-	}
-
-	// might not be needed
+    /** Returns a set of all units in the module*/
 	public Set<Unit> getUnitSet() {
 		Set<Unit> u = new HashSet<Unit>();
 		for (int i = 0; i < size; i++) {
@@ -111,14 +108,14 @@ public class Module extends Node {
 	}
 
     /**
-     * gets a list containing the units on a side of the module.
+     * Gets a list containing the units on a side of the module.
+     * <p>
      * The list is ordered from left to right or from top to bottom (depending)
      * on direction. This means that with two neighboring modules, side units
-     * can be matched up, ad we can easily create edges between modules
-     *
+     * can be matched up, and edges between modules are easy to create by
+     * iterating over side units.
      * @param dir           Indicates which side of the module to get. 
      *                      0=North, 1=East, 2=South, 3=West
-     *
      * @return              List of Unit objects
      */
     public List<Unit> getSideUnits(int dir) {
@@ -151,12 +148,20 @@ public class Module extends Node {
         return toReturn;
     }
 
-    // TODO: change name: not always clockwise
     /**
      * Returns array of units from a starting quadrant, going in direction starting
-     * in dir1, and moving towards dir2 i.e. either clocwise or counter clockwise.
+     * in dir1, and moving towards dir2.
+     * <p>
+     * This method only applies for Module size of 2.
+     * <p>
+     * Behavior when dir1 == dir2 or when dir1 == Direction.opposite(dir2) is
+     * undefined.
+     * @param dir1      Initial direction of sweep
+     * @param dir2      Secondary direction of sweep
+     * @return array of units 
      */
     public Unit[] getUnitsFrom(int dir1, int dir2) {
+        assert (size == 2);
         Unit[] units = new Unit[4];
         units[0] = getUnitInQuadrant(dir1, dir2);
         units[1] = getUnitInQuadrant(dir1, Direction.opposite(dir2));
@@ -165,28 +170,45 @@ public class Module extends Node {
         return units;
     }
 
+    /**
+     * Gets A unit given two directions determining the quadrent of the unit.
+     * <p>
+     * This method only applies for Module size of 2.
+     * <p>
+     * Behavior when dir1 == dir2 or when dir1 == Direction.opposite(dir2) is
+     * undefined. swapping the two direction parameters results in the same 
+     * return value (as a symetric operation specifies the same quadrant).
+     * @param dir1 First direction vector
+     * @param dir2 Second direction vector
+     * @return Unit from a quadrant of the module
+     */
     public Unit getUnitInQuadrant(int dir1, int dir2) {
         assert (size == 2);
         //TODO fix or get rid super ugly
         switch(Direction.MAX_DIR * dir1 + dir2) {
             case 3:
             case 12:
-                return getUnit(0,0);
+                return units[0][0];
             case 11:
             case 14:
-                return getUnit(0,1);
+                return units[0][1];
             case 1:
             case 4:
-                return getUnit(1,0);
+                return units[1][0];
             case 6:
             case 9:
-                return getUnit(1,1);
+                return units[1][1];
             default:
                 return null;
         }
     }
 
     /**
+     * Returns true if this module can slide in a direction.
+     * <p>
+     * Conditions:
+     * <ol>
+     *  <li> No module in direction of slide
      * Module can slide if neighbor in one of two adjacent directions of slide
      * and if no module in direction of slide.
      *
@@ -194,17 +216,25 @@ public class Module extends Node {
      *  No Module in dir
      *      
      */
-    public boolean canSlide(int dir) {
-        
-        Node m1 = getNeighbor(Direction.right(dir));
-        Node m2 = getNeighbor(Direction.left(dir));
+/*    public boolean canSlide(int dir) {*/
+/*        */
+/*        Node m1 = getNeighbor(Direction.right(dir));*/
+/*        Node m2 = getNeighbor(Direction.left(dir));*/
+/**/
+/*        boolean moveOnM1 = (m1 != null) && (m1.hasNeighborInDirection(dir));*/
+/*        boolean moveOnM2 = (m2 != null) && (m2.hasNeighborInDirection(dir));*/
+/**/
+/*        return (moveOnM1 || moveOnM2) && !hasNeighborInDirection(dir);*/
+/*    }*/
 
-        boolean moveOnM1 = (m1 != null) && (m1.hasNeighborInDirection(dir));
-        boolean moveOnM2 = (m2 != null) && (m2.hasNeighborInDirection(dir));
 
-        return (moveOnM1 || moveOnM2) && !hasNeighborInDirection(dir);
-    }
-
+    /** Adds a neighboring module in a specified direction, with extension and connection args
+     * @param neighbor      Neighboring module to connect to
+     * @param dir           Direction of neighbor module
+     * @param isExtended    true if distance between this and neighbor is 1
+     * @param isConnected   true to connect modules
+     * @return              the edge created
+     */
     public Edge addNeighbor(Module neighbor, int dir, boolean isExtended, boolean isConnected) {
         boolean isVertical = Direction.isVertical(dir);
         Edge e = new Edge(this, neighbor, isExtended, isConnected, isVertical);
@@ -246,6 +276,12 @@ public class Module extends Node {
         return toReturn;
     }
 
+    /**
+     * Returns a list containing all the exterior edges in a direction.
+     * @param dir       direction of interest
+     * @return          List of edges between units in that direction. 
+     *                  Always supplied up to down or left to right.
+     */
     public List<Edge> getExteriorSubEdges(int dir) {
         List<Edge> sideEdges = new ArrayList<Edge>();
 
@@ -257,16 +293,22 @@ public class Module extends Node {
         return sideEdges;
     }
 
+    /**
+     * Returns a list containing all the exterior edges in a direction.
+     * @param neighbor  Neighboring module of interest
+     * @return          List of edges between units in that direction. 
+     *                  Always supplied up to down or left to right.
+     */
     public List<Edge> getExteriorSubEdges(Module neighbor) {
         return getExteriorSubEdges(this.findNeighborDirection(neighbor));
     }
 
-
     /**
-     * gets the interior edges either all horizontal or all vertical.
+     * Gets the interior edges either all horizontal or all vertical.
      *
-     * @param 
-     * @param
+     * @param vertical true gets vertical edges, horizontal otherwise.
+     * @return         set of all edges in between units of the module in either
+     *                 the horizontal or vertical directions.
      */
     public Set<Edge> getInteriorEdges(boolean vertical) {
         if (vertical) {
@@ -283,21 +325,40 @@ public class Module extends Node {
         }
     }
 
+    /** Expands the module in the vertical or horizontal direction */
     public void expandInteriorEdges(boolean vertical) {
         modifyInteriorEdges(vertical, true);
     }
 
+    /** Contracts the module in the vertical or horizontal direction */
     public void contractInteriorEdges(boolean vertical) {
         modifyInteriorEdges(vertical, false);
     }
 
-    // TODO: add checks to make sure edge exists
+    /** Expands exterior edges in a direction*/
     public void expandExteriorEdges(int dir) {
         for (Edge e : getExteriorSubEdges(dir)) {
-            e.setIsExtended(true);
+            if (e != null) {
+                e.setIsExtended(true);
+            }
         }
     }
 
+    /** Contracts exterior edges in a direction*/
+    public void expandExteriorEdges(int dir) {
+        for (Edge e : getExteriorSubEdges(dir)) {
+            if (e != null) {
+                e.setIsExtended(false);
+            }
+        }
+    }
+
+    /**
+     * Swaps Units in the module array, useful for cleaning up after
+     * complicated movements, where units may be rearranged within the module.
+     * @param u1    First unit to swap
+     * @param u2    Second unit to swap
+     */
     public void swapUnits(Unit u1, Unit u2) {
         Coordinate a = u1.findSelfInArray(units);
         Coordinate b = u2.findSelfInArray(units);
@@ -311,6 +372,7 @@ public class Module extends Node {
     }
 
 	// NEEDSWORK: print all of the units?
+    /** Debug method, prints the module to screen as "M"*/
 	public String toString() {
 		return "M";
 /*		return String.format("%d ", getId());*/
