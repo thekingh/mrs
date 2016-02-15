@@ -1,9 +1,0 @@
-#!/bin/bash
-echo "Starting MRS program"
-echo "===================="
-
-
-sh compile
-#java -cp .:./json-simple-1.1.1.jar src.TestSlide
-java -cp .:./json-simple-1.1.1.jar tst.TestMelt
-#java -cp .:./json-simple-1.1.1.jar src.TestParallelMove

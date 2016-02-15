@@ -29,6 +29,10 @@ public class Melt extends Algorithm {
     private final Wall w;
     private final int dir;
 
+    public void displayName() {
+       System.out.println(this.getClass().getCanonicalName());
+    }
+
     /**
      * Initializes a Melt Algorithm which melts a Robot in a direction
      * <p>

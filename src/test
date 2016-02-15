@@ -4,11 +4,10 @@ echo "===================="
 
 sh compile
 
+# classpaths for running are separated by ':'
 if [ $1 = "Robot" ]
 then
-    echo "Running java -cp .:./json-simple-1.1.1.jar .:./../bin rgraph.Test${1}"
-    java -cp .:./json-simple-1.1.1.jar -cp .:./../bin rgraph.Test$1
+    java -cp .:../lib/json-simple-1.1.1.jar:./../bin/ rgraph.Test$1
 else
-    echo "Running java -cp .:./json-simple-1.1.1.jar .:./../bin ralgorithm.Test${1}"
-    java -cp .:./json-simple-1.1.1.jar -cp .:./../bin ralgorithm.Test$1
+    java -cp .:../lib/json-simple-1.1.1.jar:./../bin/ ralgorithm.Test$1
 fi

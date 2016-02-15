@@ -1,4 +1,4 @@
 #!/bin/bash
 
 # put .class files in bin/
-javac -cp ../lib/* -g -d ./../bin */*.java ./../test/*/*.java
+javac -cp .:../lib/* -g -d ./../bin */*.java ./../test/*/*.java
