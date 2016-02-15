@@ -99,7 +99,7 @@ public class Wall {
             if (wallModules[i] == null) {
                 isMoving[i] = null;
             } else {
-                isMoving[i] = !hasReachedEnd && !wallModules[i].hasNeighborInDirection(dir);
+                isMoving[i] = !hasReachedEnd && !wallModules[i].hasEdge(dir);
             }
         }
     }
