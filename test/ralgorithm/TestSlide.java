@@ -15,7 +15,7 @@ public class TestSlide {
         r.drawModule();
         System.out.println("=====================================");
 
-        TestHelper.runMove(s);
+        TestHelper.runAndDisplayMove(s);
 
         r.drawModule();
         TestHelper.validateOutput(r, f);

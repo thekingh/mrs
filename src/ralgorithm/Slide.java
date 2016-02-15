@@ -65,7 +65,7 @@ public class Slide implements Movement {
     public Slide(Robot r, Module m, int dir, int neighborDir) {
         this.r           = r;
         this.mA          = m;
-        this.uA          = mA.getUnitsFrom(dir, neighborDir);
+        this.uA          = mA.getUnitsFrom(neighborDir, dir);
         this.dir         = dir;
         this.neighborDir = neighborDir;
 
@@ -81,7 +81,7 @@ public class Slide implements Movement {
         outerUs = new Unit[7][4];
         for (int i = 0; i < outerMs.length; i++) {
             if (outerMs[i] != null) {
-                outerUs[i] = outerMs[i].getUnitsFrom(dir, neighborDir);
+                outerUs[i] = outerMs[i].getUnitsFrom(neighborDir, dir);
             }
         }
     }

@@ -61,6 +61,11 @@ public class ParallelMove {
             }
             states.add(state);
         }
+        // runs final step of moves to update Robot
+        for (Movement m : moves) {
+            m.finalize();
+        }
+
         return states;
     }
 
