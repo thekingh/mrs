@@ -345,7 +345,7 @@ public class Module extends Node {
     }
 
     /** Contracts exterior edges in a direction*/
-    public void expandExteriorEdges(int dir) {
+    public void contractExteriorEdges(int dir) {
         for (Edge e : getExteriorSubEdges(dir)) {
             if (e != null) {
                 e.setIsExtended(false);
