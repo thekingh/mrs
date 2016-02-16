@@ -51,7 +51,7 @@ public class ModuleGraph extends Graph {
         for (int i = 0; i < w; i++) {
             for (int j = 0; j < h; j++) {
                 if (moduleBools[i][j]) {
-                    for (int dir = 0; dir < Direction.MAX_DIR; dir++) {
+                    for (int dir = 0; dir < Direction.NUM_DIR; dir++) {
                         Coordinate c = new Coordinate(i, j);
                         Coordinate r = c.calcRelativeLoc(dir);
                         if (r.inBounds(w, h) && moduleBools[r.x()][r.y()]) {

@@ -122,7 +122,7 @@ public class OneTunnel implements Movement {
 
         //find dir
         int dir = -1;
-        for (int i = 0; i < Direction.MAX_DIR; i++) {
+        for (int i = 0; i < Direction.NUM_DIR; i++) {
             if (startM.hasEdge(i)) { 
                 dir = i;
             }

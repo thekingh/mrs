@@ -67,7 +67,7 @@ public class TestMelt {
                        {1,1,0,0}};
         int [][][] fs = {f0, f1, f2, f3};
 
-        for (int dir = 0; dir < Direction.MAX_DIR; dir ++) {
+        for (int dir = 0; dir < Direction.NUM_DIR; dir ++) {
             meltTest(s, fs[dir], dir);
         }
 

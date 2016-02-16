@@ -58,6 +58,7 @@ public class Coordinate {
      * @param w width
      * @param h height
      * @return True if this is within the bounded area between w and h
+     */
     public boolean inBounds(int w, int h) {
         return (x() >= 0) && (x() < w) && (y() >= 0) && (y() < h);
     }

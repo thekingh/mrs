@@ -185,7 +185,7 @@ public class Module extends Node {
     public Unit getUnitInQuadrant(int dir1, int dir2) {
         assert (size == 2);
         //TODO fix or get rid super ugly
-        switch(Direction.MAX_DIR * dir1 + dir2) {
+        switch(Direction.NUM_DIR * dir1 + dir2) {
             case 3:
             case 12:
                 return units[0][0];
