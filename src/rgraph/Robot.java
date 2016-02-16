@@ -298,19 +298,26 @@ public class Robot {
         Module[][] ms1 = this.toModuleArray();
         Module[][] ms2 = other.toModuleArray();
 
-        int w = ms1.length;
-        int h = ms1[0].length;
+        Unit[][] us1 = this.toUnitArray();
+        Unit[][] us2 = other.toUnitArray();
+
+        return arrayEquals(ms1, ms2) && arrayEquals(us1, us2);
+    }
+
+    private boolean arrayEquals(Node[][] a1, Node[][] a2) {
+        int w = a1.length;
+        int h = a1[0].length;
 
         //check dims
-        if (w != ms2.length || h != ms2[0].length) {
+        if (w != a2.length || h != a2[0].length) {
             return false;
         }
 
         for (int i = 0; i < w; i++) {
             for (int j = 0; j < h; j++) {
-                if (ms1[i][j] != null && ms2[i][j] == null) {
+                if (a1[i][j] != null && a2[i][j] == null) {
                     return false;
-                } else if (ms1[i][j] == null && ms2[i][j] != null) {
+                } else if (a1[i][j] == null && a2[i][j] != null) {
                     return false;
                 }
             }
