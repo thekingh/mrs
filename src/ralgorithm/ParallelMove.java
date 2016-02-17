@@ -92,4 +92,22 @@ public class ParallelMove {
             return null;
         }
     }
+
+    /**
+     * returns the opposite of a parallel move, meaning the inverse of all Movements
+     * <p>
+     * Given n moves comprising a ParallelMove the opposite ParallelMove would
+     * be that comprising the inverse of all n moves
+     *
+     * @return an inverted ParallelMove
+     */
+    public ParallelMove invertPMove() {
+        List<Movement> invertedMoves = new ArrayList<Movement>();
+
+        for (Movement m : moves) {
+            invertedMoves.add(m.invert());
+        }
+
+        return new ParallelMove(r, invertedMoves);
+    }
 }
