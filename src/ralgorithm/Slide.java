@@ -122,8 +122,8 @@ public class Slide implements Movement {
     }
 
     public void finalize() {
-        r.disconnect(mA, neighborDir);
-        r.connect   (mA, outerMs[2], neighborDir);
+        r.disconnectModules(mA, neighborDir);
+        r.connectModules   (mA, outerMs[2], neighborDir);
     }
 
     public boolean reachedEnd() {

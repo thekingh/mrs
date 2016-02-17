@@ -5,6 +5,7 @@ import rutils.*;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 /**
  * Implementation of the Melt algorithm to melt a robot in some direction
@@ -28,6 +29,8 @@ import java.util.ArrayList;
 public class Melt extends Algorithm {
     private final Wall w;
     private final int dir;
+    private boolean haveMadeTunnels;
+    private LinkedList<ParallelMove> q;
 
     public void displayName() {
        System.out.println(this.getClass().getCanonicalName());
@@ -46,6 +49,8 @@ public class Melt extends Algorithm {
         super(r);
         this.w = new Wall(r, dir);
         this.dir = dir;
+        this.haveMadeTunnels = false;
+        this.q = new LinkedList<ParallelMove>();
     }
 
     /**
@@ -55,23 +60,16 @@ public class Melt extends Algorithm {
      * direction, ad no more Modules may be slid down
      */
     public boolean isComplete() {
-        return w.hasReachedEnd();
+        return w.hasReachedEnd() && q.isEmpty();
     }
 
-
-    @Override
-    /**
-     * determines the next Parallel move for the Melt
-     *
-     * @return a ParallelMove consisting of multiple slides, to be run concurrently,
-     * in the Melt direction
-     */
-    public ParallelMove determinePMove() {
+    private void enqueueMoves() {
         w.update(r);
 
         Module[] wallModules = w.getWallModules();
         Boolean[] isMoving = w.getIsMoving();
-        List<Movement> moves = new ArrayList<Movement>();
+        List<Movement> slideMoves = new ArrayList<Movement>();
+        List<Movement> tunnelMoves = new ArrayList<Movement>();
         int neighborDir;
  
         //Initialize a Slide for all moving blocks next to stationary blocks
@@ -82,13 +80,30 @@ public class Melt extends Algorithm {
             if (isMoving[i] && !isMoving[i + 1]) {
                 //wall determins neighbor dir, right or down if MS blocks
                 neighborDir = Direction.isVertical(dir) ? 1 : 0; 
-                moves.add(new Slide(r, wallModules[i], dir, neighborDir));
+                tunnelMoves.add(new MakeTunnel(r, wallModules[i], dir, neighborDir));
+                slideMoves.add(new Slide(r, wallModules[i], dir, neighborDir));
             } else if (!isMoving[i] && isMoving[i + 1]) {
                 neighborDir = Direction.isVertical(dir) ? 3 : 2; 
-                moves.add(new Slide(r, wallModules[i + 1], dir, neighborDir));
+                tunnelMoves.add(new MakeTunnel(r, wallModules[i + 1], dir, neighborDir));
+                slideMoves.add(new Slide(r, wallModules[i + 1], dir, neighborDir));
             }
         }
+        //add to queue
+        q.addLast(new ParallelMove(r, tunnelMoves));
+        q.addLast(new ParallelMove(r, slideMoves));
+    }
 
-        return new ParallelMove(r, moves);
+    @Override
+    /**
+     * determines the next Parallel move for the Melt
+     *
+     * @return a ParallelMove consisting of multiple slides, to be run concurrently,
+     * in the Melt direction
+     */
+    public ParallelMove determinePMove() {
+        if (q.isEmpty()) {
+            enqueueMoves();
+        }
+        return q.getFirst();
     }
 }

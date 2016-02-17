@@ -339,24 +339,24 @@ public class OneTunnel implements Movement {
      * tunnel performed
      */
     public void finalize() {
-        r.disconnect(outerMs[0], pushDir);
-        r.disconnect(outerMs[1], pushDir);
-        r.disconnect(outerMs[2], Direction.opposite(dir));
-        r.disconnect(outerMs[3], Direction.opposite(dir));
-        r.disconnect(outerMs[4], Direction.opposite(dir));
-        r.disconnect(outerMs[5], Direction.opposite(pushDir));
-        r.disconnect(outerMs[6], pushDir);
-        r.disconnect(outerMs[6], Direction.opposite(pushDir));
-        r.disconnect(mA, dir);
+        r.disconnectModules(outerMs[0], pushDir);
+        r.disconnectModules(outerMs[1], pushDir);
+        r.disconnectModules(outerMs[2], Direction.opposite(dir));
+        r.disconnectModules(outerMs[3], Direction.opposite(dir));
+        r.disconnectModules(outerMs[4], Direction.opposite(dir));
+        r.disconnectModules(outerMs[5], Direction.opposite(pushDir));
+        r.disconnectModules(outerMs[6], pushDir);
+        r.disconnectModules(outerMs[6], Direction.opposite(pushDir));
+        r.disconnectModules(mA, dir);
 
-        r.connect(outerMs[0], outerMs[6], pushDir);
-        r.connect(outerMs[0], outerMs[1], dir);
-        r.connect(outerMs[1], mA, pushDir);
-        r.connect(outerMs[5], mB, dir);
-        r.connect(outerMs[6], outerMs[5], pushDir);
-        r.connect(mA, mB, pushDir);
-        r.connect(mA, outerMs[2], dir);
-        r.connect(mB, outerMs[3], dir);
+        r.connectModules(outerMs[0], outerMs[6], pushDir);
+        r.connectModules(outerMs[0], outerMs[1], dir);
+        r.connectModules(outerMs[1], mA, pushDir);
+        r.connectModules(outerMs[5], mB, dir);
+        r.connectModules(outerMs[6], outerMs[5], pushDir);
+        r.connectModules(mA, mB, pushDir);
+        r.connectModules(mA, outerMs[2], dir);
+        r.connectModules(mB, outerMs[3], dir);
 
         mA.swapUnits(unitsA[0], unitsA[1]);
     }

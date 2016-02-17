@@ -76,15 +76,16 @@ public class Robot {
      * In the robot operations silently fail, the graph throws errors.
      */
 
+    //////////////////////////////////////////////////////////
+    ////////////////// Unit       extends ////////////////////
+    //////////////////////////////////////////////////////////
     /**
      * Extends an edge relative to a unit.
      * @param u     Unit of interest
      * @param dir   Direction of arm relative to unit u
      */
     public void extend(Unit u, int dir) {
-        if (u != null) {
-            u.extend(dir);
-        }
+        extend(u, (Unit) u.getNeighbor(dir));
     }
 
     /**
@@ -98,15 +99,16 @@ public class Robot {
         }
     }
 
+    //////////////////////////////////////////////////////////
+    ////////////////// Unit     contracts ////////////////////
+    //////////////////////////////////////////////////////////
     /**
      * Contracts an edge relative to a unit.
      * @param u     Unit of interest
      * @param dir   Direction of arm relative to unit u
      */
     public void contract(Unit u, int dir) {
-        if (u != null) {
-            u.contract(dir);
-        }
+        contract(u, (Unit) u.getNeighbor(dir));
     }
 
     /**
@@ -120,6 +122,9 @@ public class Robot {
         }
     }
 
+    //////////////////////////////////////////////////////////
+    ////////////////// Unit      connects ////////////////////
+    //////////////////////////////////////////////////////////
     /**
      * Connects two units with a contracted edge in direction from u1 to u2.
      * @param u1    First unit of interest
@@ -127,9 +132,7 @@ public class Robot {
      * @param dir   Direction from u1 to u2
      */
     public void connect(Unit u1, Unit u2, int dir) {
-        if (u1 != null && u2 != null) {
-            unitGraph.addEdge(u1, u2, dir);
-        }
+        connect(u1, u2, dir, false);
     }
 
     /**
@@ -145,31 +148,42 @@ public class Robot {
         }
     }
 
+    //////////////////////////////////////////////////////////
+    ////////////////// Module    connects ////////////////////
+    //////////////////////////////////////////////////////////
     /**
-     * Connects two modules with a contracted edge in direction from m1 to m2.
+     * Connects two modules with a contracted edge in direction from m1 to m2,
+     * connecting sub edges between the two.
      * @param m1    First module of interest
      * @param m2    Second module of interest
      * @param dir   Direction from m1 to m2
      */
-    public void connect(Module m1, Module m2, int dir) {
-        if (m1 != null && m2 != null) {
-            moduleGraph.addEdge(m1, m2, dir);
-        }
+    public void connectModules(Module m1, Module m2, int dir) {
+        connectModules(m1, m2, dir, false);
     }
 
     /**
-     * Connects two modules with an edge in direction from m1 to m2.
+     * Connects two modules with an edge in direction from m1 to m2, connecting
+     * sub edges between the two.
      * @param m1    First module of interest
      * @param m2    Second module of interest
      * @param dir   Direction from m1 to m2
      * @param isExtended    true constructs an extended edge
      */
-    public void connect(Module m1, Module m2, int dir, boolean isExtended) {
+    public void connectModules(Module m1, Module m2, int dir, boolean isExtended) {
         if (m1 != null && m2 != null) {
             moduleGraph.addEdge(m1, m2, dir, isExtended);
+            Object[] us1 = m1.getSideUnits(dir).toArray();
+            Object[] us2 = m2.getSideUnits(Direction.opposite(dir)).toArray();
+            for (int i = 0; i < us1.length; i++) {
+                connect((Unit)us1[i], (Unit)us2[i], dir, isExtended);
+            }
         }
     }
 
+    //////////////////////////////////////////////////////////
+    ////////////////// Unit   disconnects ////////////////////
+    //////////////////////////////////////////////////////////
     /**
      * Disconnects the edge between two units.
      * @param u1    First unit of interest
@@ -187,8 +201,19 @@ public class Robot {
      * @param dir   Direction of arm relative to unit u
      */
     public void disconnect(Unit u, int dir) {
-        if (u != null) {
-            unitGraph.removeEdge(u, dir);
+        disconnect(u, (Unit) u.getNeighbor(dir));
+    }
+
+    //////////////////////////////////////////////////////////
+    ////////////////// Module disconnects ////////////////////
+    //////////////////////////////////////////////////////////
+    
+    private void disconnectModules(Module m1, Module m2, int dir) {
+        if (m1 != null && m2 != null) {
+            for (Unit u : m1.getSideUnits(dir)) {
+                disconnect(u, dir);
+            }
+            moduleGraph.removeEdge(m1, m2);
         }
     }
 
@@ -197,10 +222,8 @@ public class Robot {
      * @param m1    First module of interest
      * @param m2    Second module of interest
      */
-    public void disconnect(Module m1, Module m2) {
-        if (m1 != null && m2 != null) {
-            moduleGraph.removeEdge(m1, m2);
-        }
+    public void disconnectModules(Module m1, Module m2) {
+        disconnectModules(m1, m2, m1.findNeighborDirection(m2));
     }
 
     /**
@@ -208,10 +231,8 @@ public class Robot {
      * @param m     Module of interest
      * @param dir   Direction of arm relative to module m
      */
-    public void disconnect(Module m, int dir) {
-        if (m != null) {
-            moduleGraph.removeEdge(m, dir);
-        }
+    public void disconnectModules(Module m, int dir) {
+        disconnectModules(m, (Module) m.getNeighbor(dir), dir);
     }
 
     /**

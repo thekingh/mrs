@@ -70,7 +70,17 @@ public class TestMelt {
         for (int dir = 0; dir < Direction.NUM_DIR; dir ++) {
             meltTest(s, fs[dir], dir);
         }
-
+    }
+    public static void makeTunnelTest1() {
+        int [][] s = {{1,1,1},
+                      {1,1,1},
+                      {1,0,1},
+                      {1,1,1}};
+        int [][] f = {{1,0,1},
+                      {1,1,1},
+                      {1,1,1},
+                      {1,1,1}};
+        meltTest(s, f, 2);
     }
 
     
@@ -78,7 +88,8 @@ public class TestMelt {
     public static void main(String[] args) {
 /*        easyMeltTest();*/
 /*        harderMeltTest();*/
-        zigZagMeltTest();
+/*        zigZagMeltTest();*/
+        makeTunnelTest1();
 
     }
 }

@@ -25,7 +25,7 @@ public class TestRobot {
         Robot r = TestHelper.makeBot(s);
         Module[][] ms = r.toModuleArray();
         testConnectedness(r, true);
-        r.disconnect(ms[0][0], 1);
+        r.disconnectModules(ms[0][0], 1);
         testConnectedness(r, false);
     }
 

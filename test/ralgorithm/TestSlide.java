@@ -5,8 +5,6 @@ import rutils.*;
 import rgraph.*;
 
 public class TestSlide {
-
-
     public static void slideTest(Robot r, int[][] finish, Slide s) {
         Robot f = TestHelper.makeBot(finish);
 
@@ -63,6 +61,24 @@ public class TestSlide {
         Slide s2 = new Slide(r, ms[3][2], 2, 1);
         slideTest(r, f1, s2);
     }
+
+    public static void makeTunnelTest() {
+        int [][] s = {{1,1,1},
+                      {1,1,1},
+                      {1,0,1},
+                      {1,1,1}};
+        int [][] f = {{1,0,1},
+                      {1,1,1},
+                      {1,1,1},
+                      {1,1,1}};
+        Robot r = TestHelper.makeBot(s);
+
+        Module[][] ms = r.toModuleArray();
+        Slide s1 = new Slide(r, ms[1][1], 2, 3);
+        slideTest(r, f, s1);
+    }
+        
+
 
 
     public static void main(String[] args) {
