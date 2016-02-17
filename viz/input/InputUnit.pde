@@ -1,12 +1,28 @@
-public class Robot {
+/** 
+ *  Unit class exclusively for the input visualiztion
+ *
+ *  @author Casey Gowrie
+ *  @author Alex Tong
+ *  @author Kabir Singh
+ *  
+ *  @version 1.0
+ */
+
+public class InputUnit {
     private int x;
     private int y;
 
-    public Robot() {
+    public InputUnit() {
         this(0, 0);
     }
 
-    public Robot(int x, int y) {
+    /**
+     * Given an x and y coordinate, construct a new unit at that location
+     *
+     * @param x x coordinate of unit
+     * @param y y coordinate of unit
+     */
+    public InputUnit(int x, int y) {
         this.x = x;
         this.y = y;
     }
@@ -19,6 +35,10 @@ public class Robot {
         return y;
     }
 
+    /**
+     * Given a direction, draw a robot arm; reused code from the more dynamic
+     * output visualization unit class.
+     */
     public void drawContractedArms(int dir) {
 
         // how much of block length the unit width is
@@ -62,6 +82,9 @@ public class Robot {
         popStyle();
     }
 
+    /**
+     * Draws the unit's body 
+     */
     public void drawUnit() {
 
         // calculate sizes
@@ -85,6 +108,9 @@ public class Robot {
         popStyle();
     }
 
+    /**
+     * Render the entire unit
+     */
     public void render() {
 
         // draw unit body
