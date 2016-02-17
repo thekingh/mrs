@@ -3,30 +3,26 @@ package rgraph;
 import rutils.*;
 
 public class TestRobot {
-    private static void testConnectedness(Robot r, boolean connected) {
-        assert r.isConnected() == connected;
-        System.out.println("Test Passed");
-    }
 
     public static void test1Bad() {
         int[][] s = {{1,0,1}};
         Robot r = TestHelper.makeBot(s);
-        testConnectedness(r, false);
+        TestHelper.testConnectedness(r, false);
     }
 
     public static void test1Good() {
         int[][] s = {{1,1,1}};
         Robot r = TestHelper.makeBot(s);
-        testConnectedness(r, true);
+        TestHelper.testConnectedness(r, true);
     }
 
     public static void test1Both() {
         int[][] s = {{1,1,1}};
         Robot r = TestHelper.makeBot(s);
         Module[][] ms = r.toModuleArray();
-        testConnectedness(r, true);
+        TestHelper.testConnectedness(r, true);
         r.disconnectModules(ms[0][0], 1);
-        testConnectedness(r, false);
+        TestHelper.testConnectedness(r, false);
     }
 
     public static void main(String[] args) {

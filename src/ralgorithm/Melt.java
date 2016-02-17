@@ -70,6 +70,7 @@ public class Melt extends Algorithm {
         Boolean[] isMoving = w.getIsMoving();
         List<Movement> slideMoves = new ArrayList<Movement>();
         List<Movement> tunnelMoves = new ArrayList<Movement>();
+        List<Movement> connectMoves = new ArrayList<Movement>();
         int neighborDir;
  
         //Initialize a Slide for all moving blocks next to stationary blocks
@@ -80,17 +81,23 @@ public class Melt extends Algorithm {
             if (isMoving[i] && !isMoving[i + 1]) {
                 //wall determins neighbor dir, right or down if MS blocks
                 neighborDir = Direction.isVertical(dir) ? 1 : 0; 
-                tunnelMoves.add(new MakeTunnel(r, wallModules[i], dir, neighborDir));
+                tunnelMoves.add(new MakeTunnel(r, wallModules[i], 
+                    Direction.opposite(dir), neighborDir));
                 slideMoves.add(new Slide(r, wallModules[i], dir, neighborDir));
             } else if (!isMoving[i] && isMoving[i + 1]) {
                 neighborDir = Direction.isVertical(dir) ? 3 : 2; 
-                tunnelMoves.add(new MakeTunnel(r, wallModules[i + 1], dir, neighborDir));
+                tunnelMoves.add(new MakeTunnel(r, wallModules[i + 1], 
+                    Direction.opposite(dir), neighborDir));
                 slideMoves.add(new Slide(r, wallModules[i + 1], dir, neighborDir));
             }
         }
+        // connect all modules after wall moves
+        connectMoves.add(new ConnectAll(r));
+
         //add to queue
         q.addLast(new ParallelMove(r, tunnelMoves));
         q.addLast(new ParallelMove(r, slideMoves));
+        q.addLast(new ParallelMove (r, connectMoves));
     }
 
     @Override
@@ -104,6 +111,6 @@ public class Melt extends Algorithm {
         if (q.isEmpty()) {
             enqueueMoves();
         }
-        return q.getFirst();
+        return q.pollFirst();
     }
 }

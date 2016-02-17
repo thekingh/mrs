@@ -63,6 +63,11 @@ public final class TestHelper {
         return new Robot(orientArray(in), false); 
     }
 
+    public static void testConnectedness(Robot r, boolean connected) {
+        assert r.isConnected() == connected;
+        System.out.println("Connectedness Test Passed");
+    }
+
     public static boolean verifyShape(Robot r, Robot s) {
         return r.equals(s);
     }

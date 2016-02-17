@@ -152,7 +152,7 @@ public class Slide implements Movement {
      * END<br>
      * &nbsp&nbsp&nbsp&nbsp   A2 A3<br>
      * &nbsp&nbsp&nbsp&nbsp   A1 A0<br>
-     * u1 u2 u3<br>
+     *                     u1 u2 u3<br>
      */
     public void performHalfSlide(Unit u1, Unit u2, Unit u3, int step) {
         Unit trailing = uA[1];
