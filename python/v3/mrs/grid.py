@@ -28,13 +28,6 @@ class Unit(Node):
     def __repr__(self):
         return "U"
 
-class Graph(object):
-
-    @classmethod
-    def performOp(graph, op):
-        """ Performs the operation on the networkx graph """
-        pass
-
 class Grid(object):
     """Grid is a sparse 2d representation of a robot.
     
@@ -56,10 +49,14 @@ class Grid(object):
                 new = obj()
                 self.D[new.id] = new
                 self.A[i]      = new.id
+        self.G = self.to_graph()
 
     def get(self, coord):
         """ Gets object id from coordinate (x, y) """
         return self.A[coord]
+
+    def get_list(self, coords):
+        return tuple([self.get(c) for c in coords])
 
     def where(self, id):
         """ Searches grid for id returns first instance of id"""
@@ -91,6 +88,20 @@ class Grid(object):
         G = self.to_graph()
         for op in oplist:
             Graph.performOp(G, op)
+
+    def perform_op(op):
+        """ Performs the operation on the networkx graph """
+
+        if op.op == OpType.EXTEND:
+            self.G
+
+if __name__ == "__main__":
+    a = np.array([[1,0],[1,1]])
+    g = Grid(a, Module)
+    print nx.get_edge_attributes(g.G, 'weight')
+    print g.G.nodes()
+    print g.G.edge[0][1]
+
 
 
 

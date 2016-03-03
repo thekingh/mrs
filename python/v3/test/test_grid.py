@@ -20,11 +20,13 @@ class TestGrid(object):
         assert ans[0] == 0
         assert ans[1] == 1
 
+    def test_get_list(self):
+        g = 
+
     def test_id_from_loc(self):
         g = self.g
         for i, item in np.ndenumerate(g.A):
             assert g.A[i] == g.get(i)
-
 
     def test_grid(self):
         g = self.g
