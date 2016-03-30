@@ -42,6 +42,8 @@ public class Slide implements Movement {
     private static final int NUMSTEPS = 10;
     private final Robot r;
 
+    private final Coordinate c;
+
     private final Module mA;
     private final Unit[] uA;
 
@@ -65,6 +67,7 @@ public class Slide implements Movement {
     public Slide(Robot r, Module m, int dir, int neighborDir) {
         this.r           = r;
         this.mA          = m;
+        this.c = m.findSelfInArray(r.toModuleArray());
         this.uA          = mA.getUnitsFrom(neighborDir, dir);
         this.dir         = dir;
         this.neighborDir = neighborDir;
@@ -84,6 +87,10 @@ public class Slide implements Movement {
                 outerUs[i] = outerMs[i].getUnitsFrom(neighborDir, dir);
             }
         }
+    }
+
+    public static Slide initFromCoord(Robot r, Coordinate c, int dir, int neighborDir) {
+        return new Slide(r, r.toModuleArray()[c.x()][c.y()], dir, neighborDir);
     }
 
     /**
@@ -131,8 +138,9 @@ public class Slide implements Movement {
     }
 
     //TODO IMPLEMENT
-    public Movement invert() {
-        return null;
+    public Movement invert(Robot s) {
+        return Slide.initFromCoord(s, c.calcRelativeLoc(dir), 
+            Direction.opposite(dir), neighborDir);
     }
 
     /**

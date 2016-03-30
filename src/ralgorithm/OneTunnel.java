@@ -378,7 +378,7 @@ public class OneTunnel implements Movement {
      *
      * @return OneTunnel from end to start of the same robot
      */
-    public Movement invert() {
+    public Movement invert(Robot s) {
         return null;
     }
 

@@ -101,11 +101,11 @@ public class ParallelMove {
      *
      * @return an inverted ParallelMove
      */
-    public ParallelMove invertPMove() {
+    public ParallelMove invertPMove(Robot r) {
         List<Movement> invertedMoves = new ArrayList<Movement>();
 
         for (Movement m : moves) {
-            invertedMoves.add(m.invert());
+            invertedMoves.add(m.invert(r));
         }
 
         return new ParallelMove(r, invertedMoves);

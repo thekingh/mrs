@@ -72,7 +72,7 @@ public class ConnectAll implements Movement {
      *
      * @return a new Movement that is this inverted
      */
-    public Movement invert() {
+    public Movement invert(Robot s) {
     	return null;
     }
 

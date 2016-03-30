@@ -30,6 +30,10 @@ public class MakeTunnel implements Movement {
         this(r, m, dir, disconnectDir, Integer.MAX_VALUE);
     }
 
+    public static MakeTunnel initFromCoords(Robot r, Coordinate c, int dir, int disconnectDir) {
+        return new MakeTunnel(r, r.toModuleArray()[c.x()][c.y()], dir, disconnectDir);
+    }
+
     /**
      * Makes a tunnel of a specific length after some module.
      * <p>
@@ -83,7 +87,7 @@ public class MakeTunnel implements Movement {
      *
      * @return a new Movement that is this inverted
      */
-    public Movement invert() {
+    public Movement invert(Robot s) {
         return null;
     }
 

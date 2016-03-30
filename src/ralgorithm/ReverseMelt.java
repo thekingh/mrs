@@ -64,7 +64,7 @@ public class ReverseMelt extends Algorithm {
             pm = forward.determinePMove();
             pm.pmove();
             // add the opposite Pmove to Stack for later use
-            stack.push(pm.invertPMove());
+            stack.push(pm.invertPMove(s));
         }
 	}
 

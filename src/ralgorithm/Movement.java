@@ -40,7 +40,7 @@ public interface Movement {
      *
      * @return a new Movement that is this inverted
      */
-    public Movement invert();
+    public Movement invert(Robot s);
 
     /**
      * Runs final cleanup to update robot, switch units in modules etc.

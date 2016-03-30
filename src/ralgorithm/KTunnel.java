@@ -61,7 +61,7 @@ public class KTunnel implements Movement {
     /**
      * returns an opposite movement
      */
-    public Movement invert() {
+    public Movement invert(Robot s) {
         return null;
     }
 

@@ -170,7 +170,7 @@ public class Node {
      * @return      true iff nodes are equal.
      */
 	public boolean equals(Node other) {
-		return (this.id == other.getId());
+		return (other != null && this.id == other.getId());
 	}
 
 	public String toString() {

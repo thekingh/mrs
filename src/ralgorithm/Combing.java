@@ -28,30 +28,22 @@ public class Combing extends Algorithm {
      * Init function for combing algorithm, note that robots must be in
      * [x][y] up, right positive direction.
      */
-    public Combing(Robot r, int dir) {
+    public Combing(Robot s, Robot t) {
         super(r);
-        this.dir = dir;
-        Wall w = new Wall(r, dir);
-        System.out.println(w);
+        List<Algorithm> parts = new ArrayList<Algorithm>();
+        parts.add(new Melt(s, 2))
+        parts.add(new CombtoLine(s, 2))
+
+        List<Algorithm> reverseParts = new ArrayList<Algorithm>();
+        reverseParts.add(new Melt(t, 2))
+        reverseParts.add(new CombtoLine(t, 2))
+
+        List<State> states = new ArrayList<State>();
+
+        for ()
+
     }
 
-    /**
-     * Moves wall down one level.
-     *
-     * There is a case where we must slide a module down on both sides
-     *
-     * If a module has 2 neighbors to slide on, we will slide on both, with
-     *   one half of the module sliding on each (in parallel)
-     */
-    public void moveWall(Wall w) {
-        Module[] wallModules = w.getWallModules();
-        Boolean[] isMoving = w.getIsMoving();
-        for (int i = 0; i < wallModules.length; i++) {
-            if (isMoving[i] != null && isMoving[i] == true) {
-/*                r.slide(wallModules[i], dir, false);*/
-            }
-        }
-    }
 
     @Override
     public boolean isComplete() {
@@ -61,12 +53,7 @@ public class Combing extends Algorithm {
 
     @Override
     public ParallelMove determinePMove() {
-/*        moveWall(w);*/
-/*        w.update(r);*/
-/*        if (sliding) {*/
-/**/
-/*        }*/
-        return null;
+
     }
 
 

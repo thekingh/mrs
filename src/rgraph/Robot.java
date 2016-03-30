@@ -85,6 +85,9 @@ public class Robot {
      * @param dir   Direction of arm relative to unit u
      */
     public void extend(Unit u, int dir) {
+        if (u == null) {
+            return;
+        }
         extend(u, (Unit) u.getNeighbor(dir));
     }
 
@@ -108,6 +111,9 @@ public class Robot {
      * @param dir   Direction of arm relative to unit u
      */
     public void contract(Unit u, int dir) {
+        if (u == null) {
+            return;
+        }
         contract(u, (Unit) u.getNeighbor(dir));
     }
 
@@ -132,6 +138,12 @@ public class Robot {
      * @param dir   Direction from u1 to u2
      */
     public void connect(Unit u1, Unit u2, int dir) {
+        if (u1 == null) {
+            return;
+        }
+        if (u2 == null) {
+            return;
+        }
         connect(u1, u2, dir, false);
     }
 
@@ -201,6 +213,9 @@ public class Robot {
      * @param dir   Direction of arm relative to unit u
      */
     public void disconnect(Unit u, int dir) {
+        if (u == null) {
+            return;
+        }
         disconnect(u, (Unit) u.getNeighbor(dir));
     }
 
@@ -223,6 +238,12 @@ public class Robot {
      * @param m2    Second module of interest
      */
     public void disconnectModules(Module m1, Module m2) {
+        if (m1 == null) {
+            return;
+        }
+        if (m2 == null) {
+            return;
+        }
         disconnectModules(m1, m2, m1.findNeighborDirection(m2));
     }
 
@@ -232,6 +253,9 @@ public class Robot {
      * @param dir   Direction of arm relative to module m
      */
     public void disconnectModules(Module m, int dir) {
+        if (m == null) {
+            return;
+        }
         disconnectModules(m, (Module) m.getNeighbor(dir), dir);
     }
 
