@@ -8,6 +8,7 @@ import org.json.simple.*;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
+import java.nio.file.Files;
 
 /** 
  * State is a snapshot of a robot state.
@@ -20,6 +21,9 @@ import java.util.List;
  * @version 1.0
  */
 public class State {
+
+    private static final String STATE_PATH_PREFIX = "../viz/json_states/";
+    private static final String STATE_PATH_EXT    = ".json";
 
     private JSONArray jsonArr;
 
@@ -87,7 +91,7 @@ public class State {
     public void writeToFile(int stateNum) {
         
         try {
-            FileWriter file = new FileWriter("../viz/json_states/state" + stateNum + ".json");
+            FileWriter file = new FileWriter(STATE_PATH_PREFIX + stateNum + STATE_PATH_EXT);
             file.write(jsonArr.toJSONString());
             file.flush();
             file.close();
@@ -97,5 +101,11 @@ public class State {
 
     }
 
-
+    //TODO this path prefix thing... its bad umkay?
+    public static void clearStates() {
+        File dir = new File(STATE_PATH_PREFIX);
+        for (File file : dir.listFiles()) {
+            file.delete();
+        }
+    }
 }
