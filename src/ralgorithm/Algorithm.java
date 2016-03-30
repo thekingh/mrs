@@ -52,10 +52,12 @@ public abstract class Algorithm {
      *
      * @return ParallelMove which will be next run in the algorithm
      */
-    public abstract ParallelMove determinePMove();
+    public ParallelMove determinePMove() {
+        throw new RuntimeException("Either Determine PMove or Determine next state must be overwritten.");
+    }
 
-    public State determineNextState() {
-        pm = determinePMove();
+    public List<State> determineNextStates() {
+        ParallelMove pm = determinePMove();
         return pm.pmove();
     }
 
@@ -66,10 +68,10 @@ public abstract class Algorithm {
      */
     public List<State> run() {
         List<State> allStates = new ArrayList<State>();
-        State nextState;
+        List<State> nextStates;
         while (!isComplete()) {
-            nextState = determineNextState();
-            allStates.addAll(nextState);
+            nextStates = determineNextStates();
+            allStates.addAll(nextStates);
         }
         return allStates;
     }

@@ -3,6 +3,10 @@ package ralgorithm;
 import rgraph.*;
 import rutils.*;
 
+import java.util.List;
+import java.util.LinkedList;
+import java.util.ArrayList;
+
 /**
  * Transforms a Source Robot, S, into a Target Robot, T, in O(n) parallel steps
  * <p>
@@ -23,37 +27,43 @@ import rutils.*;
  */
 public class Combing extends Algorithm {
     private int dir; //direction of melt
+    private LinkedList<State> states;
 
     /**
      * Init function for combing algorithm, note that robots must be in
      * [x][y] up, right positive direction.
      */
     public Combing(Robot s, Robot t) {
-        super(r);
+        super(s);
+        
         List<Algorithm> parts = new ArrayList<Algorithm>();
-        parts.add(new Melt(s, 2))
-        parts.add(new CombtoLine(s, 2))
+        parts.add(new Melt(s, 2));
+        parts.add(new CombToLine(s, 2));
 
         List<Algorithm> reverseParts = new ArrayList<Algorithm>();
-        reverseParts.add(new Melt(t, 2))
-        reverseParts.add(new CombtoLine(t, 2))
+        reverseParts.add(new Melt(t, 2));
+        reverseParts.add(new CombToLine(t, 2));
 
-        List<State> states = new ArrayList<State>();
-
-        for ()
-
+        states = new LinkedList<State>();
+        for (Algorithm part : parts) {
+            states.addAll(part.run());
+        }
+        for (Algorithm reversePart : reverseParts) {
+            states.addAll(reversePart.runReverse());
+        }
     }
 
 
     @Override
     public boolean isComplete() {
-
-        return false;
+        return states.isEmpty();
     }
 
     @Override
-    public ParallelMove determinePMove() {
-
+    public List<State> determineNextStates() {
+        List s = new ArrayList<State>();
+        s.add(states.pollFirst());
+        return s;
     }
 
 
