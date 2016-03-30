@@ -91,7 +91,8 @@ public class State {
     public void writeToFile(int stateNum) {
         
         try {
-            FileWriter file = new FileWriter(STATE_PATH_PREFIX + stateNum + STATE_PATH_EXT);
+            //TODO remove state
+            FileWriter file = new FileWriter(STATE_PATH_PREFIX + "state" + stateNum + STATE_PATH_EXT);
             file.write(jsonArr.toJSONString());
             file.flush();
             file.close();
