@@ -5,4 +5,5 @@ temp/*
 src/src/*.class
 doc/
 *.rbt
+viz/json_states/
 

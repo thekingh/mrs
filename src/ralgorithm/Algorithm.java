@@ -54,6 +54,11 @@ public abstract class Algorithm {
      */
     public abstract ParallelMove determinePMove();
 
+    public State determineNextState() {
+        pm = determinePMove();
+        return pm.pmove();
+    }
+
     /**
      * Runs the algorithm by running all of the Parallel Moves
      *
@@ -61,10 +66,10 @@ public abstract class Algorithm {
      */
     public List<State> run() {
         List<State> allStates = new ArrayList<State>();
-        ParallelMove pm;
+        State nextState;
         while (!isComplete()) {
-            pm = determinePMove();
-            allStates.addAll(pm.pmove());
+            nextState = determineNextState();
+            allStates.addAll(nextState);
         }
         return allStates;
     }
