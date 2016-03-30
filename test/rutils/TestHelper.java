@@ -2,6 +2,8 @@ package rutils;
 
 import rgraph.*;
 import ralgorithm.*;
+import java.util.List;
+import java.util.ArrayList;
 
 public final class TestHelper {
     public static void printRobot(Robot r) {
@@ -120,5 +122,11 @@ public final class TestHelper {
             }
         }
         return out;
+    }
+
+    public static void outputStates(List<State> states) {
+        for (int i = 0; i < states.size(); i++) {
+            states.get(i).writeToFile(i);
+        }
     }
 }

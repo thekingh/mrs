@@ -6,6 +6,7 @@ import rutils.*;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Abstract class for algorithms involving reconfiguration of Robot Objects.
@@ -66,5 +67,18 @@ public abstract class Algorithm {
             allStates.addAll(pm.pmove());
         }
         return allStates;
+    }
+
+    public static List<State> reverse(List<State> states) {
+        int length = states.size();
+        List<State> toReturn = new ArrayList<State>();
+        for (int i = 0; i < length; i++) {
+            toReturn.add(states.get(length - i - 1));
+        }
+        return toReturn;
+    }
+
+    public List<State> runReverse() {
+        return reverse(run());
     }
 }
