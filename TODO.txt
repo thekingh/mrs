@@ -2,6 +2,15 @@ TODO
 ==============
 
 
+Potential Bugs:
+Some extended arms do not show in testing. This is apparent by running
+corneronetunnel test with 2 vertical blocks on step 25.
+
+
+finalize must write unit swaps before modules as module graph affects unit graph
+when a module connects it connects all units between the two. 
+
+
 
 
 
