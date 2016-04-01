@@ -51,19 +51,6 @@ public class TestOneTunnel {
 
         oneTunnelTest(r, f, p0);
      }
-     public static void testSimpleTwoBlocks() {
-        int[][] s = {{1},
-                     {1}};
-        int[][] f = {{1,1}};
-        Robot r = TestHelper.makeBot(s);
-
-        Module[][] ms0 = r.toModuleArray();
-        OneTunnel p0 = new OneTunnel(r, ms0[0][1], 2, 1);
-        testUnionUse(p0, false);
-
-        oneTunnelTest(r, f, p0);
-    }
-
     public static void testSimpleDL() {
         int[][] s = {{1,1},
                      {0,1}};
