@@ -339,6 +339,8 @@ public class OneTunnel implements Movement {
      * tunnel performed
      */
     public void finalize() {
+        mA.swapUnits(unitsA[0], unitsA[1]);
+
         r.disconnectModules(outerMs[0], pushDir);
         r.disconnectModules(outerMs[1], pushDir);
         r.disconnectModules(outerMs[2], Direction.opposite(dir));
@@ -357,8 +359,6 @@ public class OneTunnel implements Movement {
         r.connectModules(mA, mB, pushDir);
         r.connectModules(mA, outerMs[2], dir);
         r.connectModules(mB, outerMs[3], dir);
-
-        mA.swapUnits(unitsA[0], unitsA[1]);
     }
 
     // /**

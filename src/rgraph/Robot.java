@@ -350,6 +350,7 @@ public class Robot {
     }
 
     private boolean arrayEquals(Node[][] a1, Node[][] a2) {
+
         int w = a1.length;
         int h = a1[0].length;
 

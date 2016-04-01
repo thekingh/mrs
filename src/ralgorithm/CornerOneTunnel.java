@@ -356,27 +356,32 @@ public class CornerOneTunnel implements Movement {
      * tunnel performed
      */
     public void finalize() {
+        // NOTE: switch units before modules, if not, module connections
+        // will permute units in undesired ways
+        // TODO: make finalize units and run that first, and finalize modules
+        mA.swapUnits(unitsA[0], unitsA[1]);
+        mA.swapUnits(unitsA[0], unitsA[2]);
+
+        mB.swapUnits(unitsB[1], unitsB[2]);
         //TODO switch modules
-/*        r.disconnectModules(outerMs[0], pushDir);*/
-/*        r.disconnectModules(outerMs[1], pushDir);*/
-/*        r.disconnectModules(outerMs[2], Direction.opposite(dir));*/
-/*        r.disconnectModules(outerMs[3], Direction.opposite(dir));*/
-/*        r.disconnectModules(outerMs[4], Direction.opposite(dir));*/
-/*        r.disconnectModules(outerMs[5], Direction.opposite(pushDir));*/
-/*        r.disconnectModules(outerMs[6], pushDir);*/
-/*        r.disconnectModules(outerMs[6], Direction.opposite(pushDir));*/
-/*        r.disconnectModules(mA, dir);*/
-/**/
-/*        r.connectModules(outerMs[0], outerMs[6], pushDir);*/
-/*        r.connectModules(outerMs[0], outerMs[1], dir);*/
-/*        r.connectModules(outerMs[1], mA, pushDir);*/
-/*        r.connectModules(outerMs[5], mB, dir);*/
-/*        r.connectModules(outerMs[6], outerMs[5], pushDir);*/
-/*        r.connectModules(mA, mB, pushDir);*/
-/*        r.connectModules(mA, outerMs[2], dir);*/
-/*        r.connectModules(mB, outerMs[3], dir);*/
-/**/
-/*        mA.swapUnits(unitsA[0], unitsA[1]);*/
+        r.disconnectModules(outerMs[0], pushDir);
+        r.disconnectModules(outerMs[1], pushDir);
+        r.disconnectModules(outerMs[2], Direction.opposite(dir));
+        r.disconnectModules(outerMs[3], Direction.opposite(dir));
+        r.disconnectModules(outerMs[4], Direction.opposite(dir));
+        r.disconnectModules(outerMs[5], Direction.opposite(pushDir));
+        r.disconnectModules(outerMs[6], pushDir);
+        r.disconnectModules(outerMs[6], Direction.opposite(pushDir));
+        r.disconnectModules(mA, dir);
+
+        r.connectModules(outerMs[0], outerMs[6], pushDir);
+        r.connectModules(outerMs[0], outerMs[1], dir);
+        r.connectModules(outerMs[1], mA, pushDir);
+        r.connectModules(outerMs[5], mB, dir);
+        r.connectModules(outerMs[6], outerMs[5], pushDir);
+        r.connectModules(mA, mB, pushDir);
+        r.connectModules(mA, outerMs[2], dir);
+        r.connectModules(mB, outerMs[3], dir);
     }
 
     // /**

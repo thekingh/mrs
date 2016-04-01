@@ -33,18 +33,18 @@ public class TestOneTunnel {
 
         oneTunnelTest(r, f, p0);
     }
-    public static void testSimpleTwoBlocks() {
-        int[][] s = {{1,0},
-                     {1,0}};
-        int[][] f = {{0,0},
-                     {1,1}};
-        Robot r = TestHelper.makeBot(s);
+    // public static void testSimpleTwoBlocks() {
+    //     int[][] s = {{1,0},
+    //                  {1,0}};
+    //     int[][] f = {{0,0},
+    //                  {1,1}};
+    //     Robot r = TestHelper.makeBot(s);
 
-        Module[][] ms0 = r.toModuleArray();
-        OneTunnel p0 = new OneTunnel(r, ms0[0][1], 2, 1);
+    //     Module[][] ms0 = r.toModuleArray();
+    //     OneTunnel p0 = new OneTunnel(r, ms0[0][1], 2, 1);
 
-        oneTunnelTest(r, f, p0);
-    }
+    //     oneTunnelTest(r, f, p0);
+    // }
 
     public static void testSimpleDL() {
         int[][] s = {{1,1},
@@ -117,7 +117,7 @@ public class TestOneTunnel {
     }
 
     public static void main(String[] args) {
-        testSimpleTwoBlocks();
+        testSimpleDR();
         // testSimpleDL();
         // testSimpleUR();
         // testSimpleUL();

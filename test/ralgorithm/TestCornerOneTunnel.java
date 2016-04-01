@@ -28,9 +28,14 @@ public class TestCornerOneTunnel {
         r.drawModule();
         System.out.println("=====================================");
 
-        TestHelper.runAndDisplayMoveForSteps(p, 35);
+        TestHelper.runAndDisplayMove(p);
 
+        System.out.println("Draw Result");
         r.drawModule();
+        r.drawUnit();
+        System.out.println("Draw Expected Final");
+        f.drawModule();
+        f.drawUnit();
         TestHelper.validateOutput(r, f);
         return null;
     }
@@ -48,10 +53,9 @@ public class TestCornerOneTunnel {
         oneTunnelTest(r, f, p0);
     }
     public static void testSimpleTwoBlocks() {
-        int[][] s = {{1,0},
-                     {1,0}};
-        int[][] f = {{0,0},
-                     {1,1}};
+        int[][] s = {{1},
+                     {1}};
+        int[][] f = {{1,1}};
         Robot r = TestHelper.makeBot(s);
 
         Module[][] ms0 = r.toModuleArray();
