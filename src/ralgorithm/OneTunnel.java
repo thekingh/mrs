@@ -42,6 +42,10 @@ import java.util.ArrayList;
  *      <li>Module C will always be connected to Module 4 through 2 connections</li>
  *      <li>Connectedness will be maintained throughout the 1-tunnel between modules
  *      0, 1, 2, 3, 5</li>
+ *      <li>If Module 5 exists, or Modules 0,1,2,3 exist, then we perform a One-Tunnel
+ *      within the union of the movement, otherwise we use a single unit space
+ *      within module 5.</li>
+ * </ul>
  *
  * @author Casey Gowrie
  * @author Kabir Singh
@@ -51,7 +55,7 @@ import java.util.ArrayList;
  */
 public class OneTunnel implements Movement {
 	private int currStep = 0;
-    private static final int NUMSTEPS = 29;
+    private static final int NUMSTEPS = 34;
 
     private final Robot r;
     private final Module mA;
@@ -62,6 +66,11 @@ public class OneTunnel implements Movement {
     private final Unit[] unitsA;
     private final Unit[] unitsB;
     private final Unit[][] outerUs;
+
+    //This variable sets which varient of one tunnel to use. Two options, either
+    //performs move in union, requiring existance of module 5, or outside
+    //of union requiring no module in slot 5.
+    private final boolean UNION;
 
     /**
      * Instantiate a OneTunnel movement in a simple form of which Module being tunneled
@@ -97,6 +106,13 @@ public class OneTunnel implements Movement {
             if (outerMs[i] != null) {
                 outerUs[i] = outerMs[i].getUnitsFrom(dir, pushDir);
             }
+        }
+
+        if (outerMs[5] != null || (outerMs[0] != null && outerMs[1] != null &&
+                                   outerMs[2] != null && outerMs[3] != null)) {
+            UNION = true;
+        } else {
+            UNION = false;
         }
     }
 
@@ -168,6 +184,14 @@ public class OneTunnel implements Movement {
      * Steps through the OneTunnel by incrementally connecting, etc. units
      */
     public void step() {
+        if (UNION) {
+            stepInUnion();
+        } else {
+            stepOutsideUnion();
+        }
+    }
+
+    private void stepInUnion() {
         switch (currStep) {
             case 0:
                 // disconnect from everything on the outside
@@ -324,6 +348,8 @@ public class OneTunnel implements Movement {
                 r.connect(unitsA[3], unitsB[2], pushDir);
                 r.connect(unitsA[2], outerUs[1][3], Direction.opposite(pushDir));
                 break;
+            default: //as this is shorter, we will just wait for a few steps
+                break;
         }
         //TODO: tunnel out sliding path somehow (don't worry about chunks that
         //may be disconnected, that should be taken care of by alg)
@@ -332,6 +358,187 @@ public class OneTunnel implements Movement {
         currStep++;
     }
 
+    private void stepOutsideUnion() {
+        switch (currStep) {
+            case 0:
+                // disconnect from everything on the outside
+                r.disconnect(unitsA[2], Direction.opposite(pushDir));
+                r.disconnect(unitsA[3], pushDir);
+                r.disconnect(unitsB[0], dir);
+                r.disconnect(unitsB[1], Direction.opposite(pushDir));
+                r.disconnect(unitsB[2], Direction.opposite(pushDir));
+
+                // disconnect inside modules
+                r.disconnect(unitsA[0], unitsB[3]);
+                r.disconnect(unitsB[2], unitsB[3]);
+                break;
+            case 1:
+                r.extend(unitsB[0], unitsB[1]);
+                break;
+            case 2:
+                //connect
+                r.connect(unitsB[0], outerUs[3][2], dir);
+                r.connect(unitsB[3], outerUs[5][1], Direction.opposite(dir));
+                //inside disconnect
+                r.disconnect(unitsA[0], unitsA[1]);
+                //outside disconnect
+                r.disconnect(unitsA[0], pushDir);
+                r.disconnect(unitsB[1], dir);
+                break;
+            case 3:
+                r.extend(unitsA[0], unitsA[3]);
+                break;
+            case 4:
+                r.connect(unitsA[0], unitsB[3], pushDir);
+                r.disconnect(unitsB[1], unitsB[2]);
+                break;
+            case 5:
+                r.contract(unitsB[0], unitsB[1]);
+                break;
+            case 6:
+                r.extend(unitsA[1], unitsB[2]);
+                break;
+            case 7:
+                r.connect(unitsB[2], outerUs[1][0], Direction.opposite(pushDir));
+                r.disconnect(unitsA[1], Direction.opposite(pushDir));
+                r.connect(unitsB[2], unitsB[1], pushDir);
+                break;
+            case 8:
+                r.contract(unitsA[0], unitsA[3]);
+                r.contract(unitsB[2], unitsA[1]);
+                break;
+            case 9:
+                r.disconnect(unitsA[3], unitsA[0]);
+                r.disconnect(unitsB[3], Direction.opposite(dir));
+                r.disconnect(unitsB[0], dir);
+
+                r.connect(unitsA[3], outerUs[5][1], pushDir);
+                r.connect(unitsB[2], outerUs[2][2], dir);
+                break;
+            case 10:
+                r.extend(unitsA[2], unitsA[3]);
+                break;
+            case 11:
+                r.connect(unitsA[2], unitsA[1], dir);
+                r.connect(unitsA[1], unitsB[2], dir);
+                r.connect(unitsB[2], unitsB[1], pushDir);
+                r.connect(unitsA[0], unitsB[1], dir);
+                r.connect(unitsA[3], unitsB[3], dir);
+                r.disconnect(unitsA[2], unitsA[3]);
+                r.disconnect(unitsA[0], unitsA[1]);
+                r.disconnect(unitsA[0], unitsB[3]);
+                break;
+            case 12:
+                r.extend(unitsA[0], unitsB[1]);
+                break;
+            case 13:
+                r.connect(unitsA[0], unitsA[2], Direction.opposite(pushDir));
+                r.connect(unitsA[0], unitsA[3], pushDir);
+                r.disconnect(unitsB[2], unitsB[1]);
+                r.disconnect(unitsB[1], unitsB[0]);
+                break;
+            case 14:
+                r.contract(unitsA[0], unitsB[1]);
+                break;
+            case 15:
+                r.connect(unitsB[1], unitsB[3], pushDir);
+                r.connect(unitsB[2], unitsB[0], pushDir, true);
+                r.disconnect(unitsA[1], unitsB[2]);
+                break;
+            case 16:
+                r.contract(unitsB[0], unitsB[2]);
+                break;
+                //No connection steps
+            case 17:
+                r.extend(unitsA[1], unitsA[2]);
+                break;
+            case 18:
+                r.connect(unitsA[1], unitsB[2], pushDir);
+                r.disconnect(unitsA[2], unitsA[0]);
+                break;
+            case 19:
+                r.contract(unitsA[1], unitsA[2]);
+                break;
+                //TODO write outside connections
+            case 20:
+                r.connect(unitsA[2], unitsB[1], pushDir);
+                r.disconnect(unitsB[1], unitsA[0]);
+                break;
+            case 21:
+                r.extend(unitsA[0], unitsA[3]);
+                break;
+            case 22:
+                r.connect(unitsA[0], unitsA[2], dir);
+                r.disconnect(unitsA[3], unitsB[3]);
+                break;
+            case 23:
+                r.contract(unitsA[0], unitsA[3]);
+                break;
+            //handling outside connections.
+            //TODO figure out why this arm isnt showing
+            case 24:
+                r.connect(unitsB[1], unitsB[3], pushDir);
+                r.disconnect(unitsB[2], unitsB[1]);
+                r.disconnect(unitsB[0], dir);
+                r.disconnect(unitsB[2], dir);
+                r.disconnect(unitsB[3], Direction.opposite(dir));
+                break;
+            case 25:
+                r.extend(unitsA[1], unitsB[2]);
+                r.extend(unitsB[1], unitsB[3]);
+                break;
+            case 26:
+                r.connect(unitsB[1], unitsB[3], pushDir, true);
+                r.connect(unitsB[3], outerUs[5][0], Direction.opposite(dir));
+                r.connect(unitsB[0], outerUs[3][3], dir);
+                r.connect(unitsB[2], outerUs[3][2], dir);
+                r.disconnect(unitsA[1], unitsA[2]);
+                r.disconnect(unitsA[1], dir);
+                r.disconnect(unitsA[1], Direction.opposite(pushDir));
+                break;
+            case 27:
+                r.contract(unitsB[2], unitsA[1]);
+                break;
+            case 28:
+                r.connect(unitsA[1], unitsB[1], dir);
+                r.connect(unitsA[3], unitsB[1], dir);
+                r.disconnect(unitsA[2], unitsB[1]);
+                r.disconnect(unitsA[2], Direction.opposite(pushDir));
+                break;
+            case 29:
+                r.extend(unitsA[0], unitsA[2]);
+                break;
+            case 30:
+                r.disconnect(unitsA[3], unitsB[1]);
+                r.disconnect(unitsA[1], unitsB[1]);
+                r.connect(unitsA[2], unitsA[1], pushDir);
+                break;
+            case 31:
+                r.contract(unitsB[3], unitsB[1]);
+                break;
+            case 32:
+                r.connect(unitsA[3], unitsA[1], dir, true);
+                r.disconnect(unitsA[3], pushDir);
+                r.disconnect(unitsA[0], Direction.opposite(pushDir));
+                break;
+            case 33:
+                r.contract(unitsA[1], unitsA[3]);
+                r.contract(unitsA[2], unitsA[0]);
+                break;
+            case 34:
+                r.connect(unitsA[3], unitsB[1], pushDir);
+                r.connect(outerUs[1][3], unitsA[0], pushDir);
+                r.connect(outerUs[1][0], unitsA[2], pushDir);
+                r.connect(unitsA[2], outerUs[2][2], dir);
+                r.connect(unitsA[1], outerUs[2][3], dir);
+                break;
+        }
+        //TODO: tunnel out sliding path somehow (don't worry about chunks that
+        //may be disconnected, that should be taken care of by alg)
+        //TODO: change module graph at the end to reflect the tunnel;
+
+        currStep++;
+    }
     /**
      * Finalizes the OneTunnel movement
      * <p>
@@ -339,8 +546,45 @@ public class OneTunnel implements Movement {
      * tunnel performed
      */
     public void finalize() {
+        if (UNION) {
+            finalizeInUnion();
+        } else {
+            finalizeOutsideUnion();
+        }
+    }
+
+    private void finalizeInUnion() {
         mA.swapUnits(unitsA[0], unitsA[1]);
 
+        r.disconnectModules(outerMs[0], pushDir);
+        r.disconnectModules(outerMs[1], pushDir);
+        r.disconnectModules(outerMs[2], Direction.opposite(dir));
+        r.disconnectModules(outerMs[3], Direction.opposite(dir));
+        r.disconnectModules(outerMs[4], Direction.opposite(dir));
+        r.disconnectModules(outerMs[5], Direction.opposite(pushDir));
+        r.disconnectModules(outerMs[6], pushDir);
+        r.disconnectModules(outerMs[6], Direction.opposite(pushDir));
+        r.disconnectModules(mA, dir);
+
+        r.connectModules(outerMs[0], outerMs[6], pushDir);
+        r.connectModules(outerMs[0], outerMs[1], dir);
+        r.connectModules(outerMs[1], mA, pushDir);
+        r.connectModules(outerMs[5], mB, dir);
+        r.connectModules(outerMs[6], outerMs[5], pushDir);
+        r.connectModules(mA, mB, pushDir);
+        r.connectModules(mA, outerMs[2], dir);
+        r.connectModules(mB, outerMs[3], dir);
+    }
+
+    private void finalizeOutsideUnion() {
+        // NOTE: switch units before modules, if not, module connections
+        // will permute units in undesired ways
+        // TODO: make finalize units and run that first, and finalize modules
+        mA.swapUnits(unitsA[0], unitsA[1]);
+        mA.swapUnits(unitsA[0], unitsA[2]);
+
+        mB.swapUnits(unitsB[1], unitsB[2]);
+        //TODO switch modules
         r.disconnectModules(outerMs[0], pushDir);
         r.disconnectModules(outerMs[1], pushDir);
         r.disconnectModules(outerMs[2], Direction.opposite(dir));
@@ -384,5 +628,9 @@ public class OneTunnel implements Movement {
 
     public Robot getRobot() {
         return r;
+    }
+
+    public boolean isUsingUnion() {
+        return UNION;
     }
 }
