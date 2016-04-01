@@ -3,10 +3,11 @@ package ralgorithm;
 
 import rutils.*;
 import rgraph.*;
+import java.util.List;
 
 public class TestCombToLine {
 
-    public static void combToLineTest(int[][] start, int[][] finish, int dir) {
+    public static List<State> combToLineTest(int[][] start, int[][] finish, int dir) {
         Robot r = TestHelper.makeBot(start);
         Robot f = TestHelper.makeBot(finish);
 
@@ -16,9 +17,10 @@ public class TestCombToLine {
         System.out.println("=====================================");
 
         CombToLine cl = new CombToLine(r, dir);
-        cl.run();
+        List<State> states = cl.run();
         r.drawModule();
         TestHelper.validateOutput(r, f);
+        return states;
     }
 
     public static void easyCombToLine() {

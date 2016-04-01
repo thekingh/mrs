@@ -4,7 +4,7 @@ import rutils.*;
 import rgraph.*;
 import java.util.List;
 
-public class TestOneTunnel {
+public class TestCornerOneTunnel {
 
     public static List<State> oneTunnelTest(Robot r, int[][] finish, OneTunnel p) {
         Robot f = TestHelper.makeBot(finish);
@@ -14,7 +14,21 @@ public class TestOneTunnel {
         r.drawModule();
         System.out.println("=====================================");
 
-        TestHelper.runAndDisplayMoveForSteps(p, 30);
+        TestHelper.runAndDisplayMoveForSteps(p, 35);
+
+        r.drawModule();
+        TestHelper.validateOutput(r, f);
+        return null;
+    }
+    public static List<State> oneTunnelTest(Robot r, int[][] finish, CornerOneTunnel p) {
+        Robot f = TestHelper.makeBot(finish);
+
+        System.out.println("=====================================");
+        System.out.println("1-Tunnel");
+        r.drawModule();
+        System.out.println("=====================================");
+
+        TestHelper.runAndDisplayMoveForSteps(p, 35);
 
         r.drawModule();
         TestHelper.validateOutput(r, f);
@@ -41,7 +55,7 @@ public class TestOneTunnel {
         Robot r = TestHelper.makeBot(s);
 
         Module[][] ms0 = r.toModuleArray();
-        OneTunnel p0 = new OneTunnel(r, ms0[0][1], 2, 1);
+        CornerOneTunnel p0 = new CornerOneTunnel(r, ms0[0][1], 2, 1);
 
         oneTunnelTest(r, f, p0);
     }
