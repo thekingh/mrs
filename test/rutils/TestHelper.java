@@ -61,8 +61,12 @@ public final class TestHelper {
         m.finalize();
     }
 
+    public static Robot makeBot(int[][] in, boolean expanded) {
+        return new Robot(orientArray(in), expanded);
+    }
+
     public static Robot makeBot(int[][] in) {
-        return new Robot(orientArray(in), false); 
+        return makeBot(in, false); 
     }
 
     public static void testConnectedness(Robot r, boolean connected) {
