@@ -30,6 +30,7 @@ public class Robot {
 	private ModuleGraph moduleGraph;
 	private UnitGraph   unitGraph;
     private int         stateCount;
+    private boolean     isExpanded;
 
     /**
      * Constructs a robot from a 2d array of modules.
@@ -38,8 +39,24 @@ public class Robot {
      *                    true implies 2x2 modules taking up 3x3 space.
      */
     public Robot(boolean[][] moduleBools, boolean expanded) {
-        this(ModuleGraph.initFromBools(moduleBools, expanded));
+        this(ModuleGraph.initFromBools(moduleBools, expanded), expanded);
+
     }
+
+    /**
+     * Constructs a robot from a module graph.
+     * <p>
+     * This allows construction of a new robot from a subset of another robot,
+     * i.e. allowing for splits or combinations of robots.
+     * @param moduleGraph graph representing the modules of the robot to construct
+     * @param expanded true value initializes an expanded robot
+     */
+	public Robot(ModuleGraph moduleGraph, boolean expanded) {
+		this.moduleGraph = moduleGraph;
+        this.unitGraph = this.moduleGraph.generateUnitGraph();
+        this.isExpanded = expanded;
+        stateCount = 0;
+	}
 
     /**
      * Constructs a robot from a module graph.
@@ -51,7 +68,7 @@ public class Robot {
 	public Robot(ModuleGraph moduleGraph) {
 		this.moduleGraph = moduleGraph;
         this.unitGraph = this.moduleGraph.generateUnitGraph();
-
+        this.isExpanded = false;
         stateCount = 0;
 	}
 
@@ -257,6 +274,40 @@ public class Robot {
             return;
         }
         disconnectModules(m, (Module) m.getNeighbor(dir), dir);
+    }
+
+    /**
+     * Expands all arms in the robot.
+     * Note that this only works if all edges are already contracted
+     */
+    public void expandAll() {
+        if (isExpanded) {
+            throw new RuntimeException("expanding already expanded robot");
+        }
+        isExpanded = true;
+        for (Edge edge : unitGraph.getEdges()) {
+            if (edge.isExtended()) {
+                throw new RuntimeException("expanding partially expanded robots is not possible");
+            }
+            edge.setIsExtended(true);
+        }
+    }
+
+    /**
+     * Contracts all arms in the robot.
+     * Note that this only works if all edges are already extended
+     */
+    public void contractAll() {
+        if (!isExpanded) {
+            throw new RuntimeException("contracting already contracted robot");
+        }
+        isExpanded = false;
+        for (Edge edge : unitGraph.getEdges()) {
+            if (!edge.isExtended()) {
+                throw new RuntimeException("contracting partially expanded robots is not possible");
+            }
+            edge.setIsExtended(false);
+        }
     }
 
     /**

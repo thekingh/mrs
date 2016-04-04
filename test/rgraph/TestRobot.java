@@ -25,7 +25,29 @@ public class TestRobot {
         TestHelper.testConnectedness(r, false);
     }
 
+    public static void testExpandAll() {
+        int[][] s = {{1,1,1},
+                     {1,0,1}};
+        Robot r = TestHelper.makeBot(s);
+        r.drawUnit();
+        r.expandAll();
+        r.drawUnit();
+    }
+
+    public static void testContractAll() {
+        int[][] s = {{1,1,1},
+                     {1,0,1}};
+        Robot r = TestHelper.makeBot(s, true);
+        r.drawUnit();
+        r.contractAll();
+        r.drawUnit();
+    }
+
+
+
     public static void main(String[] args) {
+        testExpandAll();
+        testContractAll();
         test1Bad();
         test1Good();
         test1Both();

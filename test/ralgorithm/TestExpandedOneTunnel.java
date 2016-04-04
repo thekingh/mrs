@@ -27,12 +27,11 @@ public class TestExpandedOneTunnel {
     }
 
 
-    public static void testSimpleTwoBlocks() {
+    public static void testSimpleTwoDR() {
         int[][] s = {{1},
                      {1}};
         int[][] f = {{1,1}};
         Robot r = TestHelper.makeBot(s, true);
-        // r.expandAll();
 
         Module[][] ms0 = r.toModuleArray();
         ExpandedOneTunnel p0 = new ExpandedOneTunnel(r, ms0[0][1], 2, 1);
@@ -40,9 +39,22 @@ public class TestExpandedOneTunnel {
         oneTunnelTest(r, f, p0);
     }
 
+    public static void testSimpleTwoDL() {
+        int[][] s = {{1},
+                     {1}};
+        int[][] f = {{1,1}};
+        Robot r = TestHelper.makeBot(s, true);
+
+        Module[][] ms0 = r.toModuleArray();
+        ExpandedOneTunnel p0 = new ExpandedOneTunnel(r, ms0[0][1], 2, 3);
+
+        oneTunnelTest(r, f, p0);
+    }
+
 
     public static void main(String[] args) {
-        testSimpleTwoBlocks();
+        // testSimpleTwoDR();
+        testSimpleTwoDL();
     }
 
 }

@@ -66,7 +66,7 @@ public final class TestHelper {
     }
 
     public static Robot makeBot(int[][] in) {
-        return makeBot(in, false); 
+        return makeBot(in, false);
     }
 
     public static void testConnectedness(Robot r, boolean connected) {
