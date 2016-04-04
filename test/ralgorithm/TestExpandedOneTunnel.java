@@ -51,10 +51,67 @@ public class TestExpandedOneTunnel {
         oneTunnelTest(r, f, p0);
     }
 
+    public static void testSimpleThreeDR() {
+        int[][] s = {{0,1},
+                     {1,1}};
+        int[][] f = {{1,1,1}};
+        Robot r = TestHelper.makeBot(s, true);
+
+        Module[][] ms0 = r.toModuleArray();
+        ExpandedOneTunnel p0 = new ExpandedOneTunnel(r, ms0[1][1], 2, 1);
+
+        oneTunnelTest(r, f, p0);
+    }
+
+    public static void testSimpleThreeDRCoords() {
+        int[][] s = {{0,1},
+                     {1,1}};
+        int[][] f = {{1,1,1}};
+        Robot r = TestHelper.makeBot(s, true);
+
+        Module[][] ms0 = r.toModuleArray();
+        ExpandedOneTunnel p0 = ExpandedOneTunnel.initFromCoords(r, new Coordinate(1,1), new Coordinate(2,0));
+
+        oneTunnelTest(r, f, p0);
+    }
+
+    public static void testSimpleThreeBottomDR() {
+        int[][] s = {{1},
+                     {1},
+                     {1}};
+        int[][] f = {{0,1,1},
+                     {0,1,0}};
+        Robot r = TestHelper.makeBot(s, true);
+
+        Module[][] ms0 = r.toModuleArray();
+        ExpandedOneTunnel p0 = new ExpandedOneTunnel(r, ms0[0][2], 2, 1);
+
+        oneTunnelTest(r, f, p0);
+    }
+
+    public static void testSimpleFourDR() {
+        // TODO: weird that not all connected when initializing!!
+        // BUG here
+        int[][] s = {{1,1},
+                     {1,1}};
+        int[][] f = {{1,0,0},
+                     {1,1,1}};
+        Robot r = TestHelper.makeBot(s, true);
+
+        Module[][] ms0 = r.toModuleArray();
+        ExpandedOneTunnel p0 = new ExpandedOneTunnel(r, ms0[1][1], 2, 1);
+
+        oneTunnelTest(r, f, p0);
+    }
+
 
     public static void main(String[] args) {
         // testSimpleTwoDR();
-        testSimpleTwoDL();
+        // testSimpleTwoDL();
+        // testSimpleThreeDR();
+        // testSimpleThreeDRCoords();
+        testSimpleThreeBottomDR();
+        // testSimpleFourDR();
     }
 
 }

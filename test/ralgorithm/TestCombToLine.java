@@ -8,8 +8,8 @@ import java.util.List;
 public class TestCombToLine {
 
     public static List<State> combToLineTest(int[][] start, int[][] finish, int dir) {
-        Robot r = TestHelper.makeBot(start);
-        Robot f = TestHelper.makeBot(finish);
+        Robot r = TestHelper.makeBot(start, true);
+        Robot f = TestHelper.makeBot(finish, true);
 
         System.out.println("=====================================");
         System.out.println("Testing Dir: " + dir);

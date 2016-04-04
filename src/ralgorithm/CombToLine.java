@@ -27,16 +27,16 @@ public class CombToLine extends Algorithm {
     	List<Movement> tunnelMovesEven = new ArrayList<Movement>();
     	List<Movement> tunnelMovesOdd = new ArrayList<Movement>();
     	List<Movement> connectMoves = new ArrayList<Movement>();
-    	int w = modules.length;
+    	int w = modules[0].length;
     	Module m;
 
     	for (int i = 0; i < w; i++) {
     		m = modules[i][1];
     		if (m != null) {
 	    		if (i % 2 == 0) {
-	    			tunnelMovesEven.add(new OneTunnel(r, m, 2, 1));
+	    			tunnelMovesEven.add(new ExpandedOneTunnel(r, m, 2, 1));
 	    		} else {
-	    			tunnelMovesOdd.add(new OneTunnel(r, m, 2, 1));
+	    			tunnelMovesOdd.add(new ExpandedOneTunnel(r, m, 2, 1));
 	    		}
 	    	}
     	}

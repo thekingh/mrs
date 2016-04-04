@@ -16,11 +16,17 @@ import rutils.*;
  */
 public class ConnectAll implements Movement {
 	private final Robot r;
+    private final boolean extended;
 	private boolean isFinished = false;
 
 	public ConnectAll(Robot r) {
-		this.r = r;
+		this(r, false);
 	}
+
+    public ConnectAll(Robot r, boolean extended) {
+        this.r = r;
+        this.extended = extended;
+    }
 
 	/**
      * Run a single step of the movement.
@@ -38,19 +44,19 @@ public class ConnectAll implements Movement {
     		for (int j = 0; j < h; j++) {
     			// connect up
     			if (j < h - 1) {
-    				r.connectModules(ms[i][j], ms[i][j+1], 0);
+    				r.connectModules(ms[i][j], ms[i][j+1], 0, extended);
     			}
     			// connect right
     			if (i < w - 1) {
-    				r.connectModules(ms[i][j], ms[i+1][j], 1);
+    				r.connectModules(ms[i][j], ms[i+1][j], 1, extended);
     			}
     			// connect down
     			if (j > 0) {
-    				r.connectModules(ms[i][j], ms[i][j-1], 2);
+    				r.connectModules(ms[i][j], ms[i][j-1], 2, extended);
     			}
     			//connect left
     			if (i > 0) {
-    				r.connectModules(ms[i][j], ms[i-1][j], 3);
+    				r.connectModules(ms[i][j], ms[i-1][j], 3, extended);
     			}
     		}
     	}
