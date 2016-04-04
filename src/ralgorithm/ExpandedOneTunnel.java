@@ -294,6 +294,7 @@ public class ExpandedOneTunnel implements Movement {
                 r.connect(A[0], A[2], dir);
 
                 r.disconnect(A[3], B[3]);
+                // TODO: BUG here.
                 r.disconnect(A[3], pushDir);
                 r.disconnect(A[3], Direction.opposite(dir));
                 break;

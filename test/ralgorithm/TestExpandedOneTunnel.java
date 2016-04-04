@@ -14,7 +14,7 @@ public class TestExpandedOneTunnel {
         r.drawModule();
         System.out.println("=====================================");
 
-        TestHelper.runAndDisplayMove(p);
+        TestHelper.runAndDisplayMoveForSteps(p, 40);
 
         System.out.println("Draw Result");
         r.drawModule();
@@ -75,6 +75,30 @@ public class TestExpandedOneTunnel {
         oneTunnelTest(r, f, p0);
     }
 
+    public static void testSimpleThreeRightDR() {
+        int[][] s = {{1,0},
+                     {1,1}};
+        int[][] f = {{1,1,1}};
+        Robot r = TestHelper.makeBot(s, true);
+
+        Module[][] ms0 = r.toModuleArray();
+        ExpandedOneTunnel p0 = new ExpandedOneTunnel(r, ms0[0][1], 2, 1);
+
+        oneTunnelTest(r, f, p0);
+    }
+
+    public static void testSimpleFourRightDR() {
+        int[][] s  = {{1,0,0},
+                      {1,1,1}};       
+        int[][] f = {{1,1,1,1}};
+        Robot r = TestHelper.makeBot(s, true);
+
+        Module[][] ms0 = r.toModuleArray();
+        ExpandedOneTunnel p0 = new ExpandedOneTunnel(r, ms0[0][1], 2, 1);
+
+        oneTunnelTest(r, f, p0);
+    }
+
     public static void testSimpleThreeBottomDR() {
         int[][] s = {{1},
                      {1},
@@ -110,7 +134,9 @@ public class TestExpandedOneTunnel {
         // testSimpleTwoDL();
         // testSimpleThreeDR();
         // testSimpleThreeDRCoords();
-        testSimpleThreeBottomDR();
+        // testSimpleThreeRightDR();
+        testSimpleFourRightDR();
+        // testSimpleThreeBottomDR();
         // testSimpleFourDR();
     }
 

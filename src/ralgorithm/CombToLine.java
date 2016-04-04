@@ -23,6 +23,11 @@ public class CombToLine extends Algorithm {
     }
 
     private void enqueueMoves() {
+
+        // TODO: onetunnel does not yet correctly handle coordinates very well,
+        // only does 1 space turns, but need to do long tunnels??
+
+
     	Module[][] modules = r.toModuleArray();
     	List<Movement> tunnelMovesEven = new ArrayList<Movement>();
     	List<Movement> tunnelMovesOdd = new ArrayList<Movement>();
@@ -33,21 +38,24 @@ public class CombToLine extends Algorithm {
     	for (int i = 0; i < w; i++) {
     		m = modules[i][1];
     		if (m != null) {
-	    		if (i % 2 == 0) {
-	    			tunnelMovesEven.add(new ExpandedOneTunnel(r, m, 2, 1));
-	    		} else {
-	    			tunnelMovesOdd.add(new ExpandedOneTunnel(r, m, 2, 1));
-	    		}
+                List<Movement> l = new ArrayList<Movement>();
+                l.add(new ExpandedOneTunnel(r, m, 2, 1));
+                q.addLast(new ParallelMove(r, l));
+	    		// if (i % 2 == 0) {
+	    		// 	tunnelMovesEven.add(new ExpandedOneTunnel(r, m, 2, 1));
+	    		// } else {
+	    		// 	tunnelMovesOdd.add(new ExpandedOneTunnel(r, m, 2, 1));
+	    		// }
 	    	}
     	}
 
     	// connect all modules after wall moves
-        connectMoves.add(new ConnectAll(r));
+        connectMoves.add(new ConnectAll(r, true));
 
         //add to queue
-        q.addLast(new ParallelMove(r, tunnelMovesEven));
-        q.addLast(new ParallelMove(r, tunnelMovesOdd));
-        q.addLast(new ParallelMove (r, connectMoves));
+        // q.addLast(new ParallelMove(r, tunnelMovesEven));
+        // q.addLast(new ParallelMove(r, tunnelMovesOdd));
+        // q.addLast(new ParallelMove (r, connectMoves));
     }
 
     @Override
