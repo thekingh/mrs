@@ -79,17 +79,26 @@ public class Graph {
     }
 
     private void removeEdge(Edge e) {
+        if (e == null) { //silent failure if no edge
+            return;
+        }
         e.removeFromNodes();
         edges.remove(e);
     }
 
+    //WTF????
+/*    public void removeEdge(Node n1, Node n2) {*/
+/*        Edge e = new Edge(n1, n2, false, false, false);*/
+/*        removeEdge(e);*/
+/*    }*/
     /**
      * Removes the edge between two nodes.
      * @param n1 one node in the edge
      * @param n2 other node in the edge
      */
     public void removeEdge(Node n1, Node n2) {
-        Edge e = new Edge(n1, n2, false, false, false);
+        int dir = n1.findNeighborDirection(n2);
+        Edge e = n1.getEdge(dir);
         removeEdge(e);
     }
 
