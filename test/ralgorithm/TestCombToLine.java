@@ -20,30 +20,29 @@ public class TestCombToLine {
         List<State> states = cl.run();
         r.drawModule();
         TestHelper.validateOutput(r, f);
+        System.out.println(states.size());
         return states;
     }
 
-    public static void easyCombToLine() {
+    public static List<State> easyCombToLine() {
         int[][] start  = {{1,0,0},
                           {1,1,1}};
         int[][] finish = {{1,1,1,1}};
         int dir = 2;
-        combToLineTest(start, finish, dir);
+        return combToLineTest(start, finish, dir);
     }
 
-    public static void easyCombToLineFive() {
+    public static List<State> easyCombToLineFive() {
         int[][] start  = {{1,1,0},
                           {1,1,1}};
         int[][] finish = {{1,1,1,1,1}};
         int dir = 2;
-        combToLineTest(start, finish, dir);
+        return combToLineTest(start, finish, dir);
     }
-
-    
 
     public static void main(String[] args) {
         // easyCombToLine();
-        easyCombToLineFive();
+        TestHelper.outputStates(easyCombToLineFive());
     }
 }
 

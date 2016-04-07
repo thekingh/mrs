@@ -134,6 +134,7 @@ public final class TestHelper {
     public static void outputStates(List<State> states) {
         clearStates();
         for (int i = 0; i < states.size(); i++) {
+            System.out.println(i);
             states.get(i).writeToFile(i);
         }
     }
