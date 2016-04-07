@@ -359,6 +359,14 @@ public class Robot {
     }
 
     /**
+     * returns true if the robot is in an expanded configuration
+     * @return true iff robot is expanded
+     */
+    public boolean isExpanded() {
+        return isExpanded;
+    }
+
+    /**
      * returns true if the robot is connected (through units).
      * @return true iff robot is connected.
      */

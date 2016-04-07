@@ -15,6 +15,9 @@ public class CombToLine extends Algorithm {
 		super(r);
 		this.dir = dir;
 		this.q = new LinkedList<ParallelMove>();
+        List<Movement> initial_moves = new ArrayList<Movement>();
+        initial_moves.add(new FlipConfiguration(r));
+        q.addLast(new ParallelMove(r, initial_moves));
 	}
 	
 	@Override
