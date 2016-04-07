@@ -36,7 +36,7 @@ public final class TestHelper {
     public static void runAndDisplayMoveForSteps(Movement m, int s) {
         Robot r = m.getRobot();
         for (int i = 0; i < s; i++) {
-            System.out.println(i);
+
             m.step();
             assert r.isConnected();
             r.drawUnit();
