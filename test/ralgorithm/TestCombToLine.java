@@ -21,6 +21,7 @@ public class TestCombToLine {
         r.drawModule();
         TestHelper.validateOutput(r, f);
         System.out.println(states.size());
+        TestHelper.printStatesToCommandLine(states);
         return states;
     }
 
@@ -42,7 +43,7 @@ public class TestCombToLine {
 
     public static void main(String[] args) {
         // easyCombToLine();
-        TestHelper.outputStates(easyCombToLineFive());
+        easyCombToLineFive();
     }
 }
 

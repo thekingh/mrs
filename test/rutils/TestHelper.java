@@ -22,6 +22,22 @@ public final class TestHelper {
         }
     }
 
+    public static void printStatesToCommandLine(List<State> states) {
+        for (State s: states) {
+            delay(500);
+            s.printToCommandLine();
+        }
+    }
+
+    private static void delay(int millis) {
+        try {
+            Thread.sleep(millis); 
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+
     public static void runAndDisplayMove(Movement m) {
         Robot r = m.getRobot();
         while (!m.reachedEnd()) {
