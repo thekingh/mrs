@@ -14,7 +14,7 @@ import java.util.ArrayList;
  * @version 1.0
  * @since 2/14/2016 
  */
-public class FlipConfiguration implements Movement {
+public class ExpandAll implements Movement {
     private int currStep = 0;
     private static final int NUMSTEPS = 1;
     private final Robot r;
@@ -24,9 +24,7 @@ public class FlipConfiguration implements Movement {
     }
 
     public void step() {
-        if (r.isExpanded()) {
-            r.contractAll();
-        } else {
+        if (!r.isExpanded()) {
             r.expandAll();
         }
         currStep++;
@@ -42,7 +40,7 @@ public class FlipConfiguration implements Movement {
 
     //TODO IMPLEMENT
     public Movement invert(Robot s) {
-        return new FlipConfiguration(s);
+        return new ContractAll(s);
     }
 
     public Robot getRobot() {
