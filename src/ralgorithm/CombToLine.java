@@ -10,22 +10,32 @@ import java.util.LinkedList;
 public class CombToLine extends Algorithm {
 	private final int dir;
 	private LinkedList<ParallelMove> q;
+    private boolean isComplete;
 
 	public CombToLine(Robot r, int dir) {
 		super(r);
 		this.dir = dir;
 		this.q = new LinkedList<ParallelMove>();
-        // List<Movement> initial_moves = new ArrayList<Movement>();
-        // initial_moves.add(new FlipConfiguration(r));
-        // q.addLast(new ParallelMove(r, initial_moves));
+        List<Movement> initial_moves = new ArrayList<Movement>();
+        initial_moves.add(new ExpandAll(r));
+        q.addLast(new ParallelMove(r, initial_moves));
+
+        this.isComplete = false;
 	}
 	
 	@Override
     public boolean isComplete() {
-    	return r.toModuleArray()[0].length == 1;
+    	return q.isEmpty() && isComplete;
     }
 
     private void enqueueMoves() {
+        if (r.toModuleArray()[0].length == 1) {
+            List<Movement> initial_moves = new ArrayList<Movement>();
+            initial_moves.add(new ContractAll(r));
+            q.addLast(new ParallelMove(r, initial_moves));
+            isComplete = true;
+        }
+
         Module[][] modules = r.toModuleArray();
         List<Movement> tunnelMoves = new ArrayList<Movement>();
         List<Movement> connectMoves = new ArrayList<Movement>();
