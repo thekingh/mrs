@@ -15,9 +15,9 @@ public class CombToLine extends Algorithm {
 		super(r);
 		this.dir = dir;
 		this.q = new LinkedList<ParallelMove>();
-        List<Movement> initial_moves = new ArrayList<Movement>();
-        initial_moves.add(new FlipConfiguration(r));
-        q.addLast(new ParallelMove(r, initial_moves));
+        // List<Movement> initial_moves = new ArrayList<Movement>();
+        // initial_moves.add(new FlipConfiguration(r));
+        // q.addLast(new ParallelMove(r, initial_moves));
 	}
 	
 	@Override
@@ -26,39 +26,67 @@ public class CombToLine extends Algorithm {
     }
 
     private void enqueueMoves() {
+        Module[][] modules = r.toModuleArray();
+        List<Movement> tunnelMoves = new ArrayList<Movement>();
+        List<Movement> connectMoves = new ArrayList<Movement>();
 
-        // TODO: onetunnel does not yet correctly handle coordinates very well,
-        // only does 1 space turns, but need to do long tunnels??
+
+        int x = 0;
+        int y = 0;
+
+        for (int i = 0; i < modules.length; i++) {
+            for (int j = modules[0].length - 1; j >= 1; j--) {
+                if (modules[i][j] != null) {
+                    x = i;
+                    y = j;
+                    break;
+                }
+            }
+        }
+
+        System.out.println(String.format("Moving %d, %d to %d, %d", x, y, x + 1, 0));
+
+        Coordinate start = new Coordinate(x, y);
+        Coordinate end = new Coordinate(x + 1, 0);
+        tunnelMoves.add(ExpandedOneTunnel.initFromCoordsWithDir(r, dir, start, end));
 
 
-    	Module[][] modules = r.toModuleArray();
-    	List<Movement> tunnelMovesEven = new ArrayList<Movement>();
-    	List<Movement> tunnelMovesOdd = new ArrayList<Movement>();
-    	List<Movement> connectMoves = new ArrayList<Movement>();
-    	int w = modules[0].length;
-    	Module m;
-
-    	for (int i = 0; i < w; i++) {
-    		m = modules[i][1];
-    		if (m != null) {
-                List<Movement> l = new ArrayList<Movement>();
-                l.add(new ExpandedOneTunnel(r, m, 2, 1));
-                q.addLast(new ParallelMove(r, l));
-	    		// if (i % 2 == 0) {
-	    		// 	tunnelMovesEven.add(new ExpandedOneTunnel(r, m, 2, 1));
-	    		// } else {
-	    		// 	tunnelMovesOdd.add(new ExpandedOneTunnel(r, m, 2, 1));
-	    		// }
-	    	}
-    	}
-
-    	// connect all modules after wall moves
+        // connect all modules after wall moves
         connectMoves.add(new ConnectAll(r, true));
 
         //add to queue
-        // q.addLast(new ParallelMove(r, tunnelMovesEven));
-        // q.addLast(new ParallelMove(r, tunnelMovesOdd));
-        // q.addLast(new ParallelMove (r, connectMoves));
+        q.addLast(new ParallelMove(r, tunnelMoves));
+        q.addLast(new ParallelMove (r, connectMoves));
+
+
+    	// Module[][] modules = r.toModuleArray();
+    	// List<Movement> tunnelMovesEven = new ArrayList<Movement>();
+    	// List<Movement> tunnelMovesOdd = new ArrayList<Movement>();
+    	// List<Movement> connectMoves = new ArrayList<Movement>();
+    	// int w = modules[0].length;
+    	// Module m;
+
+    	// for (int i = 0; i < w; i++) {
+    	// 	m = modules[i][1];
+    	// 	if (m != null) {
+     //            List<Movement> l = new ArrayList<Movement>();
+     //            l.add(new ExpandedOneTunnel(r, m, 2, 1));
+     //            q.addLast(new ParallelMove(r, l));
+	    // 		// if (i % 2 == 0) {
+	    // 		// 	tunnelMovesEven.add(new ExpandedOneTunnel(r, m, 2, 1));
+	    // 		// } else {
+	    // 		// 	tunnelMovesOdd.add(new ExpandedOneTunnel(r, m, 2, 1));
+	    // 		// }
+	    // 	}
+    	// }
+
+    	// // connect all modules after wall moves
+     //    connectMoves.add(new ConnectAll(r, true));
+
+     //    //add to queue
+     //    // q.addLast(new ParallelMove(r, tunnelMovesEven));
+     //    // q.addLast(new ParallelMove(r, tunnelMovesOdd));
+     //    // q.addLast(new ParallelMove (r, connectMoves));
     }
 
     @Override

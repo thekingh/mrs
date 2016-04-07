@@ -103,6 +103,47 @@ public class ExpandedOneTunnel implements Movement {
         }
     }
 
+    // TODO: remove old initfrom coords??
+    public static ExpandedOneTunnel initFromCoordsWithDir(Robot r, int dir, Coordinate start, Coordinate end) {
+        Module[][] ms = r.toModuleArray();
+        //find startM
+        Module startM = ms[start.x()][start.y()];
+        int dX = end.x() - start.x();
+        int dY = end.y() - start.y();
+
+        //find pushDir
+        int pushDir;
+        if (Direction.isVertical(dir)) {
+            pushDir = dX > 0 ? 1 : 3;
+        } else {
+            pushDir = dY > 0 ? 0 : 2;
+        }
+
+        //find turning module
+        Module m;
+        switch (dir) {
+            case 0:
+                m = ms[start.x()][end.y() - 1];
+                break;
+            case 1:
+                m = ms[start.x() - 1][end.y()];
+                break;
+            case 2:
+                m = ms[start.x()][end.y() + 1];
+                break;
+            case 3:
+                m = ms[start.x() + 1][end.y()];
+                break;
+            default:
+                m = null;
+                break;
+        }
+        System.out.println("dir: " + dir);
+        System.out.println("pushDir: " + pushDir);
+        
+        return new ExpandedOneTunnel(r, m, dir, pushDir);
+    }
+
     /**
      * Initializes a 1-tunnel move from a start coordinate to an end coordinate
      * in the module graph.
