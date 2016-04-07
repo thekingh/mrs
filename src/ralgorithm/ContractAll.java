@@ -19,7 +19,7 @@ public class ContractAll implements Movement {
     private static final int NUMSTEPS = 1;
     private final Robot r;
 
-    public FlipConfiguration(Robot r) {
+    public ContractAll(Robot r) {
         this.r = r;
     }
 
