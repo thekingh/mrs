@@ -26,12 +26,14 @@ public class State {
     private static final String STATE_PATH_EXT    = ".json";
 
     private JSONArray jsonArr;
+    private final Grid g;
 
     /**Constructs state given a robot
      * @param r     Robot to capture
      */ 
     public State(Robot r) {
         jsonArr = generateJSONRobots(r.getUnitGraph());
+        g = r.getUnitGraph().toGrid();
     }
 
     /**
@@ -82,6 +84,10 @@ public class State {
             robots.add(rbt);
         }
         return robots;
+    }
+
+    public void printToCommandLine() {
+        System.out.println(g.toString());
     }
 
     /**
