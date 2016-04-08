@@ -42,10 +42,15 @@ public final class TestHelper {
         Robot r = m.getRobot();
         while (!m.reachedEnd()) {
             m.step();
-            assert r.isConnected();
+            // NEEDWORK: test this more
+            // assert r.isConnected();
             r.drawUnit();
+            System.out.println(RobotStats.getAll(r));
         }
         m.finalize();
+        System.out.println("Finalizing");
+        r.drawUnit();
+        System.out.println(RobotStats.getAll(r));
         r.drawModule();
     }
 
@@ -56,6 +61,8 @@ public final class TestHelper {
             m.step();
             assert r.isConnected();
             r.drawUnit();
+            System.out.println(RobotStats.getAll(r));
+
         }
         m.finalize();
         r.drawModule();

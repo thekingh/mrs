@@ -437,13 +437,14 @@ public class ExpandedOneTunnel implements Movement {
         r.disconnectModules(outerMs[3], Direction.opposite(dir));
         r.disconnectModules(outerMs[4], Direction.opposite(dir));
         r.disconnectModules(outerMs[5], Direction.opposite(pushDir));
-        r.disconnectModules(outerMs[6], pushDir);
-        r.disconnectModules(outerMs[6], Direction.opposite(pushDir));
+        // TODO: may need to keep for tunneling?
+        // r.disconnectModules(outerMs[6], pushDir);
+        // r.disconnectModules(outerMs[6], Direction.opposite(pushDir));
         r.disconnectModules(mA, dir);
 
         // TODO: need to make expanded modules when connecting
         r.connectModules(outerMs[0], outerMs[6], pushDir, true);
-        r.connectModules(outerMs[0], outerMs[1], dir, true);
+        // r.connectModules(outerMs[0], outerMs[1], dir, true);
         r.connectModules(outerMs[1], mA, pushDir, true);
         r.connectModules(outerMs[5], mB, dir, true);
         r.connectModules(outerMs[6], outerMs[5], pushDir, true);

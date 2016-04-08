@@ -94,10 +94,10 @@ public class Graph {
     }
 
     //WTF????
-/*    public void removeEdge(Node n1, Node n2) {*/
-/*        Edge e = new Edge(n1, n2, false, false, false);*/
-/*        removeEdge(e);*/
-/*    }*/
+    // public void removeEdge(Node n1, Node n2) {
+    //     Edge e = new Edge(n1, n2, false, false, false);
+    //     removeEdge(e);
+    // }
     /**
      * Removes the edge between two nodes.
      * @param n1 one node in the edge

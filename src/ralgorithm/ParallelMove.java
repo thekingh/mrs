@@ -86,6 +86,7 @@ public class ParallelMove {
         }
         if (!moveFinished) {
             r.drawUnit();
+            System.out.println(RobotStats.getAll(r));
 /*            return r.getState();*/
             return new State(r);
         } else {

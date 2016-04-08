@@ -276,6 +276,7 @@ public class Robot {
         disconnectModules(m, (Module) m.getNeighbor(dir), dir);
     }
 
+    // TODO: weird that we don't allow just expand or contract no matter what
     /**
      * Expands all arms in the robot.
      * Note that this only works if all edges are already contracted

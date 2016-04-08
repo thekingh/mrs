@@ -14,7 +14,7 @@ public class TestExpandedOneTunnel {
         r.drawModule();
         System.out.println("=====================================");
 
-        TestHelper.runAndDisplayMoveForSteps(p, 40);
+        TestHelper.runAndDisplayMove(p);
 
         System.out.println("Draw Result");
         r.drawModule();
