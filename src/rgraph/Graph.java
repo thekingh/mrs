@@ -75,6 +75,13 @@ public class Graph {
         Edge e = new Edge(n1, n2, isExtended, isConnected, isVertical);
         n1.putEdge(dir, e);
         n2.putEdge(Direction.opposite(dir), e);
+        addToEdgeSet(e);
+    }
+
+    private void addToEdgeSet(Edge e) {
+        if (edges.contains(e)) {
+            edges.remove(e);
+        }
         edges.add(e);
     }
 

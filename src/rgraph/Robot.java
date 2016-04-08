@@ -291,11 +291,13 @@ public class Robot {
             }
             edge.setIsExtended(true);
         }
+        System.out.println(unitGraph.getEdges().size());
 
         for (Edge edge : unitGraph.getEdges()) {
             if (!edge.isExtended()) {
                 throw new RuntimeException("NOT EXPANDED");
             }
+
         }
     }
 

@@ -34,6 +34,7 @@ public class CombToLine extends Algorithm {
             initial_moves.add(new ContractAll(r));
             q.addLast(new ParallelMove(r, initial_moves));
             isComplete = true;
+            return;
         }
 
         Module[][] modules = r.toModuleArray();
