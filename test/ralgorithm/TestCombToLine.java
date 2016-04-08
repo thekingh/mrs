@@ -8,6 +8,7 @@ import java.util.List;
 public class TestCombToLine {
 
     public static List<State> combToLineTest(int[][] start, int[][] finish, int dir) {
+        // TODO: could be weird starting expanded, then expanding in CombToLine
         Robot r = TestHelper.makeBot(start, true);
         Robot f = TestHelper.makeBot(finish, true);
 
@@ -41,6 +42,16 @@ public class TestCombToLine {
         return combToLineTest(start, finish, dir);
     }
 
+    // TODO: BROKEN
+    public static List<State> hardCombToLineEight() {
+        int[][] start  = {{1,0,0,0},
+                          {1,1,1,0},
+                          {1,1,1,1}};
+        int[][] finish = {{1,1,1,1,1,1,1,1}};
+        int dir = 2;
+        return combToLineTest(start, finish, dir);
+    }
+
     public static List<State> easyCombToLineFive() {
         int[][] start  = {{1,1,0},
                           {1,1,1}};
@@ -52,7 +63,8 @@ public class TestCombToLine {
     public static void main(String[] args) {
         // easyCombToLine();
 /*        easyCombToLineFive();*/
-        easyCombToLineEight();
+        // easyCombToLineEight();
+        hardCombToLineEight();
     }
 }
 

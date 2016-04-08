@@ -128,6 +128,50 @@ public class TestExpandedOneTunnel {
         oneTunnelTest(r, f, p0);
     }
 
+    public static void testHardEightDR() {
+        // TODO: weird that not all connected when initializing!!
+        // BUG here
+        int[][] s = {{1,0,0,0,0},
+                     {1,1,0,0,0},
+                     {1,1,1,1,1}};
+        int[][] f = {{1,0,0,0,0,0},
+                     {1,0,0,0,0,0},
+                     {1,1,1,1,1,1}};
+        Robot r = TestHelper.makeBot(s, true);
+
+        Module[][] ms0 = r.toModuleArray();
+        // ExpandedOneTunnel p0 = new ExpandedOneTunnel(r, ms0[1][1], 2, 1);
+        ExpandedOneTunnel p0 = ExpandedOneTunnel.initFromCoordsWithDir(r, 2,
+            new Coordinate(1,1), new Coordinate(2,0));
+
+        oneTunnelTest(r, f, p0);
+    }
+
+    public static void testTwoConsecutive() {
+        // TODO: weird that not all connected when initializing!!
+        // BUG here
+        int[][] s = {{1,0,0,0},
+                     {1,1,1,0},
+                     {1,1,1,1}};
+        int[][] f1 = {{1,0,0,0,0},
+                      {1,1,0,0,0},
+                      {1,1,1,1,1}};
+        int[][] f2 = {{1,0,0,0,0,0},
+                      {1,0,0,0,0,0},
+                      {1,1,1,1,1,1}};
+        Robot r = TestHelper.makeBot(s, true);
+
+        // Module[][] ms0 = r.toModuleArray();
+        // ExpandedOneTunnel p0 = new ExpandedOneTunnel(r, ms0[1][1], 2, 1);
+        ExpandedOneTunnel p0 = ExpandedOneTunnel.initFromCoordsWithDir(r, 2,
+            new Coordinate(2,1), new Coordinate(3,0));
+        oneTunnelTest(r, f1, p0);
+
+        ExpandedOneTunnel p1 = ExpandedOneTunnel.initFromCoordsWithDir(r, 2,
+            new Coordinate(1,1), new Coordinate(2,0));
+        oneTunnelTest(r, f2, p1);
+    }
+
 
     public static void main(String[] args) {
         // testSimpleTwoDR();
@@ -135,9 +179,11 @@ public class TestExpandedOneTunnel {
         // testSimpleThreeDR();
         // testSimpleThreeDRCoords();
         // testSimpleThreeRightDR();
-        testSimpleFourRightDR();
+        // testSimpleFourRightDR();
         // testSimpleThreeBottomDR();
         // testSimpleFourDR();
+        // testHardEightDR();
+        testTwoConsecutive();
     }
 
 }
