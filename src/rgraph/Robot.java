@@ -291,13 +291,25 @@ public class Robot {
             }
             edge.setIsExtended(true);
         }
-        System.out.println(unitGraph.getEdges().size());
 
+        for (Edge edge : moduleGraph.getEdges()) {
+            if (edge.isExtended()) {
+                throw new RuntimeException("expanding partially expanded robots is not possible");
+            }
+            edge.setIsExtended(true);
+        }
+
+        //Testing Code
+        System.out.println(unitGraph.getEdges().size());
         for (Edge edge : unitGraph.getEdges()) {
             if (!edge.isExtended()) {
                 throw new RuntimeException("NOT EXPANDED");
             }
-
+        }
+        for (Edge edge : moduleGraph.getEdges()) {
+            if (!edge.isExtended()) {
+                throw new RuntimeException("NOT EXPANDED");
+            }
         }
     }
 
@@ -310,6 +322,12 @@ public class Robot {
             throw new RuntimeException("contracting already contracted robot");
         }
         isExpanded = false;
+        for (Edge edge : moduleGraph.getEdges()) {
+            if (!edge.isExtended()) {
+                throw new RuntimeException("contracting partially expanded robots is not possible");
+            }
+            edge.setIsExtended(false);
+        }
         for (Edge edge : unitGraph.getEdges()) {
             if (!edge.isExtended()) {
                 throw new RuntimeException("contracting partially expanded robots is not possible");
