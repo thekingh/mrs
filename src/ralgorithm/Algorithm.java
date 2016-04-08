@@ -80,7 +80,7 @@ public abstract class Algorithm {
         int length = states.size();
         List<State> toReturn = new ArrayList<State>();
         for (int i = 0; i < length; i++) {
-            toReturn.add(states.get(length - i - 1));
+           toReturn.add(states.get(length - i - 1));
         }
         return toReturn;
     }

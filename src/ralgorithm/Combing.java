@@ -6,6 +6,7 @@ import rutils.*;
 import java.util.List;
 import java.util.LinkedList;
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Transforms a Source Robot, S, into a Target Robot, T, in O(n) parallel steps
@@ -45,12 +46,17 @@ public class Combing extends Algorithm {
         reverseParts.add(new CombToLine(t, 2));
 
         states = new LinkedList<State>();
+        LinkedList<State> fstates = new LinkedList<State>();
+        LinkedList<State> rstates = new LinkedList<State>();
         for (Algorithm part : parts) {
-            states.addAll(part.run());
+            fstates.addAll(part.run());
         }
         for (Algorithm reversePart : reverseParts) {
-            states.addAll(reversePart.runReverse());
+            rstates.addAll(reversePart.run());
         }
+        states.addAll(fstates);
+        Collections.reverse(rstates);
+        states.addAll(rstates);
     }
 
 
@@ -65,7 +71,5 @@ public class Combing extends Algorithm {
         s.add(states.pollFirst());
         return s;
     }
-
-
 }
     
