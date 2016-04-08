@@ -37,7 +37,7 @@ public class Graph {
         return nodes;
     }
 
-    protected Set<Edge> getEdges() {
+    public Set<Edge> getEdges() {
         return edges;
     }
 

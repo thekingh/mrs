@@ -5,9 +5,15 @@ echo "===================="
 sh compile
 
 # classpaths for running are separated by ':'
+# -ea is --enableassertions
 if [ $1 = "Robot" ]
 then
-    java -cp .:../lib/json-simple-1.1.1.jar:./../bin/ rgraph.Test$1
+    java -ea -cp .:../lib/json-simple-1.1.1.jar:./../bin/ rgraph.Test$1
 else
-    java -cp .:../lib/json-simple-1.1.1.jar:./../bin/ ralgorithm.Test$1
+    if [ $1 = "RobotStats" ]
+    then
+        java -ea -cp .:../lib/json-simple-1.1.1.jar:./../bin/ rutils.Test$1
+    else
+        java -ea -cp .:../lib/json-simple-1.1.1.jar:./../bin/ ralgorithm.Test$1
+    fi
 fi
