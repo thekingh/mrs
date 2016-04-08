@@ -159,7 +159,10 @@ public class TestExpandedOneTunnel {
         int[][] f2 = {{1,0,0,0,0,0},
                       {1,0,0,0,0,0},
                       {1,1,1,1,1,1}};
-        Robot r = TestHelper.makeBot(s, true);
+        Robot r = TestHelper.makeBot(s);
+
+        ExpandAll exp = new ExpandAll(r);
+        TestHelper.runAndDisplayMove(exp);
 
         // Module[][] ms0 = r.toModuleArray();
         // ExpandedOneTunnel p0 = new ExpandedOneTunnel(r, ms0[1][1], 2, 1);
