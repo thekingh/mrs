@@ -26,13 +26,27 @@ public class RobotStats {
     public String getModuleEdgeStat() {
         Graph mGraph = r.getModuleGraph();
         int numberEdges = mGraph.getEdges().size();
-        return "Robot has " + numberEdges + " Module Edges in Graph Set";
+        int expandEdges = 0;
+        for (Edge e : mGraph.getEdges()) {
+            if (e.isExtended()) {
+                expandEdges += 1;
+            }
+        }
+        return "Robot has " + numberEdges + " Module Edges in Graph Set\n" +
+               "Robot has " + expandEdges + " Expanded Modules Edges";
     }
 
     public String getUnitsEdgeStat() {
         Graph uGraph = r.getUnitGraph();
         int numberEdges = uGraph.getEdges().size();
-        return "Robot has " + numberEdges + " Module Edges in Graph Set";
+        int expandEdges = 0;
+        for (Edge e : uGraph.getEdges()) {
+            if (e.isExtended()) {
+                expandEdges += 1;
+            }
+        }
+        return "Robot has " + numberEdges + " Unit Edges in Graph Set\n" + 
+               "Robot has " + expandEdges + " Expanded Unit Edges";
     }
 
     public String getAllStats() {
