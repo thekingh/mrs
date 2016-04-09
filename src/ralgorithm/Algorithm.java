@@ -58,9 +58,7 @@ public abstract class Algorithm {
 
     public List<State> determineNextStates() {
         ParallelMove pm = determinePMove();
-        // System.out.println("Running PMOVE");
         List<State> res = pm.pmove();
-        pm.finalize();
         return res;
     }
 

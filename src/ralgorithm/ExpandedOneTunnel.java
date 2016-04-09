@@ -65,8 +65,6 @@ public class ExpandedOneTunnel implements Movement {
     private final Unit[] B;
     private final Unit[][] O;
 
-    // TODO: remove
-    private boolean stackTrace = true;
 
     /**
      * Instantiate a OneTunnel movement in a simple form of which Module being tunneled
@@ -413,8 +411,6 @@ public class ExpandedOneTunnel implements Movement {
                 r.connect(A[1], O[2][3], dir, true);
                 r.connect(B[2], O[3][2], dir, true);
                 r.connect(B[0], O[3][3], dir, true);
-
-                stackTrace = false;
                 break;
 
         }
@@ -433,15 +429,11 @@ public class ExpandedOneTunnel implements Movement {
         // NOTE: switch units before modules, if not, module connections
         // will permute units in undesired ways
         // TODO: make finalize units and run that first, and finalize modules
-        System.out.println("Finalizing OneTunnel");
         if (!reachedEnd()) {
             throw new RuntimeException("finalize without end");
         }
-        // if (stackTrace) {
-        //     throw new RuntimeException("finalize without end");
-        // }
 
-        Thread.dumpStack();
+        // Thread.dumpStack();
 
         mA.swapUnits(A[0], A[1]);
         mA.swapUnits(A[0], A[2]);
@@ -472,9 +464,6 @@ public class ExpandedOneTunnel implements Movement {
 
     public boolean reachedEnd() {
         boolean done = currStep >= NUMSTEPS;
-        if (done) {
-            System.out.println("Thinks its done!");
-        }
         return done;
     }
 

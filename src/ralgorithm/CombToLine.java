@@ -16,9 +16,9 @@ public class CombToLine extends Algorithm {
 		super(r);
 		this.dir = dir;
 		this.q = new LinkedList<ParallelMove>();
-        // List<Movement> initial_moves = new ArrayList<Movement>();
-        // initial_moves.add(new ExpandAll(r));
-        // q.addLast(new ParallelMove(r, initial_moves));
+        List<Movement> initial_moves = new ArrayList<Movement>();
+        initial_moves.add(new ExpandAll(r));
+        q.addLast(new ParallelMove(r, initial_moves));
 
         this.isComplete = false;
 	}
@@ -30,9 +30,9 @@ public class CombToLine extends Algorithm {
 
     private void enqueueMoves() {
         if (r.toModuleArray()[0].length == 1) {
-            // List<Movement> initial_moves = new ArrayList<Movement>();
-            // initial_moves.add(new ContractAll(r));
-            // q.addLast(new ParallelMove(r, initial_moves));
+            List<Movement> initial_moves = new ArrayList<Movement>();
+            initial_moves.add(new ContractAll(r));
+            q.addLast(new ParallelMove(r, initial_moves));
             isComplete = true;
             return;
         }
@@ -62,11 +62,11 @@ public class CombToLine extends Algorithm {
         tunnelMoves.add(ExpandedOneTunnel.initFromCoordsWithDir(r, dir, start, end));
 
         // connect all modules after wall moves
-        // connectMoves.add(new ConnectAll(r, true));
+        connectMoves.add(new ConnectAll(r, true));
 
         //add to queue
         q.addLast(new ParallelMove(r, tunnelMoves));
-        // q.addLast(new ParallelMove (r, connectMoves));
+        q.addLast(new ParallelMove (r, connectMoves));
 
     }
 
