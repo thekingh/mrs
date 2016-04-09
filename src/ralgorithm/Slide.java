@@ -128,7 +128,7 @@ public class Slide implements Movement {
         currStep++;
     }
 
-    public void finalize() {
+    public void finalizeMove() {
         r.disconnectModules(mA, neighborDir);
         r.connectModules   (mA, outerMs[2], neighborDir);
     }

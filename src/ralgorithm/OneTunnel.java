@@ -545,7 +545,7 @@ public class OneTunnel implements Movement {
      * Connects all of the modules to the appropriate neighbors, given the
      * tunnel performed
      */
-    public void finalize() {
+    public void finalizeMove() {
         if (UNION) {
             finalizeInUnion();
         } else {

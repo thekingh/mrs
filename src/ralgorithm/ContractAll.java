@@ -30,7 +30,7 @@ public class ContractAll implements Movement {
         currStep++;
     }
 
-    public void finalize() {
+    public void finalizeMove() {
         return;
     }
 

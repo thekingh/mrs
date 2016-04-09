@@ -52,21 +52,49 @@ public class ParallelMove {
      * parallel step
      */
     public List<State> pmove() {
+        // Movement m = moves.get(0);
+        // System.out.println("Got only move");
+
+        // Robot r = m.getRobot();
+        // while (!m.reachedEnd()) {
+        //     m.step();
+        //     // NEEDWORK: test this more
+        //     // assert r.isConnected();
+        //     r.drawUnit();
+        //     System.out.println(RobotStats.getAll(r));
+        // }
+        // m.finalize();
+        // System.out.println("Finalizing");
+        // r.drawUnit();
+        // System.out.println(RobotStats.getAll(r));
+        // r.drawModule();
+        // return new ArrayList<State>();
+
         List<State> states = new ArrayList<State>();
         State state;
         while(true) {
             state = step();
             if (state == null) {
+                System.out.println("Got NULL state");
                 break;
             }
             states.add(state);
         }
         // runs final step of moves to update Robot
         for (Movement m : moves) {
-            m.finalize();
+            System.out.println("FINALIZING");
+            m.finalizeMove();
         }
 
         return states;
+    }
+
+    public void finalize() {
+        System.out.println("In finalize function. moves done.");
+        // for (Movement m : moves) {
+        //     System.out.println("FINALIZING");
+        //     m.finalize();
+        // }
     }
 
     /**

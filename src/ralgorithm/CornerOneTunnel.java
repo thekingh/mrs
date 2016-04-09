@@ -355,7 +355,7 @@ public class CornerOneTunnel implements Movement {
      * Connects all of the modules to the appropriate neighbors, given the
      * tunnel performed
      */
-    public void finalize() {
+    public void finalizeMove() {
         // NOTE: switch units before modules, if not, module connections
         // will permute units in undesired ways
         // TODO: make finalize units and run that first, and finalize modules

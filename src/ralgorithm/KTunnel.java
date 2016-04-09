@@ -50,7 +50,7 @@ public class KTunnel implements Movement {
         currStep++;
     }
 
-    public void finalize() {
+    public void finalizeMove() {
 
     }
 

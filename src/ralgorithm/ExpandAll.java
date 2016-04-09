@@ -30,7 +30,7 @@ public class ExpandAll implements Movement {
         currStep++;
     }
 
-    public void finalize() {
+    public void finalizeMove() {
         return;
     }
 

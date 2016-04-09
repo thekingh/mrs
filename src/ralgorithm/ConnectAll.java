@@ -85,8 +85,8 @@ public class ConnectAll implements Movement {
     /**
      * Runs final cleanup to update robot, switch units in modules etc.
      */
-    public void finalize() {
-
+    public void finalizeMove() {
+        return;
     }
 
     /**

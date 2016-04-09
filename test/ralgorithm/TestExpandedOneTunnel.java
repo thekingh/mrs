@@ -170,6 +170,10 @@ public class TestExpandedOneTunnel {
             new Coordinate(2,1), new Coordinate(3,0));
         oneTunnelTest(r, f1, p0);
 
+        System.out.println("Connecting");
+        ConnectAll conn = new ConnectAll(r, true);
+        TestHelper.runAndDisplayMove(conn);
+
         ExpandedOneTunnel p1 = ExpandedOneTunnel.initFromCoordsWithDir(r, 2,
             new Coordinate(1,1), new Coordinate(2,0));
         oneTunnelTest(r, f2, p1);

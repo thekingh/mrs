@@ -32,7 +32,7 @@ public class FlipConfiguration implements Movement {
         currStep++;
     }
 
-    public void finalize() {
+    public void finalizeMove() {
         return;
     }
 

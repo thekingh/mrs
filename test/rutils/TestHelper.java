@@ -47,7 +47,7 @@ public final class TestHelper {
             r.drawUnit();
             System.out.println(RobotStats.getAll(r));
         }
-        m.finalize();
+        m.finalizeMove();
         System.out.println("Finalizing");
         r.drawUnit();
         System.out.println(RobotStats.getAll(r));
@@ -64,7 +64,7 @@ public final class TestHelper {
             System.out.println(RobotStats.getAll(r));
 
         }
-        m.finalize();
+        m.finalizeMove();
         r.drawModule();
     }
 
@@ -73,7 +73,7 @@ public final class TestHelper {
             m.step();
             assert m.getRobot().isConnected();
         }
-        m.finalize();
+        m.finalizeMove();
     }
 
     public static void runMoveForSteps(Movement m, int s) {
@@ -81,7 +81,7 @@ public final class TestHelper {
             m.step();
             assert m.getRobot().isConnected();
         }
-        m.finalize();
+        m.finalizeMove();
     }
 
     public static Robot makeBot(int[][] in, boolean expanded) {
