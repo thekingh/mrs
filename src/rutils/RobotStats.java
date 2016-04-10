@@ -7,7 +7,6 @@ import rgraph.*;
  *
  * This can be useful for debugging complicated robot objects.
  */
-
 public class RobotStats {
     private Robot r;
 
@@ -15,6 +14,9 @@ public class RobotStats {
         this.r = r;
     }
 
+    /**
+     * Returns string representation of robot expansion.
+     */
     public String getIsExpandedStat() {
         if (r.isExpanded()) {
             return "Robot is Expanded";
@@ -23,6 +25,10 @@ public class RobotStats {
         }
     }
 
+
+    /**
+     * Returns string representation of module edges and extensions.
+     */
     public String getModuleEdgeStat() {
         Graph mGraph = r.getModuleGraph();
         int numberEdges = mGraph.getEdges().size();
@@ -36,6 +42,9 @@ public class RobotStats {
                "Robot has " + expandEdges + " Expanded Modules Edges";
     }
 
+    /**
+     * Returns string representation of unit edges and extensions.
+     */
     public String getUnitsEdgeStat() {
         Graph uGraph = r.getUnitGraph();
         int numberEdges = uGraph.getEdges().size();
@@ -49,6 +58,9 @@ public class RobotStats {
                "Robot has " + expandEdges + " Expanded Unit Edges";
     }
 
+    /**
+     * Returns string representation of all robot statistics
+     */
     public String getAllStats() {
         String s = "";
         s += getIsExpandedStat() + '\n';
@@ -57,6 +69,10 @@ public class RobotStats {
         return s;
     }
 
+    /**
+     * Returns string representation of all robot statistics
+     * @param r Robot to analyze
+     */
     public static String getAll(Robot r) {
         RobotStats tmp = new RobotStats(r);
         return tmp.getAllStats();

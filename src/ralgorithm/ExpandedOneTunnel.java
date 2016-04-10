@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.ArrayList;
 
 
-// TODO: change comments
 /**
  * The OneTunnel is the most primitive kTunnel from Start to End in one turn.
  * <p>
@@ -19,13 +18,13 @@ import java.util.ArrayList;
  * <p>    
  * START <br>
  * &nbsp 6    <br>
- * 0A5   <br>
- * 1B4   <br>
+ * 0     A5   <br>
+ * 1     B4   <br>
  * &nbsp 23   <p>
  *
  * END   <br>
- * 065   <br>
- * 1AB4  <br>
+ * 0     65   <br>
+ * 1     AB4  <br>
  * &nbsp 23
  * <p>
  * Requirements:
@@ -36,6 +35,8 @@ import java.util.ArrayList;
  *      of the following must be true:
  *          <li>Module 5 exists</li>
  *          <li>Module 0, 1 exist and are connected, and Module 2,3 exist and are connected</li></li>
+ *      </ul>
+ *      <li>Robot must be expanded and all modules expanded at start of movement</li>
  *</ul>
  *<p>
  * Invarients:
@@ -44,6 +45,7 @@ import java.util.ArrayList;
  *      <li>Module C will always be connected to Module 4 through 2 connections</li>
  *      <li>Connectedness will be maintained throughout the 1-tunnel between modules
  *      0, 1, 2, 3, 5</li>
+ *
  *
  * @author Casey Gowrie
  * @author Kabir Singh
@@ -67,7 +69,7 @@ public class ExpandedOneTunnel implements Movement {
 
 
     /**
-     * Instantiate a OneTunnel movement in a simple form of which Module being tunneled
+     * Instantiate an ExpandedOneTunnel movement in a simple form of which Module being tunneled
      * <p>
      * Tunnels around a Turning module, which is at the corner or only turn
      *
@@ -77,7 +79,6 @@ public class ExpandedOneTunnel implements Movement {
      * @param pushDir Second direction of tunnel (push Turning module out)
      */
     public ExpandedOneTunnel(Robot r, Module m, int dir, int pushDir) {
-        // System.out.println("INIT");
     	this.r = r;
         this.mA = m;
         this.mB = (Module) m.getNeighbor(dir);
@@ -105,7 +106,17 @@ public class ExpandedOneTunnel implements Movement {
         }
     }
 
-    // TODO: remove old initfrom coords??
+    /**
+     * initializes a move given two coordinates and a direction to start the tunnel,
+     * the second direction is inferred from the supplied direction.
+     * <p>
+     * This function does not make the assumption that both the start and end
+     * coordinates must be leaf nodes in the robot connection tree.
+     * @param r Robot to initalize the move on
+     * @param dir initial direction of movement of module at start coordinate
+     * @param start coordinate of module to be "moved" to end position
+     * @param end   coordinate of module to be "moved" to
+     */
     public static ExpandedOneTunnel initFromCoordsWithDir(Robot r, int dir, Coordinate start, Coordinate end) {
         Module[][] ms = r.toModuleArray();
         //find startM
@@ -140,9 +151,6 @@ public class ExpandedOneTunnel implements Movement {
                 m = null;
                 break;
         }
-        System.out.println("dir: " + dir);
-        System.out.println("pushDir: " + pushDir);
-        
         return new ExpandedOneTunnel(r, m, dir, pushDir);
     }
 
@@ -204,9 +212,6 @@ public class ExpandedOneTunnel implements Movement {
                 m = null;
                 break;
         }
-        System.out.println("dir: " + dir);
-        System.out.println("pushDir: " + pushDir);
-        
         return new ExpandedOneTunnel(r, m, dir, pushDir);
     }
 
@@ -214,7 +219,6 @@ public class ExpandedOneTunnel implements Movement {
      * Steps through the OneTunnel by incrementally connecting, etc. units
      */
     public void step() {
-        System.out.println(String.format("Step: %d", currStep));
         switch (currStep) {
             case 0:
                 r.disconnect(A[0], pushDir);
@@ -338,7 +342,7 @@ public class ExpandedOneTunnel implements Movement {
                 r.connect(A[0], A[2], dir);
 
                 r.disconnect(A[3], B[3]);
-                // TODO: BUG here.
+                // BUG here. Bug fixed by changing method names from finalize
                 r.disconnect(A[3], pushDir);
                 r.disconnect(A[3], Direction.opposite(dir));
                 break;
@@ -412,11 +416,10 @@ public class ExpandedOneTunnel implements Movement {
                 r.connect(B[2], O[3][2], dir, true);
                 r.connect(B[0], O[3][3], dir, true);
                 break;
-
+            default:
+                throw new RuntimeException("Running non move move");
         }
-
         currStep++;
-
     }
 
     /**
@@ -432,8 +435,6 @@ public class ExpandedOneTunnel implements Movement {
         if (!reachedEnd()) {
             throw new RuntimeException("finalize without end");
         }
-
-        // Thread.dumpStack();
 
         mA.swapUnits(A[0], A[1]);
         mA.swapUnits(A[0], A[2]);
@@ -462,6 +463,9 @@ public class ExpandedOneTunnel implements Movement {
         r.connectModules(mB, outerMs[3], dir, true);
     }
 
+    /**
+     * Returns true iff move has been run for >= number of steps expected
+     */
     public boolean reachedEnd() {
         boolean done = currStep >= NUMSTEPS;
         return done;

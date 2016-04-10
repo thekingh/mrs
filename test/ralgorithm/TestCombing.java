@@ -33,6 +33,6 @@ public class TestCombing {
     }
 
     public static void main(String[] args) {
-        easyCombToLine();
+        TestHelper.outputStates(easyCombToLine());
     }
 }
