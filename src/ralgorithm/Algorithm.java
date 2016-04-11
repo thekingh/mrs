@@ -49,6 +49,10 @@ public abstract class Algorithm {
      * <p>
      * Abstract method to be defined in instance of algorithm that is
      * the essential step for the execution of the algorithm.
+     * <p>
+     * If the method is initilly called in this class then it will
+     * be an error, because in an algorithm implementation we want
+     * to determine what the pmove is.
      *
      * @return ParallelMove which will be next run in the algorithm
      */
@@ -56,6 +60,17 @@ public abstract class Algorithm {
         throw new RuntimeException("Either Determine PMove or Determine next state must be overwritten.");
     }
 
+    /**
+     * Determines the next n states of the robot in the algorithm
+     * <p>
+     * Often used so that some algorithms can contain other algorithms
+     * and determine next states through those lagorithms
+     * <p>
+     * Default method just calls an implementations determinePMove and
+     * runs it.
+     *
+     * @return A list of robot states to render next
+     */
     public List<State> determineNextStates() {
         ParallelMove pm = determinePMove();
         List<State> res = pm.pmove();
@@ -77,6 +92,11 @@ public abstract class Algorithm {
         return allStates;
     }
 
+    /**
+     * Reverses a list of robot states
+     *
+     * @param states A list of robot states to reverse
+     */
     public static List<State> reverse(List<State> states) {
         int length = states.size();
         List<State> toReturn = new ArrayList<State>();
@@ -86,6 +106,11 @@ public abstract class Algorithm {
         return toReturn;
     }
 
+    /**
+     * Runs the algorithm and reverses the states
+     *
+     * @return a reverse list of states produced by running the algorithm
+     */
     public List<State> runReverse() {
         return reverse(run());
     }
