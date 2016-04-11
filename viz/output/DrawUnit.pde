@@ -30,6 +30,18 @@ public class DrawUnit {
         extensions[3]  = e3;
     }
 
+    public void setXY(int x, int y) {
+      this.x = x;
+      this.y = y;
+    }
+
+    public int X() {
+      return this.x;
+    }
+
+    public int Y() {
+      return this.y;
+    }
     public void drawArm(int dir, int ext, int con) {
 
         // how much of block length the unit width is

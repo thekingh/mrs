@@ -83,6 +83,7 @@ void drawRobots(int index) {
 
     // draw every unit
     for(DrawUnit u: units) {
+        u.setXY(u.X() - 5, u.Y() - 5);
         u.render();
     }
 }

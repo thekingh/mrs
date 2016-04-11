@@ -24,7 +24,7 @@ public final class TestHelper {
 
     public static void printStatesToCommandLine(List<State> states) {
         for (State s: states) {
-            delay(500);
+            delay(150);
             s.printToCommandLine();
         }
     }
