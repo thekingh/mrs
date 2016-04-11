@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.ArrayList;
 
 /**
+ * Movmenet implementation to expand all of the arms in a robot.
+ *
  *
  * @author Casey Gowrie
  * @author Kabir Singh
@@ -23,6 +25,12 @@ public class ExpandAll implements Movement {
         this.r = r;
     }
 
+    /**
+     * Performs the move in one step, expanding all arms.
+     * <p>
+     * This movement can be run in one timestep, because all of the
+     * arms can extend in parallel
+     */
     public void step() {
         if (!r.isExpanded()) {
             r.expandAll();

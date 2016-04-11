@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.ArrayList;
 
 /**
+ * Movment implementation that expands robot if contracted, or contracts
+ * if expanded.
  *
  * @author Casey Gowrie
  * @author Kabir Singh
@@ -23,6 +25,9 @@ public class FlipConfiguration implements Movement {
         this.r = r;
     }
 
+    /**
+     * Changes arm extentsion for all arms in robto in one step
+     */
     public void step() {
         if (r.isExpanded()) {
             r.contractAll();

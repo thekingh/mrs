@@ -8,6 +8,9 @@ import java.util.ArrayList;
 
 /**
  * The OneTunnel is the most primitive kTunnel from Start to End in one turn.
+ * This is the contracted version of the move that operates within the union
+ * of the tunnel path if possible, ore uses a corner unit of space outside
+ * that union to maintain connectedness.
  * <p>
  * The OneTunnel is the building block for more complex kTunnels, which
  * are effectively a series of 1-Tunnels.

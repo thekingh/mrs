@@ -8,6 +8,8 @@ import java.util.ArrayList;
 
 /**
  * The OneTunnel is the most primitive kTunnel from Start to End in one turn.
+ * This particular OneTunnel, uses a small unit space in the corner of the
+ * move to maintain connectedness.
  * <p>
  * The OneTunnel is the building block for more complex kTunnels, which
  * are effectively a series of 1-Tunnels.

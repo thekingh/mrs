@@ -7,7 +7,13 @@ import java.util.List;
 import java.util.ArrayList;
 
 /**
- * The OneTunnel is the most primitive kTunnel from Start to End in one turn.
+ * Movement that creates a disconnected tunnel from the robot.
+ * This allows for the tunnel to be moved with an anchor module in certain
+ * movements (i.e. OneTunnel)
+ * <p>
+ * To connect the tunnel after a move is run, re can simply perform
+ * a ConnectAll movement, which connects the modules (in the tunnel)
+ * to their new neighbors.
  *
  * @author Casey Gowrie
  * @author Kabir Singh
@@ -35,7 +41,7 @@ public class MakeTunnel implements Movement {
     }
 
     /**
-     * Makes a tunnel of a specific length after some module.
+     * Makes a tunnel of a specific length after some module, anchor.
      * <p>
      * the length specifies the number of modules that will disconnect their sides
      *
@@ -74,7 +80,7 @@ public class MakeTunnel implements Movement {
 
 
     /**
-     * Determines is the Movement has completed all steps
+     * Determines if the Movement has completed all steps
      * 
      * @return True if done
      */
@@ -95,7 +101,7 @@ public class MakeTunnel implements Movement {
      * Runs final cleanup to update robot, switch units in modules etc.
      */
     public void finalizeMove() {
-
+        return;
     }
 
     /**

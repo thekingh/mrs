@@ -8,6 +8,10 @@ import java.util.ArrayList;
 
 /**
  * The Slide is a movement sliding one module along two adjacent modules.
+ * <p>
+ * This slide movement is defined so that two modules can be sliding
+ * on top of eachother in parallel. (This is done by only using the half
+ * of the module to do expansion and contraction for the slide)
  *
  *******************************************************************************
  * <p>Visual Aid: Modules are labeled with either a letter or number. Where A is

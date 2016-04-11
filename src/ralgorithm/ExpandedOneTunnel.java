@@ -9,6 +9,8 @@ import java.util.ArrayList;
 
 /**
  * The OneTunnel is the most primitive kTunnel from Start to End in one turn.
+ * This implementation is the expanded verion of the move, run on
+ * exapnded modules
  * <p>
  * The OneTunnel is the building block for more complex kTunnels, which
  * are effectively a series of 1-Tunnels.
@@ -31,18 +33,13 @@ import java.util.ArrayList;
  * <ul>
  *      <li>0 exists iff 1 exists</li>
  *      <li>2 exists iff 3 exists</li>
- *      <li><ul>To keep connectedness throughout the pushin the following at least one
- *      of the following must be true:
- *          <li>Module 5 exists</li>
- *          <li>Module 0, 1 exist and are connected, and Module 2,3 exist and are connected</li></li>
- *      </ul>
  *      <li>Robot must be expanded and all modules expanded at start of movement</li>
  *</ul>
  *<p>
  * Invarients:
  * <ul>
- *      <li>Module A will always be connected to Module 6 through 2 connections</li>
- *      <li>Module C will always be connected to Module 4 through 2 connections</li>
+ *      <li>Module A will always be connected to Module 6</li>
+ *      <li>Module C will always be connected to Module 4</li>
  *      <li>Connectedness will be maintained throughout the 1-tunnel between modules
  *      0, 1, 2, 3, 5</li>
  *

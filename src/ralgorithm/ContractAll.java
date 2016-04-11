@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.ArrayList;
 
 /**
+ * Implementation of a movement which contracts all the arms
+ * in the robot
  *
  * @author Casey Gowrie
  * @author Kabir Singh
@@ -23,6 +25,10 @@ public class ContractAll implements Movement {
         this.r = r;
     }
 
+    /**
+     * This Movement only takes 1 timestep, because all of the arms
+     * in the robot can be contracted in parallel
+     */
     public void step() {
         if (r.isExpanded()) {
             r.contractAll();
