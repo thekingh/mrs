@@ -23,7 +23,7 @@ public class TestStaircase {
 
         Robot r = TestHelper.makeBot(start);
         Staircase s = new Staircase(r, r.toModuleArray()[0][0], h, w);
-        TestHelper.runAndDisplayMoveForSteps(s, 70);
+        TestHelper.runAndDisplayMove(s);
         TestHelper.validateOutput(r, TestHelper.makeBot(finish));
     }
 

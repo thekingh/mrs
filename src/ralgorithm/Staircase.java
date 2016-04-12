@@ -15,6 +15,8 @@ import java.util.ArrayList;
  * @since 2/14/2016 
  */
 public class Staircase implements Movement {
+    private final static int NUM_STEPS = 69;
+
     private final Robot r;
     private final Module mc;
     private final Coordinate c;
@@ -30,19 +32,28 @@ public class Staircase implements Movement {
     private final List<Movement> makeTunnelAMovesOdd;
     private final List<Movement> stepAMovesEven;
     private final List<Movement> stepAMovesOdd;
-    private final List<Movement> connectAllAMoves;
+    private ParallelMove makeTunnelAPMoveEven;
+    private ParallelMove makeTunnelAPMoveOdd;
+    private ParallelMove stepAPMoveEven;
+    private ParallelMove stepAPMoveOdd;
 
     private final List<Movement> makeTunnelBMovesEven;
     private final List<Movement> makeTunnelBMovesOdd;
     private final List<Movement> stepBMovesEven;
     private final List<Movement> stepBMovesOdd;
-    private final List<Movement> connectAllBMoves;
+    private ParallelMove makeTunnelBPMoveEven;
+    private ParallelMove makeTunnelBPMoveOdd;
+    private ParallelMove stepBPMoveEven;
+    private ParallelMove stepBPMoveOdd;
 
     private final List<Movement> makeTunnelCMovesEven;
     private final List<Movement> makeTunnelCMovesOdd;
     private final List<Movement> stepCMovesEven;
     private final List<Movement> stepCMovesOdd;
-    private final List<Movement> connectAllCMoves;
+    private ParallelMove makeTunnelCPMoveEven;
+    private ParallelMove makeTunnelCPMoveOdd;
+    private ParallelMove stepCPMoveEven;
+    private ParallelMove stepCPMoveOdd;
 
     // private final ParallelMove stepA;
     // private final ParallelMove stepB;
@@ -76,7 +87,6 @@ public class Staircase implements Movement {
         makeTunnelAMovesOdd = new ArrayList<Movement>();
         stepAMovesEven = new ArrayList<Movement>();
         stepAMovesOdd = new ArrayList<Movement>();
-        connectAllAMoves = new ArrayList<Movement>();
 
         /////////////////////////////////////////////////////////////////////
         /////////////////// Phase B /////////////////////////////////////////
@@ -85,7 +95,6 @@ public class Staircase implements Movement {
         makeTunnelBMovesOdd = new ArrayList<Movement>();
         stepBMovesEven = new ArrayList<Movement>();
         stepBMovesOdd = new ArrayList<Movement>();
-        connectAllBMoves = new ArrayList<Movement>();
 
         /////////////////////////////////////////////////////////////////////
         /////////////////// Phase C /////////////////////////////////////////
@@ -94,7 +103,6 @@ public class Staircase implements Movement {
         makeTunnelCMovesOdd = new ArrayList<Movement>();
         stepCMovesEven = new ArrayList<Movement>();
         stepCMovesOdd = new ArrayList<Movement>();
-        connectAllCMoves = new ArrayList<Movement>();
 
     }
 
@@ -104,6 +112,7 @@ public class Staircase implements Movement {
      * Number of steps is tracked in implementation
      */
     public void step() {
+
         System.out.println(String.format("Step %d", currStep));
         int i =0;
         // TODO: broken because can't slide like we are, must make tunnel,
@@ -127,11 +136,12 @@ public class Staircase implements Movement {
                             1, 2));
                     }
                 }
+                makeTunnelAPMoveEven = new ParallelMove(r, makeTunnelAMovesEven);
+                makeTunnelAPMoveOdd = new ParallelMove(r, makeTunnelAMovesOdd);
+                stepAPMoveEven = new ParallelMove(r, stepAMovesEven);
+                stepAPMoveOdd = new ParallelMove(r, stepAMovesOdd);
 
-
-                for (Movement m : makeTunnelAMovesEven) {
-                    m.step();
-                }
+                makeTunnelAPMoveEven.step();
                 break;
             case 1:
             case 2:
@@ -142,22 +152,11 @@ public class Staircase implements Movement {
             case 7:
             case 8:
             case 9:
-                for (Movement m : stepAMovesEven) {
-                    m.step();
-                }
-                break;
             case 10:
-                for (Movement m : stepAMovesEven) {
-                    m.step();
-                }
-                for (Movement m : stepAMovesEven) {
-                    m.finalizeMove();
-                }
+                stepAPMoveEven.step();
                 break;
             case 11:
-                for (Movement m : makeTunnelAMovesOdd) {
-                    m.step();
-                }
+                makeTunnelAPMoveOdd.step();
                 break;
             case 12:
             case 13:
@@ -168,21 +167,11 @@ public class Staircase implements Movement {
             case 18:
             case 19:
             case 20:
-                for (Movement m : stepAMovesOdd) {
-                    m.step();
-                }
-                break;
             case 21:
-                for (Movement m : stepAMovesOdd) {
-                    m.step();
-                }
-                for (Movement m : stepAMovesOdd) {
-                    m.finalizeMove();
-                }
+                stepAPMoveOdd.step();
                 break;
             case 22:
                 (new ConnectAll(r)).step();
-                // connectAllAMoves.get(0).step();
 
             /////////////////////////////////////////////////////////////////////
             /////////////////// Phase B /////////////////////////////////////////
@@ -206,9 +195,12 @@ public class Staircase implements Movement {
                     }
                     i++;
                 }
-                for (Movement m : makeTunnelBMovesEven) {
-                    m.step();
-                }
+                makeTunnelBPMoveEven = new ParallelMove(r, makeTunnelBMovesEven);
+                makeTunnelBPMoveOdd = new ParallelMove(r, makeTunnelBMovesOdd);
+                stepBPMoveEven = new ParallelMove(r, stepBMovesEven);
+                stepBPMoveOdd = new ParallelMove(r, stepBMovesOdd);
+                
+                makeTunnelBPMoveEven.step();
                 break;
             case 24:
             case 25:
@@ -219,22 +211,11 @@ public class Staircase implements Movement {
             case 30:
             case 31:
             case 32:
-                for (Movement m : stepBMovesEven) {
-                    m.step();
-                }
-                break;
             case 33:
-                for (Movement m : stepBMovesEven) {
-                    m.step();
-                }
-                for (Movement m : stepBMovesEven) {
-                    m.finalizeMove();
-                }
+                stepBPMoveEven.step();
                 break;
             case 34:
-                for (Movement m : makeTunnelBMovesOdd) {
-                    m.step();
-                }
+                makeTunnelBPMoveOdd.step();
                 break;
             case 35:
             case 36:
@@ -245,20 +226,10 @@ public class Staircase implements Movement {
             case 41:
             case 42:
             case 43:
-                for (Movement m : stepBMovesOdd) {
-                    m.step();
-                }
-                break;
             case 44:
-                for (Movement m : stepBMovesOdd) {
-                    m.step();
-                }
-                for (Movement m : stepBMovesOdd) {
-                    m.finalizeMove();
-                }
+                stepBPMoveOdd.step();
                 break;
             case 45:
-                // THIS connection ruins it
                 (new ConnectAll(r)).step();
 
 
@@ -284,9 +255,12 @@ public class Staircase implements Movement {
                     }
                     i++;
                 }
-                for (Movement m : makeTunnelCMovesEven) {
-                    m.step();
-                }
+                makeTunnelCPMoveEven = new ParallelMove(r, makeTunnelCMovesEven);
+                makeTunnelCPMoveOdd = new ParallelMove(r, makeTunnelCMovesOdd);
+                stepCPMoveEven = new ParallelMove(r, stepCMovesEven);
+                stepCPMoveOdd = new ParallelMove(r, stepCMovesOdd);
+
+                makeTunnelCPMoveEven.step();
                 break;
             case 47:
             case 48:
@@ -297,19 +271,11 @@ public class Staircase implements Movement {
             case 53:
             case 54:
             case 55:
-                for (Movement m : stepCMovesEven) {
-                    m.step();
-                }
-                break;
             case 56:
-                for (Movement m : stepCMovesEven) {
-                    m.finalizeMove();
-                }
+                stepCPMoveEven.step();
                 break;
             case 57:
-                for (Movement m : makeTunnelCMovesOdd) {
-                    m.step();
-                }
+                makeTunnelCPMoveOdd.step();
                 break;
             case 58:
             case 59:
@@ -320,33 +286,98 @@ public class Staircase implements Movement {
             case 64:
             case 65:
             case 66:
-                for (Movement m : stepCMovesOdd) {
-                    m.step();
-                }
-                break;
             case 67:
-                for (Movement m : stepCMovesOdd) {
-                    m.step();
-                }
-                for (Movement m : stepCMovesOdd) {
-                    m.finalizeMove();
-                }
+                stepCPMoveOdd.step();
                 break;
             case 68:
                 (new ConnectAll(r)).step();
 
         }
-        // if (!stepA.reachedEnd()) {
-        //     stepA.step();
-        // } else if (!stepB.reachedEnd()) {
-        //     stepB.step();
-        // } else if (!stepC.reachedEnd()) {
-        //     stepC.step();
-        // } else {
-        //     throw new RuntimeException("Staircase should be over");
-        // }
         
         currStep++;
+
+
+
+
+                // if (makeTunnelAPMoveEven == null) {
+        //     for (int j = y1 + 1; j < y2; j++) {
+        //         if (j % 2 == 0) {
+        //             makeTunnelAMovesEven.add(MakeTunnel.initFromCoords(r, new Coordinate(x1, j),
+        //                 1, 2));
+        //             stepAMovesEven.add(Slide.initFromCoord(r, new Coordinate(x1, j),
+        //                 1, 2));
+        //         } else {
+        //             makeTunnelAMovesOdd.add(MakeTunnel.initFromCoords(r, new Coordinate(x1, j),
+        //                 1, 2));
+        //             stepAMovesOdd.add(Slide.initFromCoord(r, new Coordinate(x1, j),
+        //                 1, 2));
+        //         }
+        //     }
+        //     makeTunnelAPMoveEven = new ParallelMove(r, makeTunnelAMovesEven);
+        //     makeTunnelAPMoveOdd = new ParallelMove(r, makeTunnelAMovesOdd);
+        //     stepAPMoveEven = new ParallelMove(r, stepAMovesEven);
+        //     stepAPMoveOdd = new ParallelMove(r, stepAMovesOdd);
+
+        //     makeTunnelAPMoveEven.step();
+        // } else if (makeTunnelAPMoveEven.isComplete() && !stepAPMoveEven.isComplete()) {
+        //     stepAPMoveEven.step();
+        // } else if (stepAPMoveEven.isComplete() && !makeTunnelAPMoveOdd.isComplete()) {
+        //     makeTunnelAPMoveOdd.step();
+        // } else if (makeTunnelAPMoveOdd.isComplete() && !stepAPMoveOdd.isComplete()) {
+        //     stepAPMoveOdd.step();
+        // } else if (stepAPMoveOdd.isComplete() && makeTunnelBPMoveEven == null) {
+        //     for (int j = y1 + 1; j < y2; j++) {
+        //         if (j % 2 == 0) {
+        //             makeTunnelBMovesEven.add(MakeTunnel.initFromCoords(r, new Coordinate(x1, j),
+        //                 1, 2));
+        //             stepBMovesEven.add(Slide.initFromCoord(r, new Coordinate(x1, j),
+        //                 1, 2));
+        //         } else {
+        //             makeTunnelBMovesOdd.add(MakeTunnel.initFromCoords(r, new Coordinate(x1, j),
+        //                 1, 2));
+        //             stepBMovesOdd.add(Slide.initFromCoord(r, new Coordinate(x1, j),
+        //                 1, 2));
+        //         }
+        //     }
+        //     makeTunnelBPMoveEven = new ParallelMove(r, makeTunnelBMovesEven);
+        //     makeTunnelBPMoveOdd = new ParallelMove(r, makeTunnelBMovesOdd);
+        //     stepBPMoveEven = new ParallelMove(r, stepBMovesEven);
+        //     stepBPMoveOdd = new ParallelMove(r, stepBMovesOdd);
+
+        //     makeTunnelBPMoveEven.step();
+        // } else if (makeTunnelBPMoveEven.isComplete() && !stepBPMoveEven.isComplete()) {
+        //     stepBPMoveEven.step();
+        // } else if (stepBPMoveEven.isComplete() && !makeTunnelBPMoveOdd.isComplete()) {
+        //     makeTunnelBPMoveOdd.step();
+        // } else if (makeTunnelBPMoveOdd.isComplete() && !stepBPMoveOdd.isComplete()) {
+        //     stepBPMoveOdd.step();
+        // } else if (stepBPMoveOdd.isComplete() && makeTunnelCPMoveEven == null) {
+        //     for (int j = y1 + 1; j < y2; j++) {
+        //         if (j % 2 == 0) {
+        //             makeTunnelCMovesEven.add(MakeTunnel.initFromCoords(r, new Coordinate(x1, j),
+        //                 1, 2));
+        //             stepCMovesEven.add(Slide.initFromCoord(r, new Coordinate(x1, j),
+        //                 1, 2));
+        //         } else {
+        //             makeTunnelCMovesOdd.add(MakeTunnel.initFromCoords(r, new Coordinate(x1, j),
+        //                 1, 2));
+        //             stepCMovesOdd.add(Slide.initFromCoord(r, new Coordinate(x1, j),
+        //                 1, 2));
+        //         }
+        //     }
+        //     makeTunnelCPMoveEven = new ParallelMove(r, makeTunnelCMovesEven);
+        //     makeTunnelCPMoveOdd = new ParallelMove(r, makeTunnelCMovesOdd);
+        //     stepCPMoveEven = new ParallelMove(r, stepCMovesEven);
+        //     stepCPMoveOdd = new ParallelMove(r, stepCMovesOdd);
+
+        //     makeTunnelCPMoveEven.step();
+        // } else if (makeTunnelCPMoveEven.isComplete() && !stepCPMoveEven.isComplete()) {
+        //     stepCPMoveEven.step();
+        // } else if (stepCPMoveEven.isComplete() && !makeTunnelCPMoveOdd.isComplete()) {
+        //     makeTunnelCPMoveOdd.step();
+        // } else if (makeTunnelCPMoveOdd.isComplete() && !stepCPMoveOdd.isComplete()) {
+        //     stepCPMoveOdd.step();
+        // }
     }
 
 
@@ -357,7 +388,7 @@ public class Staircase implements Movement {
      */
     public boolean reachedEnd() {
         // TODO: change
-        return currStep >= 8;
+        return currStep >= NUM_STEPS;
     }
 
     /**

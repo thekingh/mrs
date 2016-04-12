@@ -61,45 +61,56 @@ public class ParallelMove {
             }
             states.add(state);
         }
-        // runs final step of moves to update Robot
-        for (Movement m : moves) {
-            m.finalizeMove();
-        }
 
         return states;
     }
-
-    // public void finalize() {
-    //     System.out.println("In finalize function. moves done.");
-    //     // for (Movement m : moves) {
-    //     //     System.out.println("FINALIZING");
-    //     //     m.finalize();
-    //     // }
-    // }
 
     /**
      * performs a single timestep of parallel movements
      * <p>
      * The timestep consists of changes made by all Movements in ParallelMove
+     * The parallel move is finalized as part of the last step
      *
      * @return A State object, unless no moves were made in which case it returns null
      */
-    private State step() {
-        boolean moveFinished = true;
+    public State step() {
         for (int i = 0; i < moves.size(); i++) {
-            if (!moves.get(i).reachedEnd()) {
                 moves.get(i).step();
-                moveFinished = false;
-            }
         }
-        if (!moveFinished) {
+        if (!isComplete()) {
 /*            r.drawUnit();*/
 /*            System.out.println(RobotStats.getAll(r));*/
 /*            return r.getState();*/
+            // if not complete we return new state
             return new State(r);
         } else {
+            // if complete we finalize
+            finalizePMove();
             return null;
         }
+    }
+
+    /**
+     * Runs the final cleanup on a ParallelMove to correct connections, etc.
+     * <p>
+     * Essentially finalizes all moves in pmove
+     */
+    public void finalizePMove() {
+        for (Movement m : moves) {
+            m.finalizeMove();
+        }    
+    }
+
+    /**
+     * Determines if all of the steps in the parallel move are complete
+     */
+    public boolean isComplete() {
+        for (Movement m: moves) {
+            if (!m.reachedEnd()) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
