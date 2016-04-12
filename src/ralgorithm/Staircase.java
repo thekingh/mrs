@@ -7,6 +7,11 @@ import java.util.List;
 import java.util.ArrayList;
 
 /**
+ * Implementation of a Staircase movement that tranforms a a rectangle of
+ * k1 by k2 modules in to one of k2 by k1 modules
+ * <p>
+ * Connectivity to the rest of the robot is kept through a module
+ * in the bottom right corner of block.
  *
  * @author Casey Gowrie
  * @author Kabir Singh
@@ -55,13 +60,10 @@ public class Staircase implements Movement {
     private ParallelMove stepCPMoveEven;
     private ParallelMove stepCPMoveOdd;
 
-    // private final ParallelMove stepA;
-    // private final ParallelMove stepB;
-    // private final ParallelMove stepC;
-
-
 
     /**
+     * Initializes a staircase move, assuming that k1 >= k2.
+     *
      * @param k1 size of box in y
      * @param k2 size of box in x
      */
@@ -109,7 +111,13 @@ public class Staircase implements Movement {
     /**
      * Run a single step of the movement.
      * <p>
-     * Number of steps is tracked in implementation
+     * The move is broken down into three phases, (a,b,c). <br>
+     *  (a) We slide all of the modules right with respect to the row below
+     * -- This is done by slisidng the left most module of the row, and doing
+     * all of the even rows then all of the odd rows <br>
+     *  (b) We slide every column that doesn't touch the top of the bounding
+     * box (and the rightmost one that does) down. <br>
+     *  (c) FInally, move every row back left in a similar manner to step a <br>
      */
     public void step() {
 
@@ -231,7 +239,6 @@ public class Staircase implements Movement {
                 break;
             case 45:
                 (new ConnectAll(r)).step();
-
 
             /////////////////////////////////////////////////////////////////////
             /////////////////// Phase C /////////////////////////////////////////
