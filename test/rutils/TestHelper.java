@@ -24,7 +24,7 @@ public final class TestHelper {
 
     public static void printStatesToCommandLine(List<State> states) {
         for (State s: states) {
-            delay(150);
+            delay(350);
             s.printToCommandLine();
         }
     }
@@ -59,7 +59,7 @@ public final class TestHelper {
         for (int i = 0; i < s; i++) {
 
             m.step();
-            assert r.isConnected();
+            // assert r.isConnected();
             r.drawUnit();
             System.out.println(RobotStats.getAll(r));
 

@@ -172,6 +172,9 @@ public class Slide implements Movement {
     
         switch(step) {
             case 0:
+                // NOTE: added this disonnect to do two slides next to eachother
+                // r.disconnect(uA[3], dir);
+
                 r.disconnect(uA[0], neighborDir);
                 r.connect   (uA[1], u1, neighborDir);
                 r.disconnect(uA[0], Direction.opposite(neighborDir));
@@ -187,6 +190,8 @@ public class Slide implements Movement {
                 r.contract  (uA[1], dir);
                 break;
             case 4:
+                // r.connect(uA[3], outerUs[3][2], dir);
+
                 r.connect   (uA[1], u2, neighborDir);
                 r.connect   (uA[0], uA[3], Direction.opposite(neighborDir));
                 break;

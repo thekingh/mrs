@@ -42,6 +42,26 @@ public class TestSlide {
 
     }
 
+    public static void testStair() {
+        int [][] s = {{0,0,1,1,1},
+                      {0,1,1,1,0},
+                      {1,1,1,0,0}};
+        int [][] f = {{0,0,1,0,0},
+                      {0,1,1,1,1},
+                      {1,1,1,1,0}};
+
+        Robot r = TestHelper.makeBot(s);
+
+        Module[][] ms0 = r.toModuleArray();
+
+
+        (new MakeTunnel(r, ms0[3][1], 0, 3)).step();
+        Slide s0 = new Slide(r, ms0[3][1], 2, 3);
+
+        slideTest(r, f, s0);
+    }
+
+
     public static void test2() {
         int [][] s = {{1,1,0,1,1},
                       {1,0,0,0,1},
@@ -82,8 +102,9 @@ public class TestSlide {
 
 
     public static void main(String[] args) {
-        test1();
-        test2();
+        // test1();
+        // test2();
+        testStair();
     }
 
 }
