@@ -55,7 +55,7 @@ public class Elevator implements Movement {
         E[0] = elevator[0].getUnitsFrom(dir, Direction.left(dir));
         for (int i = 1; i < l; i++) {
             elevator[i] = (Module) elevator[i-1].getNeighbor(Direction.left(dir));
-            E[i] = elevator[0].getUnitsFrom(dir, Direction.left(dir));
+            E[i] = elevator[i].getUnitsFrom(dir, Direction.left(dir));
         }
 
         rTower = new Module[k];
@@ -69,7 +69,8 @@ public class Elevator implements Movement {
     }
 
     public void step() {
-        System.out.println(currStep);
+
+        boolean even = (k % 2) == 0;
         switch(currStep) {
             case 0:
             // TODO: reference specific units for disconnect
@@ -84,7 +85,7 @@ public class Elevator implements Movement {
                 r.disconnect(L[k-1][3], Direction.right(dir));
 
                 // disconnect bottom part of elevator, and elevator from right column
-                for (int i = 0; i < l ; i++) {
+                for (int i = 0; i < l; i++) {
                     r.disconnect(E[i][0], Direction.opposite(dir));
                     r.disconnect(E[i][1], Direction.opposite(dir));
                 }
@@ -99,8 +100,11 @@ public class Elevator implements Movement {
                 r.contract(L[k-1][3], L[k-1][0]);
                 break;
             case 2:
-                // TODO: different R module depending on even or odd k??
-                r.connect(E[l-1][0], R[k/2][1], Direction.left(dir), true);
+                if (!even) {
+                    r.connect(E[l-1][0], R[k/2][1], Direction.left(dir), true);
+                } else {
+                    r.connect(E[l-1][0], R[k/2][2], Direction.left(dir), true);
+                }
 
                 r.disconnect(E[0][1], Direction.right(dir));
                 break;
@@ -117,7 +121,6 @@ public class Elevator implements Movement {
                 r.disconnect(L[k-1][0], L[k-1][1]);
                 break;
             case 5:
-                // TODO: again, could be different with odd number tower
                 for (int i = 1; i < k; i++) {
                     r.contract(L[i][3], L[i][0]);
                     r.contract(L[i][3], L[i-1][0]);
@@ -148,7 +151,11 @@ public class Elevator implements Movement {
                 }
                 break;
             case 10:
-                r.connect(E[l-1][3], R[k/2][2], Direction.left(dir), true);
+                if (!even) {
+                    r.connect(E[l-1][3], R[k/2][2], Direction.left(dir), true);
+                } else {
+                    r.connect(E[l-1][3], R[k/2 - 1][1], Direction.left(dir), true);
+                }
 
                 r.disconnect(E[0][2], Direction.right(dir));
                 break;
@@ -198,7 +205,7 @@ public class Elevator implements Movement {
 
                 break;
                 
-
+                // TODO: may want to make tunnel above and below
         }
 
         currStep++;
@@ -228,7 +235,11 @@ public class Elevator implements Movement {
      * Runs final cleanup to update robot, switch units in modules etc.
      */
     public void finalizeMove() {
-        return;
+        r.disconnectModules(elevator[0], Direction.right(dir));
+        r.disconnectModules(elevator[l-1], Direction.left(dir));
+
+        r.connectModules(elevator[0], lTower[k-1], Direction.right(dir), true);
+        r.connectModules(elevator[l-1], rTower[k-1], Direction.left(dir), true);
     }
 
     /**

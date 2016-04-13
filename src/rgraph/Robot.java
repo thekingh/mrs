@@ -364,7 +364,7 @@ public class Robot {
      * DEBUG method, draws unit graph representation on console.
      */
     public void drawUnit() {
-        delay(100);
+        delay(300);
         System.out.println(unitGraph.toGrid());
     }
 
