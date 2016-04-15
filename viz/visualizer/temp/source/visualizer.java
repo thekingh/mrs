@@ -14,6 +14,7 @@ import java.io.IOException;
 
 public class visualizer extends PApplet {
 
+//TODO scaling on input/oupt
 
 int NUM_W = 20;
 int NUM_H = 20;
@@ -28,18 +29,43 @@ String MODE = "INPUT_START";
 //     MODE = "INPUT_END";
 //     MODE = "OUPTUT";
 
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////  INPUT VARIABLES ///////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Button mode_button;
+
 Button start_button;
 Button end_button;
 Button clear_button;
 Button save_button;
 
+Button start_connected_button;
+Button end_connected_button;
+Button size_comparison;
+
 boolean valid_save      = true;
 boolean start_connected = false;
 boolean end_connected   = false;
-
 ArrayList<InputModule> start_modules;
 ArrayList<InputModule> end_modules;
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////// OUTPUT VARIABLES ///////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Button play_button;
+Button pause_button;
+Button stepf_button;
+Button stepb_button;
+
+ArrayList<ArrayList<OutputUnit>> states;
+int state_count;
+int cur_state = 0;
+boolean is_playing = false;
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
 public void setup() {
     
 /*    size(DEFAULT_WINDOW_W, DEFAULT_WINDOW_H);*/
@@ -48,15 +74,30 @@ public void setup() {
     init_buttons(0, DEFAULT_GRID_H, DEFAULT_WINDOW_W - 1, DEFAULT_WINDOW_H - DEFAULT_GRID_H - 1);
 
     start_modules = new ArrayList<InputModule>();
-    end_modules = new ArrayList<InputModule>();
+    end_modules   = new ArrayList<InputModule>();
 }
 
 public void init_buttons(int cx, int cy, int cw, int ch) {
     // button = new Button (x, y, w, h, "text");
+
+    mode_button = new Button(cx + cw * .85f, cy + ch * 0.05f, cw * 0.1f, ch * 0.1f, "<->");
+
+    // INPUT BUTTONS
     start_button = new Button(cx + cw * 0.125f, cy + ch * 0.7f, cw * 0.15f, ch * 0.25f, "START");
+    start_connected_button = new Button(cx + cw * 0.125f, cy + ch * 0.4f, cw * 0.15f, ch * 0.25f, "SCONNECT");
+
     end_button   = new Button(cx + cw * 0.325f, cy + ch * 0.7f, cw * 0.15f, ch * 0.25f, "END");
+    end_connected_button = new Button(cx + cw * 0.325f, cy + ch * 0.4f, cw * 0.15f, ch * 0.25f, "ECONNECT");
+
     clear_button = new Button(cx + cw * 0.525f, cy + ch * 0.7f, cw * 0.15f, ch * 0.25f, "CLEAR");
     save_button  = new Button(cx + cw * 0.725f, cy + ch * 0.7f, cw * 0.15f, ch * 0.25f, "SAVE");
+
+    //OUTPUT BUTTONS
+    stepb_button = new Button(cx + cw * 0.225f, cy + ch * 0.5f , cw * 0.15f, ch * 0.2f, "<<");
+    play_button  = new Button(cx + cw * 0.425f, cy + ch * 0.35f, cw * 0.15f, ch * 0.2f, "->");
+    pause_button = new Button(cx + cw * 0.425f, cy + ch * 0.65f, cw * 0.15f, ch * 0.2f, "||");
+    stepf_button = new Button(cx + cw * 0.625f, cy + ch * 0.5f , cw * 0.15f, ch * 0.2f, ">>");
+    
 }
 
 public void draw() {
@@ -93,6 +134,8 @@ public void mouseClicked() {
     }
 
     // BUTTON CLICKING
+
+    // INPUT
     if (start_button.inBounds(mouseX, mouseY)) {
         MODE = "INPUT_START";
     }
@@ -104,6 +147,26 @@ public void mouseClicked() {
     if (clear_button.inBounds(mouseX, mouseY)) {
         start_modules.clear();
         end_modules.clear();
+        valid_save = false;
+        start_connected = false;
+        end_connected = false;
+    }
+
+    // OUTPUT
+    if (!is_playing && play_button.inBounds(mouseX, mouseY)) {
+        is_playing = true;
+    }
+
+    if (is_playing && pause_button.inBounds(mouseX, mouseY)) {
+        is_playing = false;
+    }
+    
+
+
+
+    // UNIVERSAL
+    if (mode_button.inBounds(mouseX, mouseY)) {
+        MODE = (MODE.equals("OUTPUT")) ? "INPUT_START" : "OUTPUT"; 
     }
 }
 
@@ -287,26 +350,34 @@ public void drawMenu(int cx, int cy, int cw, int ch) {
         fill(255, 0, 0);
         textAlign(CENTER);
         //text(MODE, DEFAULT_WINDOW_W/2, 900);
+        mode_button.render(true);
 
         // draw buttons
-        if (MODE == "INPUT_START") {
-            start_button.render(true);
-            end_button.render(false);
-        } else if  (MODE == "INPUT_END") {
-            start_button.render(false);
-            end_button.render(true);
-        }
-
-        if(start_modules.size() > 0 || end_modules.size() > 0) {
-            clear_button.render(true);
+        if (MODE == "OUTPUT") {
+            stepb_button.render(true);
+            play_button.render(is_playing);
+            pause_button.render(!is_playing);
+            stepf_button.render(true);
         } else {
-            clear_button.render(false);
-        }
+            if (MODE == "INPUT_START") {
+                start_button.render(true);
+                end_button.render(false);
+            } else if  (MODE == "INPUT_END") {
+                start_button.render(false);
+                end_button.render(true);
+            }
 
-        if(valid_save) {
-            save_button.render(true);
-        } else {
-            save_button.render(false);
+            if(start_modules.size() > 0 || end_modules.size() > 0) {
+                clear_button.render(true);
+            } else {
+                clear_button.render(false);
+            }
+
+            save_button.render(valid_save);
+        
+            start_connected_button.render(start_connected);
+            end_connected_button.render(end_connected);
+
         }
 
         //TODO tell user why robot is broken
@@ -562,6 +633,107 @@ public class InputUnit {
     /*            drawArm(dir, extensions[dir], connections[dir]);*/
                 drawContractedArms(dir);
             }
+        }
+
+    }
+}
+public class OutputUnit {
+    
+    int x,y;
+    int[]  connections;
+    int[]  extensions;
+
+    public OutputUnit() {
+        this(0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+    }
+
+    public OutputUnit(String s) {
+        this(0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+    }
+
+    public OutputUnit(int x, int y, int e0, int c0, int e1, int c1, int e2, int c2, int e3, int c3) {
+        this.x = x;
+        this.y = y;
+
+        connections = new int[4];
+        extensions  = new int[4];
+
+        connections[0] = c0;
+        connections[1] = c1;
+        connections[2] = c2;
+        connections[3] = c3;
+
+        extensions[0]  = e0;
+        extensions[1]  = e1;
+        extensions[2]  = e2;
+        extensions[3]  = e3;
+    }
+
+    public void drawArm(int dir, int ext, int con) {
+
+        // how much of block length the unit width is
+        double ratio = 4.0f/5;
+
+        // calculate size variables
+        int block_size =  width / num_w;
+        int unit_width     = (int)((double)block_size * ratio);
+
+        int margin     = (int)(((1 -  ratio)/2) * (double)block_size);
+        int arm_len    = (extensions[dir]  == 1) ? (margin + block_size/2) : (margin);
+        int disconnect = (connections[dir] == 1) ? (0) : (margin/2);
+
+        // unit boundaries
+        int left   = ((block_size * (num_w/2 + x)) + (block_size - unit_width)/2);
+        int top    = ((block_size * (num_h/2 - y)) + (block_size - unit_width)/2);
+        int right  = (left + unit_width);
+        int bottom = (top  + unit_width);
+
+        stroke(0, 255);
+        strokeWeight(1);
+    
+        // draw arm in given direction (arm + "hand")
+        if(dir == 0) {
+            line(left + (unit_width/2), top, left + unit_width/2, top - arm_len + disconnect);
+            line(left + (unit_width/4), top - arm_len + disconnect, right - unit_width/4, top - arm_len + disconnect);
+        } else if(dir == 2) {
+            line(left + (unit_width/2), bottom, left + unit_width/2, bottom + arm_len - disconnect);
+            line(left + (unit_width/4), bottom + arm_len - disconnect, right - unit_width/4, bottom + arm_len - disconnect);
+        } else if (dir == 3 ) {
+            line(left, top + (unit_width/2), left - arm_len + disconnect , top + unit_width/2 );
+            line(left - arm_len + disconnect, top + (unit_width/4), left - arm_len + disconnect, bottom - (unit_width/4));
+        } else {
+            line(right, top + (unit_width/2), right + arm_len - disconnect, top + unit_width/2 );
+            line(right + arm_len - disconnect, top + (unit_width/4), right + arm_len - disconnect, bottom - (unit_width/4));
+        }
+    }
+
+    public void drawUnit() {
+
+        // calculate sizes
+        int block_size =  width / num_w;
+        double ratio = 4.0f/5;
+        int unit_width     = (int)((double)block_size * ratio);
+
+        // unit boundaries
+        int left   = ((block_size * (num_w/2 + x)) + (block_size - unit_width)/2);
+        int top    = ((block_size * (num_h/2 - y)) + (block_size - unit_width)/2);
+        int right  = (left + unit_width);
+        int bottom = (top  + unit_width);
+        
+        fill(51, 204, 255); // pretty blue
+        stroke(1);
+        rect(left, top, unit_width, unit_width);
+        fill(255, 255, 255);
+    }
+
+    public void render() {
+
+        // draw unit body
+        drawUnit();
+
+        // draw unit arms
+        for(int dir = 0; dir < 4; dir++) {
+            drawArm(dir, extensions[dir], connections[dir]);
         }
 
     }

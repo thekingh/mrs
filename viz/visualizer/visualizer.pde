@@ -13,18 +13,43 @@ String MODE = "INPUT_START";
 //     MODE = "INPUT_END";
 //     MODE = "OUPTUT";
 
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////  INPUT VARIABLES ///////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Button mode_button;
+
 Button start_button;
 Button end_button;
 Button clear_button;
 Button save_button;
 
+Button start_connected_button;
+Button end_connected_button;
+Button size_comparison;
+
 boolean valid_save      = true;
 boolean start_connected = false;
 boolean end_connected   = false;
-
 ArrayList<InputModule> start_modules;
 ArrayList<InputModule> end_modules;
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////// OUTPUT VARIABLES ///////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Button play_button;
+Button pause_button;
+Button stepf_button;
+Button stepb_button;
+
+ArrayList<ArrayList<OutputUnit>> states;
+int state_count;
+int cur_state = 0;
+boolean is_playing = false;
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
 void setup() {
     size(800, 1000);
 /*    size(DEFAULT_WINDOW_W, DEFAULT_WINDOW_H);*/
@@ -33,15 +58,30 @@ void setup() {
     init_buttons(0, DEFAULT_GRID_H, DEFAULT_WINDOW_W - 1, DEFAULT_WINDOW_H - DEFAULT_GRID_H - 1);
 
     start_modules = new ArrayList<InputModule>();
-    end_modules = new ArrayList<InputModule>();
+    end_modules   = new ArrayList<InputModule>();
 }
 
 void init_buttons(int cx, int cy, int cw, int ch) {
     // button = new Button (x, y, w, h, "text");
+
+    mode_button = new Button(cx + cw * .85, cy + ch * 0.05, cw * 0.1, ch * 0.1, "<->");
+
+    // INPUT BUTTONS
     start_button = new Button(cx + cw * 0.125, cy + ch * 0.7, cw * 0.15, ch * 0.25, "START");
+    start_connected_button = new Button(cx + cw * 0.125, cy + ch * 0.4, cw * 0.15, ch * 0.25, "SCONNECT");
+
     end_button   = new Button(cx + cw * 0.325, cy + ch * 0.7, cw * 0.15, ch * 0.25, "END");
+    end_connected_button = new Button(cx + cw * 0.325, cy + ch * 0.4, cw * 0.15, ch * 0.25, "ECONNECT");
+
     clear_button = new Button(cx + cw * 0.525, cy + ch * 0.7, cw * 0.15, ch * 0.25, "CLEAR");
     save_button  = new Button(cx + cw * 0.725, cy + ch * 0.7, cw * 0.15, ch * 0.25, "SAVE");
+
+    //OUTPUT BUTTONS
+    stepb_button = new Button(cx + cw * 0.225, cy + ch * 0.5 , cw * 0.15, ch * 0.2, "<<");
+    play_button  = new Button(cx + cw * 0.425, cy + ch * 0.35, cw * 0.15, ch * 0.2, "->");
+    pause_button = new Button(cx + cw * 0.425, cy + ch * 0.65, cw * 0.15, ch * 0.2, "||");
+    stepf_button = new Button(cx + cw * 0.625, cy + ch * 0.5 , cw * 0.15, ch * 0.2, ">>");
+    
 }
 
 void draw() {
@@ -78,6 +118,8 @@ void mouseClicked() {
     }
 
     // BUTTON CLICKING
+
+    // INPUT
     if (start_button.inBounds(mouseX, mouseY)) {
         MODE = "INPUT_START";
     }
@@ -89,6 +131,26 @@ void mouseClicked() {
     if (clear_button.inBounds(mouseX, mouseY)) {
         start_modules.clear();
         end_modules.clear();
+        valid_save = false;
+        start_connected = false;
+        end_connected = false;
+    }
+
+    // OUTPUT
+    if (!is_playing && play_button.inBounds(mouseX, mouseY)) {
+        is_playing = true;
+    }
+
+    if (is_playing && pause_button.inBounds(mouseX, mouseY)) {
+        is_playing = false;
+    }
+    
+
+
+
+    // UNIVERSAL
+    if (mode_button.inBounds(mouseX, mouseY)) {
+        MODE = (MODE.equals("OUTPUT")) ? "INPUT_START" : "OUTPUT"; 
     }
 }
 
@@ -272,26 +334,34 @@ void drawMenu(int cx, int cy, int cw, int ch) {
         fill(255, 0, 0);
         textAlign(CENTER);
         //text(MODE, DEFAULT_WINDOW_W/2, 900);
+        mode_button.render(true);
 
         // draw buttons
-        if (MODE == "INPUT_START") {
-            start_button.render(true);
-            end_button.render(false);
-        } else if  (MODE == "INPUT_END") {
-            start_button.render(false);
-            end_button.render(true);
-        }
-
-        if(start_modules.size() > 0 || end_modules.size() > 0) {
-            clear_button.render(true);
+        if (MODE == "OUTPUT") {
+            stepb_button.render(true);
+            play_button.render(is_playing);
+            pause_button.render(!is_playing);
+            stepf_button.render(true);
         } else {
-            clear_button.render(false);
-        }
+            if (MODE == "INPUT_START") {
+                start_button.render(true);
+                end_button.render(false);
+            } else if  (MODE == "INPUT_END") {
+                start_button.render(false);
+                end_button.render(true);
+            }
 
-        if(valid_save) {
-            save_button.render(true);
-        } else {
-            save_button.render(false);
+            if(start_modules.size() > 0 || end_modules.size() > 0) {
+                clear_button.render(true);
+            } else {
+                clear_button.render(false);
+            }
+
+            save_button.render(valid_save);
+        
+            start_connected_button.render(start_connected);
+            end_connected_button.render(end_connected);
+
         }
 
         //TODO tell user why robot is broken
