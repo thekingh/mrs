@@ -1,8 +1,8 @@
 public class OutputUnit {
     
-    int x,y;
-    int[]  connections;
-    int[]  extensions;
+    private int x,y;
+    private int[]  connections;
+    private int[]  extensions;
 
     public OutputUnit() {
         this(0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
@@ -30,6 +30,14 @@ public class OutputUnit {
         extensions[3]  = e3;
     }
 
+    public int X() {
+        return this.x;
+    }
+
+    public int Y() {
+        return this.y;
+    }
+
     public void drawArm(int dir, int ext, int con) {
 
         // how much of block length the unit width is
@@ -44,8 +52,10 @@ public class OutputUnit {
         int disconnect = (connections[dir] == 1) ? (0) : (margin/2);
 
         // unit boundaries
-        int left   = ((block_size * (num_w/2 + x)) + (block_size - unit_width)/2);
-        int top    = ((block_size * (num_h/2 - y)) + (block_size - unit_width)/2);
+
+        int mod_y = NUM_H - y - 1;
+        int left   = ((block_size * x)) + (block_size - unit_width)/2;
+        int top    = ((block_size * mod_y)) + (block_size - unit_width)/2;
         int right  = (left + unit_width);
         int bottom = (top  + unit_width);
 
@@ -76,8 +86,10 @@ public class OutputUnit {
         int unit_width     = (int)((double)block_size * ratio);
 
         // unit boundaries
-        int left   = ((block_size * (num_w/2 + x)) + (block_size - unit_width)/2);
-        int top    = ((block_size * (num_h/2 - y)) + (block_size - unit_width)/2);
+
+        int mod_y = NUM_H - y - 1;
+        int left   = ((block_size * x)) + (block_size - unit_width)/2;
+        int top    = ((block_size * mod_y)) + (block_size - unit_width)/2;
         int right  = (left + unit_width);
         int bottom = (top  + unit_width);
         

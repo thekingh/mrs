@@ -31,6 +31,15 @@ String MODE = "INPUT_START";
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////    DEMO PATHS    ///////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/* TODO change these to /data/ */
+String combing_prefix  = "output_states/combing/state";
+String sliding_prefix  = "output_states/sliding/state";
+String tunnel_prefix   = "output_states/tunnel/state";
+String elevator_prefix = "output_states/elevator/state";
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////  INPUT VARIABLES ///////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -59,9 +68,11 @@ Button play_button;
 Button pause_button;
 Button stepf_button;
 Button stepb_button;
+Button restart_button;
+Button skip_button;
 
 ArrayList<ArrayList<OutputUnit>> states;
-int state_count;
+int state_count = 0;
 int cur_state = 0;
 boolean is_playing = false;
 
@@ -72,6 +83,7 @@ public void setup() {
 
     // make but don't draw input buttons
     init_buttons(0, DEFAULT_GRID_H, DEFAULT_WINDOW_W - 1, DEFAULT_WINDOW_H - DEFAULT_GRID_H - 1);
+    readOutputStates(sliding_prefix);
 
     start_modules = new ArrayList<InputModule>();
     end_modules   = new ArrayList<InputModule>();
@@ -93,28 +105,91 @@ public void init_buttons(int cx, int cy, int cw, int ch) {
     save_button  = new Button(cx + cw * 0.725f, cy + ch * 0.7f, cw * 0.15f, ch * 0.25f, "SAVE");
 
     //OUTPUT BUTTONS
-    stepb_button = new Button(cx + cw * 0.225f, cy + ch * 0.5f , cw * 0.15f, ch * 0.2f, "<<");
-    play_button  = new Button(cx + cw * 0.425f, cy + ch * 0.35f, cw * 0.15f, ch * 0.2f, "->");
-    pause_button = new Button(cx + cw * 0.425f, cy + ch * 0.65f, cw * 0.15f, ch * 0.2f, "||");
-    stepf_button = new Button(cx + cw * 0.625f, cy + ch * 0.5f , cw * 0.15f, ch * 0.2f, ">>");
+    restart_button = new Button (cx + cw * 0.025f, cy + ch * 0.5f, cw * 0.15f, ch * 0.2f, "RESTART");
+    stepb_button   = new Button(cx + cw * 0.225f, cy + ch * 0.5f , cw * 0.15f, ch * 0.2f, "<<");
+    play_button    = new Button(cx + cw * 0.425f, cy + ch * 0.35f, cw * 0.15f, ch * 0.2f, "->");
+    pause_button   = new Button(cx + cw * 0.425f, cy + ch * 0.65f, cw * 0.15f, ch * 0.2f, "||");
+    stepf_button   = new Button(cx + cw * 0.625f, cy + ch * 0.5f , cw * 0.15f, ch * 0.2f, ">>");
+    skip_button    = new Button(cx + cw * 0.825f, cy + ch * 0.5f , cw * 0.15f, ch * 0.2f, "SKIP (10)");
     
 }
 
+public void scaleCanvas() {
+    ArrayList<OutputUnit> cur_robot = states.get(cur_state);
+ 
+    int right_most_x = 0;
+    int top_most_y = 0;
+    for(int i = 0; i < cur_robot.size(); i++) {
+        if(cur_robot.get(i).X() > right_most_x) {
+            right_most_x = cur_robot.get(i).X();
+        }
+
+        if(cur_robot.get(i).Y() > top_most_y) {
+            top_most_y = cur_robot.get(i).Y();
+        }
+    }
+
+    int max_dim = (right_most_x > top_most_y) ? right_most_x : top_most_y;
+
+    // padding, make sure even
+    if(max_dim % 2 == 0) {
+        max_dim += 2;
+    } else {
+        max_dim += 3;
+    }
+
+    NUM_W = max_dim;
+    NUM_H = max_dim;
+    num_w = max_dim;
+    num_h = max_dim;
+
+
+/*    println("rightmost: " + right_most_x);*/
+
+}
+
+
 public void draw() {
     background (200, 200, 200);
+    if(MODE == "OUTPUT") {
+        scaleCanvas();
+    }
     drawGrid(0, 0, DEFAULT_GRID_W, DEFAULT_GRID_H);
 /*    drawMenu(0, 800, 800, 200);*/
     drawMenu(0, DEFAULT_GRID_H, DEFAULT_WINDOW_W - 1, 
              DEFAULT_WINDOW_H - DEFAULT_GRID_H - 1);
-    highlightGridSpace();
-    drawInputModules();
+
+    if(MODE == "OUTPUT") {
+        drawOutputRobot(cur_state);
+        drawFrameNumber();
+/*        scaleCanvas();*/
+
+        // play loop
+        if(is_playing && cur_state < state_count - 1) {
+            cur_state++;
+            scaleCanvas();
+            delay(400);
+
+            if(cur_state == state_count) {
+                is_playing = false;
+            }
+        }
+
+
+    } else {
+        highlightGridSpace();
+        drawInputModules();
+    }
 
     valid_save = isValidSave();
 }
 
 public void mouseClicked() {
 
-    //MODULE CLICKING
+    /////////////////////
+    // MODULE CLICKING //
+    /////////////////////
+
     if (mouseY < DEFAULT_GRID_H) {
         int sqr_len = width/num_w;
 
@@ -133,9 +208,11 @@ public void mouseClicked() {
         }
     }
 
-    // BUTTON CLICKING
+    /////////////////////
+    // BUTTON CLICKING //
+    /////////////////////
 
-    // INPUT
+    // INPUT //
     if (start_button.inBounds(mouseX, mouseY)) {
         MODE = "INPUT_START";
     }
@@ -152,7 +229,7 @@ public void mouseClicked() {
         end_connected = false;
     }
 
-    // OUTPUT
+    // OUTPUT //
     if (!is_playing && play_button.inBounds(mouseX, mouseY)) {
         is_playing = true;
     }
@@ -161,10 +238,29 @@ public void mouseClicked() {
         is_playing = false;
     }
     
+    
+    if (!is_playing && cur_state < state_count - 1 && stepf_button.inBounds(mouseX, mouseY)) {
+        cur_state++;
+        scaleCanvas();
+    }
+
+    if (!is_playing && cur_state > 0 && stepb_button.inBounds(mouseX, mouseY)) {
+        cur_state--;
+        scaleCanvas();
+    }
+
+    if (cur_state > 0 && restart_button.inBounds(mouseX, mouseY)) {
+        cur_state = 0;
+        scaleCanvas();
+    }
+
+    if (cur_state + 10 < state_count && skip_button.inBounds(mouseX, mouseY)) {
+        cur_state += 10;
+        scaleCanvas();
+    }
 
 
-
-    // UNIVERSAL
+    // UNIVERSAL //
     if (mode_button.inBounds(mouseX, mouseY)) {
         MODE = (MODE.equals("OUTPUT")) ? "INPUT_START" : "OUTPUT"; 
     }
@@ -340,6 +436,23 @@ public void drawInputModules() {
     }
 }
 
+public void drawOutputRobot(int index) {
+    ArrayList<OutputUnit> units = states.get(index);
+
+    for(OutputUnit u: units) {
+        u.render();
+    }
+}
+
+public void drawFrameNumber() {
+    String s = "[" + (cur_state+1) + "/" + state_count + "]";
+
+    // draw in bottom right of window
+    textAlign(CENTER);
+    fill(0);
+    text(s, 0, .85f * DEFAULT_WINDOW_H, DEFAULT_WINDOW_W, DEFAULT_WINDOW_H);
+}
+
 public void drawMenu(int cx, int cy, int cw, int ch) {
 
     pushStyle();
@@ -352,12 +465,14 @@ public void drawMenu(int cx, int cy, int cw, int ch) {
         //text(MODE, DEFAULT_WINDOW_W/2, 900);
         mode_button.render(true);
 
-        // draw buttons
+        // draw appropriate buttons
         if (MODE == "OUTPUT") {
-            stepb_button.render(true);
-            play_button.render(is_playing);
-            pause_button.render(!is_playing);
-            stepf_button.render(true);
+            stepb_button.render(cur_state > 0);
+            play_button.render(!is_playing);
+            pause_button.render(is_playing);
+            stepf_button.render( cur_state < state_count - 1);
+            restart_button.render(cur_state > 0);
+            skip_button.render(cur_state + 10 < state_count);
         } else {
             if (MODE == "INPUT_START") {
                 start_button.render(true);
@@ -380,9 +495,54 @@ public void drawMenu(int cx, int cy, int cw, int ch) {
 
         }
 
-        //TODO tell user why robot is broken
 
     popStyle();
+}
+
+
+// JSON nonsensj
+public void exportToJSON() {
+
+}
+
+public void readOutputStates(String path_prefix) {
+
+    states = new ArrayList<ArrayList<OutputUnit>>();
+    String path = path_prefix + state_count + ".json";
+    File f = new File(path);
+
+    while(f.exists()) {
+        
+        // load json array of robots
+        ArrayList<OutputUnit> units = new ArrayList<OutputUnit>();
+        JSONArray robotArray = loadJSONArray(path);
+
+        // for each robot, make a draw unit and add to state
+        for(int i = 0; i < robotArray.size(); i++) {
+            JSONObject robot = robotArray.getJSONObject(i);
+            
+            OutputUnit u = new OutputUnit(robot.getInt("x"),
+                                          robot.getInt("y"),
+                                          robot.getInt("ext0"),
+                                          robot.getInt("con0"),
+                                          robot.getInt("ext1"),
+                                          robot.getInt("con1"),
+                                          robot.getInt("ext2"),
+                                          robot.getInt("con2"),
+                                          robot.getInt("ext3"),
+                                          robot.getInt("con3"));
+
+            units.add(u);
+        }
+
+        states.add(units);
+        println("Loaded state: " + state_count);
+        state_count++;
+
+        // try getting next enumerated state
+        path = path_prefix + state_count + ".json";
+        f = new File(path);
+    }
 }
 public class Button {
 
@@ -639,9 +799,9 @@ public class InputUnit {
 }
 public class OutputUnit {
     
-    int x,y;
-    int[]  connections;
-    int[]  extensions;
+    private int x,y;
+    private int[]  connections;
+    private int[]  extensions;
 
     public OutputUnit() {
         this(0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
@@ -669,6 +829,14 @@ public class OutputUnit {
         extensions[3]  = e3;
     }
 
+    public int X() {
+        return this.x;
+    }
+
+    public int Y() {
+        return this.y;
+    }
+
     public void drawArm(int dir, int ext, int con) {
 
         // how much of block length the unit width is
@@ -683,8 +851,10 @@ public class OutputUnit {
         int disconnect = (connections[dir] == 1) ? (0) : (margin/2);
 
         // unit boundaries
-        int left   = ((block_size * (num_w/2 + x)) + (block_size - unit_width)/2);
-        int top    = ((block_size * (num_h/2 - y)) + (block_size - unit_width)/2);
+
+        int mod_y = NUM_H - y - 1;
+        int left   = ((block_size * x)) + (block_size - unit_width)/2;
+        int top    = ((block_size * mod_y)) + (block_size - unit_width)/2;
         int right  = (left + unit_width);
         int bottom = (top  + unit_width);
 
@@ -715,8 +885,10 @@ public class OutputUnit {
         int unit_width     = (int)((double)block_size * ratio);
 
         // unit boundaries
-        int left   = ((block_size * (num_w/2 + x)) + (block_size - unit_width)/2);
-        int top    = ((block_size * (num_h/2 - y)) + (block_size - unit_width)/2);
+
+        int mod_y = NUM_H - y - 1;
+        int left   = ((block_size * x)) + (block_size - unit_width)/2;
+        int top    = ((block_size * mod_y)) + (block_size - unit_width)/2;
         int right  = (left + unit_width);
         int bottom = (top  + unit_width);
         
