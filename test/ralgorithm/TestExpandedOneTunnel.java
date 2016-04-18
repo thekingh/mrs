@@ -114,8 +114,6 @@ public class TestExpandedOneTunnel {
     }
 
     public static void testSimpleFourDR() {
-        // TODO: weird that not all connected when initializing!!
-        // BUG here
         int[][] s = {{1,1},
                      {1,1}};
         int[][] f = {{1,0,0},
@@ -129,8 +127,6 @@ public class TestExpandedOneTunnel {
     }
 
     public static void testHardEightDR() {
-        // TODO: weird that not all connected when initializing!!
-        // BUG here
         int[][] s = {{1,0,0,0,0},
                      {1,1,0,0,0},
                      {1,1,1,1,1}};
@@ -148,8 +144,6 @@ public class TestExpandedOneTunnel {
     }
 
     public static void testTwoConsecutive() {
-        // TODO: weird that not all connected when initializing!!
-        // BUG here
         int[][] s = {{1,0,0,0},
                      {1,1,1,0},
                      {1,1,1,1}};
@@ -179,6 +173,59 @@ public class TestExpandedOneTunnel {
         oneTunnelTest(r, f2, p1);
     }
 
+    public static void testHardTwoDown() {
+        int[][] s = {{1,1,0,0,0},
+                     {1,1,0,0,0},
+                     {1,1,1,1,1}};
+        int[][] f = {{1,0,0,0,0,0},
+                     {1,1,0,0,0,0},
+                     {1,1,1,1,1,1}};
+        Robot r = TestHelper.makeBot(s, true);
+
+        Module[][] ms0 = r.toModuleArray();
+        ExpandedOneTunnel p0 = ExpandedOneTunnel.initFromCoordsWithDir(r, 2,
+            new Coordinate(1,2), new Coordinate(2,0));
+
+        oneTunnelTest(r, f, p0);
+    }
+
+    public static void testHardTwoDownTwoOver() {
+        int[][] s = {{1,1,0,0,0},
+                     {1,1,0,0,0},
+                     {1,1,1,1,0},
+                     {1,1,1,1,1}};
+        int[][] f = {{1,0,0,0,0},
+                     {1,1,0,0,0},
+                     {1,1,1,1,1},
+                     {1,1,1,1,1}};
+        Robot r = TestHelper.makeBot(s, true);
+
+        Module[][] ms0 = r.toModuleArray();
+        ExpandedOneTunnel p0 = ExpandedOneTunnel.initFromCoordsWithDir(r, 2,
+            new Coordinate(1,2), new Coordinate(4,1));
+
+        oneTunnelTest(r, f, p0);
+    }
+
+    public static void testHardBroken() {
+        // should break
+        int[][] s = {{1,1,0,0,0},
+                     {1,1,0,0,0},
+                     {1,1,1,1,0},
+                     {1,1,1,1,1}};
+        int[][] f = {{1,0,0,0,0},
+                     {1,1,0,0,0},
+                     {1,1,1,1,1},
+                     {1,1,1,1,1}};
+        Robot r = TestHelper.makeBot(s, true);
+
+        Module[][] ms0 = r.toModuleArray();
+        ExpandedOneTunnel p0 = ExpandedOneTunnel.initFromCoordsWithDir(r, 2,
+            new Coordinate(1,2), new Coordinate(2,0));
+
+        oneTunnelTest(r, f, p0);
+    }
+
 
     public static void main(String[] args) {
         // testSimpleTwoDR();
@@ -190,7 +237,9 @@ public class TestExpandedOneTunnel {
         // testSimpleThreeBottomDR();
         // testSimpleFourDR();
         // testHardEightDR();
-        testTwoConsecutive();
+        // testTwoConsecutive();
+        // testHardTwoDown();
+        testHardTwoDownTwoOver();
     }
 
 }
