@@ -94,6 +94,25 @@ public class State {
      * Writes state to a specified state file.
      * @param stateNum  statefile to write to
      */
+    public void writeToFile(String pathPrefix, int stateNum) {
+        
+        try {
+            //TODO remove state
+            // FileWriter file = new FileWriter(STATE_PATH_PREFIX + "state" + stateNum + STATE_PATH_EXT);
+            FileWriter file = new FileWriter(pathPrefix + "state" + stateNum + STATE_PATH_EXT);
+            file.write(jsonArr.toJSONString());
+            file.flush();
+            file.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    /**
+     * Writes state to a file in default folder ../viz/states.
+     * @param stateNum  statefile to write to
+     */
     public void writeToFile(int stateNum) {
         
         try {
@@ -106,6 +125,13 @@ public class State {
             e.printStackTrace();
         }
 
+    }
+
+    public static void clearStates(String dirName) {
+        File dir = new File(dirName);
+        for (File file : dir.listFiles()) {
+            file.delete();
+        }
     }
 
     //TODO this path prefix thing... its bad umkay?
