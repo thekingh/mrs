@@ -14,6 +14,17 @@ import java.io.IOException;
 
 public class visualizer extends PApplet {
 
+/************************************************************************************************
+ *  Authors:    Alex Tong, Casey Gowrie, Kabir Singh
+ *  Date:       11 March 2016
+ *  Rev-Date:   17 April 2016
+ *
+ *  Descrption: Ever heard of Dr Frankenstein? Yeah, this is my best impression of him. 
+ *              Wouldn't be surprised if this (horrible) code gains sentience and tries to
+ *              murder me.
+ *
+ ***********************************************************************************************/
+
 //TODO scaling on input/oupt
 
 int NUM_W = 20;
@@ -28,12 +39,20 @@ int DEFAULT_GRID_H = 800;
 String MODE = "INPUT_START";
 //     MODE = "INPUT_END";
 //     MODE = "OUPTUT";
+String OUTPUT_TYPE = "SLIDING";
+//     OUTPUT_TYPE = "COMBING";
+//     OUTPUT_TYPE = "TUNNEL";
+//     OUTPUT_TYPE = "ELEVATOR";
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////    DEMO PATHS    ///////////////////////////////////////////
+///////////////////////////////////////    DATA PATHS    ///////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /* TODO change these to /data/ */
+
+String input_start_path = "input_states/start.json";
+String input_end_path   = "input_states/end.json";
+
 String combing_prefix  = "output_states/combing/state";
 String sliding_prefix  = "output_states/sliding/state";
 String tunnel_prefix   = "output_states/tunnel/state";
@@ -64,6 +83,13 @@ ArrayList<InputModule> end_modules;
 /////////////////////////////////////// OUTPUT VARIABLES ///////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
+//demos
+Button combing_button;
+Button sliding_button;
+Button tunnel_button;
+Button elevator_button;
+
+//playback 
 Button play_button;
 Button pause_button;
 Button stepf_button;
@@ -105,7 +131,12 @@ public void init_buttons(int cx, int cy, int cw, int ch) {
     save_button  = new Button(cx + cw * 0.725f, cy + ch * 0.7f, cw * 0.15f, ch * 0.25f, "SAVE");
 
     //OUTPUT BUTTONS
-    restart_button = new Button (cx + cw * 0.025f, cy + ch * 0.5f, cw * 0.15f, ch * 0.2f, "RESTART");
+    combing_button = new Button(cx + cw * 0.050f, cy + ch * 0.05f, cw * 0.1f, ch * 0.1f, "COMBING");
+    sliding_button = new Button(cx + cw * 0.175f, cy + ch * 0.05f, cw * 0.1f, ch * 0.1f, "SLIDING");
+    tunnel_button  = new Button(cx + cw * 0.300f, cy + ch * 0.05f, cw * 0.1f, ch * 0.1f, "TUNNEL");
+    elevator_button= new Button(cx + cw * 0.425f, cy + ch * 0.05f, cw * 0.1f, ch * 0.1f, "ELEVATOR");
+
+    restart_button = new Button(cx + cw * 0.025f, cy + ch * 0.5f, cw * 0.15f, ch * 0.2f, "RESTART");
     stepb_button   = new Button(cx + cw * 0.225f, cy + ch * 0.5f , cw * 0.15f, ch * 0.2f, "<<");
     play_button    = new Button(cx + cw * 0.425f, cy + ch * 0.35f, cw * 0.15f, ch * 0.2f, "->");
     pause_button   = new Button(cx + cw * 0.425f, cy + ch * 0.65f, cw * 0.15f, ch * 0.2f, "||");
@@ -227,6 +258,11 @@ public void mouseClicked() {
         valid_save = false;
         start_connected = false;
         end_connected = false;
+    }
+
+    if (valid_save && save_button.inBounds(mouseX, mouseY)) {
+        exportToJSON(start_modules, input_start_path); 
+        exportToJSON(end_modules, input_end_path);
     }
 
     // OUTPUT //
@@ -467,12 +503,19 @@ public void drawMenu(int cx, int cy, int cw, int ch) {
 
         // draw appropriate buttons
         if (MODE == "OUTPUT") {
+
+            combing_button.render(OUTPUT_TYPE == "COMBING");
+            sliding_button.render(OUTPUT_TYPE == "SLIDING");
+            tunnel_button.render(OUTPUT_TYPE == "TUNNEL");
+            elevator_button.render(OUTPUT_TYPE == "ELEVATOR");
+
             stepb_button.render(cur_state > 0);
             play_button.render(!is_playing);
             pause_button.render(is_playing);
             stepf_button.render( cur_state < state_count - 1);
             restart_button.render(cur_state > 0);
             skip_button.render(cur_state + 10 < state_count);
+
         } else {
             if (MODE == "INPUT_START") {
                 start_button.render(true);
@@ -500,8 +543,38 @@ public void drawMenu(int cx, int cy, int cw, int ch) {
 }
 
 
-// JSON nonsensj
-public void exportToJSON() {
+////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////    JSON FUNCS    ///////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+public void exportToJSON(ArrayList<InputModule> modules, String path) {
+
+    JSONArray jrs = new JSONArray();
+
+    for(int i = 0; i < modules.size(); i++) {
+        JSONObject jr = new JSONObject();
+
+        //make json object
+        jr.setInt("x", modules.get(i).X());
+        jr.setInt("y", modules.get(i).Y());
+
+        jr.setInt("con0", 1);
+        jr.setInt("ext0", 0);
+
+        jr.setInt("con1", 1);
+        jr.setInt("ext1", 0);
+
+        jr.setInt("con2", 1);
+        jr.setInt("ext2", 0);
+
+        jr.setInt("con3", 1);
+        jr.setInt("ext3", 0);
+
+        jrs.setJSONObject(i, jr);
+
+    }
+
+    saveJSONArray(jrs, path);
 
 }
 
