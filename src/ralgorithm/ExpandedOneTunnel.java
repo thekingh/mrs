@@ -64,6 +64,11 @@ public class ExpandedOneTunnel implements Movement {
     private final Unit[] B;
     private final Unit[][] O;
 
+    private final Movement makeTunnelA_L;
+    private final Movement makeTunnelA_R;
+    private final Movement makeTunnelB_L;
+    private final Movement makeTunnelB_R;
+
 
     /**
      * Instantiate an ExpandedOneTunnel movement in a simple form of which Module being tunneled
@@ -82,6 +87,12 @@ public class ExpandedOneTunnel implements Movement {
         this.dir = dir;
         this.pushDir = pushDir;
         this.currStep = 0;
+
+        makeTunnelA_L = new MakeTunnel(r, mA, Direction.opposite(dir), Direction.left(dir));
+        makeTunnelA_R = new MakeTunnel(r, mA, Direction.opposite(dir), Direction.right(dir));
+        makeTunnelB_L = new MakeTunnel(r, mB, pushDir, Direction.left(pushDir));
+        makeTunnelB_R = new MakeTunnel(r, mB, pushDir, Direction.right(pushDir));
+
 
         A = mA.getUnitsFrom(dir, pushDir);
         B = mB.getUnitsFrom(dir, pushDir);
@@ -218,6 +229,13 @@ public class ExpandedOneTunnel implements Movement {
     public void step() {
         switch (currStep) {
             case 0:
+                // tunnel out moves
+                makeTunnelA_L.step();
+                makeTunnelA_R.step();
+
+                makeTunnelB_L.step();
+                makeTunnelB_R.step();
+
                 r.disconnect(A[0], pushDir);
                 r.disconnect(A[1], Direction.opposite(pushDir));
                 r.disconnect(A[2], Direction.opposite(pushDir));
@@ -458,6 +476,8 @@ public class ExpandedOneTunnel implements Movement {
         r.connectModules(mA, mB, pushDir, true);
         r.connectModules(mA, outerMs[2], dir, true);
         r.connectModules(mB, outerMs[3], dir, true);
+
+        (new ConnectAll(r, true)).step();
     }
 
     /**
