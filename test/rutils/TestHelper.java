@@ -155,7 +155,7 @@ public final class TestHelper {
      * Clears states then writes new states to viz readable file
      */
     public static void outputStates(List<State> states) {
-        clearStates();
+        //clearStates();
         for (int i = 0; i < states.size(); i++) {
             System.out.println(i);
             states.get(i).writeToFile(i);
