@@ -5,6 +5,16 @@ import ralgorithm.*;
 import java.util.List;
 import java.util.ArrayList;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+import org.json.simple.*;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.FileNotFoundException;
+import java.io.File;
+
 public final class BotBuilder {
     public static List<State> runMove(Movement m) {
         List<State> states = new ArrayList<State>();
@@ -17,6 +27,11 @@ public final class BotBuilder {
         states.add(new State(m.getRobot()));
 
         return states;
+    }
+
+    public static Robot makeBot(String path) {
+        int [][] in = JSONToInt(path);
+        return new Robot(orientArray(in), false);
     }
 
     public static Robot makeBot(int[][] in, boolean expanded) {
@@ -132,5 +147,69 @@ public final class BotBuilder {
             System.out.println();
         }
     }
+    
+    public static int[][] JSONToInt(String path) {
+        
+        ArrayList<Coordinate> coordinates = new ArrayList<Coordinate>();
+        JSONParser parser = new JSONParser();
+
+        try {
+            Object obj = parser.parse(new FileReader(path));
+            JSONArray ja = (JSONArray)obj;
+
+            for(int i = 0; i < ja.size(); i++) {
+                JSONObject jobj = (JSONObject)ja.get(i);
+
+                long x = (long)jobj.get("x");
+                long y = (long)jobj.get("y");
+
+                Coordinate c = new Coordinate((int)x/2, (int)y/2);
+                coordinates.add(c);
+            }
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        int width = 0;
+        int height = 0;
+        for (int i = 0; i < coordinates.size(); i++) {
+            Coordinate c = coordinates.get(i);
+
+            if(c.x() > width) {
+                width = c.x();
+            }
+
+            if(c.y() > height) {
+                height = c.y();
+            }
+
+        }
+
+        System.out.println("dims w: " + width + ", h: " + height);
+
+        int[][] tmp = new int[width + 1][height + 1];
+        for(int i = 0; i < width; i++) {
+            for(int j = 0; j < height; j++) {
+                tmp[i][j] = 0;   
+            }
+        }
+
+        for(int i = 0; i < coordinates.size(); i++ ) {
+            Coordinate c = coordinates.get(i);
+            int x = c.x();
+            int y = c.y();
+            tmp[x][y] = 1;
+        }
+
+        
+        return tmp;
+    }
+
+
 
 }
