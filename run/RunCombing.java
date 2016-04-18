@@ -24,6 +24,13 @@ public class RunCombing {
         return states;
     }
 
+    public static List<state> JSONComb() {
+        int[][] start  = BotBuilder.makeBot("../data/combing/input/start.json");
+        int[][] finish = BotBuilder.makeBot("../data/combing/input/end.json");
+
+        return combTest(start, finish);
+    }
+
     public static List<State> easyCombToLine() {
         int[][] start  = {{1,1,1,1},
                           {1,0,0,0},
@@ -34,6 +41,7 @@ public class RunCombing {
     }
 
     public static void main(String[] args) {
-        BotBuilder.outputStates("../data/combing/", easyCombToLine());
+/*        BotBuilder.outputStates("../data/combing/", easyCombToLine());*/
+        BotBuilder.outputStates("../data/combing/output/", JSONComb());
     }
 }

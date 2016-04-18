@@ -32,15 +32,23 @@ String OUTPUT_TYPE = "SLIDING";
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////    DATA PATHS    ///////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-/* TODO change these to /data/ */
 
-String input_start_path = "input_states/start.json";
-String input_end_path   = "input_states/end.json";
+/*String input_start_path = "input_states/start.json";*/
+/*String input_end_path   = "input_states/end.json";*/
+/**/
+/*String combing_prefix  = "output_states/combing/state";*/
+/*String sliding_prefix  = "output_states/sliding/state";*/
+/*String tunnel_prefix   = "output_states/tunnel/state";*/
+/*String elevator_prefix = "output_states/elevator/state";*/
 
-String combing_prefix  = "output_states/combing/state";
-String sliding_prefix  = "output_states/sliding/state";
-String tunnel_prefix   = "output_states/tunnel/state";
-String elevator_prefix = "output_states/elevator/state";
+String input_start_path = "../../data/combing/input/start.json";
+String input_end_path   = "../../data/combing/input/end.json";
+
+String combing_prefix  = "../../data/combing/state";
+String sliding_prefix  = "../../data/sliding/state";
+String tunnel_prefix   = "../../data/tunnel/state";
+String elevator_prefix = "../../data/elevator/state";
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////  INPUT VARIABLES ///////////////////////////////////////////
