@@ -22,7 +22,7 @@ import java.io.File;
  */
 public class State {
 
-    private static final String STATE_PATH_PREFIX = "../viz/json_states/";
+    private static final String STATE_PATH_PREFIX = "../data/expanded/";
     private static final String STATE_PATH_EXT    = ".json";
 
     private JSONArray jsonArr;

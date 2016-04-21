@@ -14,7 +14,8 @@ public class TestExpandedOneTunnel {
         r.drawModule();
         System.out.println("=====================================");
 
-        TestHelper.runAndDisplayMove(p);
+//        TestHelper.runAndDisplayMove(p);
+        List<State> states = BotBuilder.runMove(p);
 
         System.out.println("Draw Result");
         r.drawModule();
@@ -23,9 +24,8 @@ public class TestExpandedOneTunnel {
         f.drawModule();
         f.drawUnit();
         TestHelper.validateOutput(r, f);
-        return null;
+        return states;
     }
-
 
     public static void testSimpleTwoDR() {
         int[][] s = {{1},
@@ -36,7 +36,8 @@ public class TestExpandedOneTunnel {
         Module[][] ms0 = r.toModuleArray();
         ExpandedOneTunnel p0 = new ExpandedOneTunnel(r, ms0[0][1], 2, 1);
 
-        oneTunnelTest(r, f, p0);
+        TestHelper.outputStates(oneTunnelTest(r, f, p0));
+
     }
 
     public static void testSimpleTwoDL() {
@@ -228,7 +229,7 @@ public class TestExpandedOneTunnel {
 
 
     public static void main(String[] args) {
-        // testSimpleTwoDR();
+         testSimpleTwoDR();
         // testSimpleTwoDL();
         // testSimpleThreeDR();
         // testSimpleThreeDRCoords();
@@ -239,7 +240,7 @@ public class TestExpandedOneTunnel {
         // testHardEightDR();
         // testTwoConsecutive();
         // testHardTwoDown();
-        testHardTwoDownTwoOver();
+        // testHardTwoDownTwoOver();
     }
 
 }

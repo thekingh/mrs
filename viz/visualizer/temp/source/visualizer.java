@@ -26,6 +26,8 @@ public class visualizer extends PApplet {
  ***********************************************************************************************/
 
 //TODO scaling on input/oupt
+//TODO scaling error
+//TODO input ints -> bool -> make robot
 
 int NUM_W = 20;
 int NUM_H = 20;
@@ -48,15 +50,24 @@ String OUTPUT_TYPE = "SLIDING";
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////    DATA PATHS    ///////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-/* TODO change these to /data/ */
 
-String input_start_path = "input_states/start.json";
-String input_end_path   = "input_states/end.json";
+/*String input_start_path = "input_states/start.json";*/
+/*String input_end_path   = "input_states/end.json";*/
+/**/
+/*String combing_prefix  = "output_states/combing/state";*/
+/*String sliding_prefix  = "output_states/sliding/state";*/
+/*String tunnel_prefix   = "output_states/tunnel/state";*/
+/*String elevator_prefix = "output_states/elevator/state";*/
 
-String combing_prefix  = "output_states/combing/state";
-String sliding_prefix  = "output_states/sliding/state";
-String tunnel_prefix   = "output_states/tunnel/state";
-String elevator_prefix = "output_states/elevator/state";
+String input_start_path = "../../data/combing/input/start.json";
+String input_end_path   = "../../data/combing/input/end.json";
+
+String combing_prefix  = "../../data/combing/output/state";
+String sliding_prefix  = "../../data/sliding/state";
+String tunnel_prefix   = "../../data/tunnel/state";
+String elevator_prefix = "../../data/elevator/state";
+String expanded_prefix = "../../data/expanded/state";
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////  INPUT VARIABLES ///////////////////////////////////////////
@@ -109,7 +120,9 @@ public void setup() {
 
     // make but don't draw input buttons
     init_buttons(0, DEFAULT_GRID_H, DEFAULT_WINDOW_W - 1, DEFAULT_WINDOW_H - DEFAULT_GRID_H - 1);
-    readOutputStates(sliding_prefix);
+    readOutputStates(expanded_prefix);
+    
+    scaleCanvas();
 
     start_modules = new ArrayList<InputModule>();
     end_modules   = new ArrayList<InputModule>();
@@ -118,7 +131,7 @@ public void setup() {
 public void init_buttons(int cx, int cy, int cw, int ch) {
     // button = new Button (x, y, w, h, "text");
 
-    mode_button = new Button(cx + cw * .85f, cy + ch * 0.05f, cw * 0.1f, ch * 0.1f, "<->");
+    mode_button = new Button(cx + cw * .85f, cy + ch * 0.05f, cw * 0.1f, ch * 0.1f, "RUN");
 
     // INPUT BUTTONS
     start_button = new Button(cx + cw * 0.125f, cy + ch * 0.7f, cw * 0.15f, ch * 0.25f, "START");
@@ -146,33 +159,44 @@ public void init_buttons(int cx, int cy, int cw, int ch) {
 }
 
 public void scaleCanvas() {
-    ArrayList<OutputUnit> cur_robot = states.get(cur_state);
+
+    int global_max_dim = 0;
+
+    for(ArrayList<OutputUnit> cur_robot: states) {
  
-    int right_most_x = 0;
-    int top_most_y = 0;
-    for(int i = 0; i < cur_robot.size(); i++) {
-        if(cur_robot.get(i).X() > right_most_x) {
-            right_most_x = cur_robot.get(i).X();
+        int right_most_x = 0;
+        int top_most_y = 0;
+        for(int i = 0; i < cur_robot.size(); i++) {
+            if(cur_robot.get(i).X() > right_most_x) {
+                right_most_x = cur_robot.get(i).X();
+            }
+
+            if(cur_robot.get(i).Y() > top_most_y) {
+                top_most_y = cur_robot.get(i).Y();
+            }
         }
 
-        if(cur_robot.get(i).Y() > top_most_y) {
-            top_most_y = cur_robot.get(i).Y();
+        int local_max_dim = (right_most_x > top_most_y) ? right_most_x : top_most_y;
+
+        if (local_max_dim > global_max_dim) {
+            // padding, make sure even
+            if(local_max_dim % 2 == 0) {
+                local_max_dim += 2;
+            } else {
+                local_max_dim += 3;
+            }
+
+            global_max_dim = local_max_dim;
+
         }
     }
 
-    int max_dim = (right_most_x > top_most_y) ? right_most_x : top_most_y;
 
-    // padding, make sure even
-    if(max_dim % 2 == 0) {
-        max_dim += 2;
-    } else {
-        max_dim += 3;
-    }
+    NUM_W = global_max_dim;
+    NUM_H = global_max_dim;
+    num_w = global_max_dim;
+    num_h = global_max_dim;
 
-    NUM_W = max_dim;
-    NUM_H = max_dim;
-    num_w = max_dim;
-    num_h = max_dim;
 
 
 /*    println("rightmost: " + right_most_x);*/
@@ -183,7 +207,7 @@ public void scaleCanvas() {
 public void draw() {
     background (200, 200, 200);
     if(MODE == "OUTPUT") {
-        scaleCanvas();
+        //scaleCanvas();
     }
     drawGrid(0, 0, DEFAULT_GRID_W, DEFAULT_GRID_H);
 /*    drawMenu(0, 800, 800, 200);*/
@@ -198,7 +222,7 @@ public void draw() {
         // play loop
         if(is_playing && cur_state < state_count - 1) {
             cur_state++;
-            scaleCanvas();
+/*            scaleCanvas();*/
             delay(400);
 
             if(cur_state == state_count) {
@@ -277,22 +301,22 @@ public void mouseClicked() {
     
     if (!is_playing && cur_state < state_count - 1 && stepf_button.inBounds(mouseX, mouseY)) {
         cur_state++;
-        scaleCanvas();
+/*        scaleCanvas();*/
     }
 
     if (!is_playing && cur_state > 0 && stepb_button.inBounds(mouseX, mouseY)) {
         cur_state--;
-        scaleCanvas();
+/*        scaleCanvas();*/
     }
 
     if (cur_state > 0 && restart_button.inBounds(mouseX, mouseY)) {
         cur_state = 0;
-        scaleCanvas();
+/*        scaleCanvas();*/
     }
 
     if (cur_state + 10 < state_count && skip_button.inBounds(mouseX, mouseY)) {
         cur_state += 10;
-        scaleCanvas();
+/*        scaleCanvas();*/
     }
 
 
