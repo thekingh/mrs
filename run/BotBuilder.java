@@ -160,8 +160,10 @@ public final class BotBuilder {
             for(int i = 0; i < ja.size(); i++) {
                 JSONObject jobj = (JSONObject)ja.get(i);
 
-                long x = (long)jobj.get("x");
-                long y = (long)jobj.get("y");
+                Long lx = (Long)jobj.get("x");
+                Long ly = (Long)jobj.get("y");
+                long x = (long)lx;
+                long y = (long)ly;
 
                 Coordinate c = new Coordinate((int)x/2, (int)y/2);
                 coordinates.add(c);

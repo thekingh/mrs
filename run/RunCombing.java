@@ -17,13 +17,18 @@ public class RunCombing {
         Combing c = new Combing(s, t);
         List<State> states = c.run();
         System.out.println(states.size());
-        BotBuilder.printStatesToCommandLine(states);
+/*        BotBuilder.printStatesToCommandLine(states);*/
         return states;
     }
 
-    public static List<State> JSONComb() {
-        Robot s  = BotBuilder.makeBot("../data/combing/input/start.json");
-        Robot t  = BotBuilder.makeBot("../data/combing/input/end.json");
+    public static void JSONCombHelper(String output_path, String start_path, String end_path) {
+
+        BotBuilder.outputStates(output_path, JSONComb(start_path, end_path));
+    }
+
+    public static List<State> JSONComb(String start_path, String end_path) {
+        Robot s  = BotBuilder.makeBot(start_path);
+        Robot t  = BotBuilder.makeBot(end_path);
 
         return combTest(s, t);
     }
@@ -39,6 +44,8 @@ public class RunCombing {
 
     public static void main(String[] args) {
 /*        BotBuilder.outputStates("../data/combing/", easyCombToLine());*/
-        BotBuilder.outputStates("../data/combing/output/", JSONComb());
+        BotBuilder.outputStates("../data/combing/output/",
+                                JSONComb("../data/combing/input/start.json",
+                                         "../data/combing/input/start.json"));
     }
 }

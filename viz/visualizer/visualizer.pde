@@ -12,9 +12,10 @@
 //TODO scaling error ???
 //TODO input ints -> bool -> make robot
 
-/*import rutils.*;*/
-/*import ralgorithm.*;*/
-/*import rgraph.*;*/
+import rutils.*;
+import ralgorithm.*;
+import rgraph.*;
+import java.io.File;
 
 int NUM_W = 20;
 int NUM_H = 20;
@@ -48,6 +49,7 @@ String OUTPUT_TYPE = "SLIDING";
 
 String input_start_path = "../../data/combing/input/start.json";
 String input_end_path   = "../../data/combing/input/end.json";
+String output_path         = "../../data/combing/output/";
 
 String combing_prefix  = "../../data/combing/output/state";
 String sliding_prefix  = "../../data/sliding/state";
@@ -107,7 +109,7 @@ void setup() {
 
     // make but don't draw input buttons
     init_buttons(0, DEFAULT_GRID_H, DEFAULT_WINDOW_W - 1, DEFAULT_WINDOW_H - DEFAULT_GRID_H - 1);
-    readOutputStates(elevator_prefix);
+/*    readOutputStates(combing_prefix);*/
     
     scaleCanvasToInput();
 
@@ -276,8 +278,8 @@ void mouseClicked() {
     }
 
     if (valid_save && save_button.inBounds(mouseX, mouseY)) {
-        exportToJSON(start_modules, input_start_path); 
-        exportToJSON(end_modules, input_end_path);
+        exportToJSON(start_modules, input_start_path, true);
+        exportToJSON(end_modules, input_end_path, false);
     }
 
     // OUTPUT //
@@ -314,11 +316,11 @@ void mouseClicked() {
             scaleCanvasToInput();
         } else if(MODE == "INPUT_START" || MODE == "INPUT_END") {
             MODE = "OUTPUT";
+            RunCombing.JSONCombHelper(output_path, input_start_path, input_end_path);
+            delay(5000);
+            readOutputStates(combing_prefix);
             scaleCanvasToOutput();
-
-/*            RunCombing.JSONComb();*/
-/*            delay(5000);*/
-/*            println("done waiting...");*/
+            println("done waiting...");
         }
     }
 }
@@ -586,32 +588,81 @@ ArrayList<InputModule> sanitize (ArrayList<InputModule> modules) {
     
     }
 
+    // move by offset
     for(InputModule m: modules) {
-/*        println("old: (" + m.X() + "," + m.Y() + ")");*/
         m.setX(m.X() - left); 
         m.setY(m.Y() - bottom); 
-/*        println("new: (" + m.X() + "," + m.Y() + ")");*/
-/*        println("--------");*/
+    }
+
+    return modules;
+}
+
+ArrayList<InputModule> invert (ArrayList<InputModule> modules) {
+         
+    int x, y;
+    for(InputModule m: modules) {
+        x = m.X();
+        y = m.Y();
+        m.setX(y);
+        m.setY(x);
     }
 
     return modules;
 
+}
 
+ArrayList<InputModule> mirror(ArrayList<InputModule> modules) {
+
+    // find bounding box
+    int w = 0;
+    int h = 0;
+    for(InputModule m: modules) {
+
+        if(m.X() > w) {
+            w = m.X();
+        }
+
+        if(m.Y() > h) {
+            h = m.Y();
+        }
+    
+    }
+         
+    int x, y;
+    for(InputModule m: modules) {
+        x = m.X();
+        y = m.Y();
+        m.setX(w - x - 1);
+    }
+
+    return modules;
+
+}
+
+
+void clearDirectory(String path) {
+    File dir = new File(path);
+    for(File f : dir.listFiles()) {
+        f.delete();
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////    JSON FUNCS    ///////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void exportToJSON(ArrayList<InputModule> modules, String path) {
+void exportToJSON(ArrayList<InputModule> modules, String path, boolean clean) {
 
     // Preprocess modules 
-    ArrayList<InputModule> sanitized = sanitize(modules);
+    ArrayList<InputModule> sanitized = modules;
+/*    if (clean) {*/
+        sanitized = (invert(sanitize(modules)));
+/*    }*/
 
-    JSONArray jrs = new JSONArray();
+    processing.data.JSONArray jrs = new processing.data.JSONArray();
 
     for(int i = 0; i < sanitized.size(); i++) {
-        JSONObject jr = new JSONObject();
+        processing.data.JSONObject jr = new processing.data.JSONObject();
 
         //make json object
         jr.setInt("x", sanitized.get(i).X());
@@ -633,6 +684,8 @@ void exportToJSON(ArrayList<InputModule> modules, String path) {
 
     }
 
+
+/*    clearDirectory("../../data/combing/output/");*/
     saveJSONArray(jrs, path);
 
 }
@@ -642,16 +695,17 @@ void readOutputStates(String path_prefix) {
     states = new ArrayList<ArrayList<OutputUnit>>();
     String path = path_prefix + state_count + ".json";
     File f = new File(path);
+    println("reading output states from: " + path);
 
     while(f.exists()) {
         
         // load json array of robots
         ArrayList<OutputUnit> units = new ArrayList<OutputUnit>();
-        JSONArray robotArray = loadJSONArray(path);
+        processing.data.JSONArray robotArray = loadJSONArray(path);
 
         // for each robot, make a draw unit and add to state
         for(int i = 0; i < robotArray.size(); i++) {
-            JSONObject robot = robotArray.getJSONObject(i);
+            processing.data.JSONObject robot = robotArray.getJSONObject(i);
             
             OutputUnit u = new OutputUnit(robot.getInt("x"),
                                           robot.getInt("y"),
