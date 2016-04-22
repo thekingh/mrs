@@ -69,12 +69,26 @@ public class TestCombToLine {
         return combToLineTest(start, finish, dir);
     }
 
+    public static List<State> combingBug22Apr() {
+        int[][] start  = {{1,0,0,0},
+                          {1,0,0,0},
+                          {1,1,1,0},
+                          {1,1,1,1}};
+
+        int[][] finish = {{1,1,1,1,1,1,1,1,1}};
+        return combToLineTest(start, finish, 2);
+
+
+    }
+
+
     public static void main(String[] args) {
         // easyCombToLine();
 /*        easyCombToLineFive();*/
         // easyCombToLineEight();
-        middleCombToLineEight();
+        // middleCombToLineEight();
         // hardCombToLineEight();
+        combingBug22Apr();
     }
 }
 

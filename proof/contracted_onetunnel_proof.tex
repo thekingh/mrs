@@ -40,7 +40,7 @@
 }
 \newcolumntype{[}{@{\vrule width 1.5pt\hspace{6pt}}} \newcolumntype{]}{@{\hspace{6pt}\vrule width 1.5pt}}
 
-\begin{theorem} A Robot $R$ consisting of two 2x2 contracted Modules $M_a$, $M_b$ cannot perform a 1-Tunnel move within the union of the movement. Assuming that units cannot switch which module they belong to.
+\begin{theorem} A Robot $R$ consisting of two 2x2 contracted Modules $M_a$, $M_b$ cannot perform a 1-Tunnel move within the union of the macro-motion, i.e. occupy no space outside other than the spaces occupied at the beginning or end of the macro-motion. Assuming that units cannot switch which module they belong to, but can switch their ordering within the module.
 
 To simplify this proof, we label each unit block space as below. $w.l.o.g$ we assume module $M_a$ is above module $M_b$ at the start, and the move terminates with module $M_a$ to the left of module $M_b$.
 
@@ -85,25 +85,21 @@ To simplify this proof, we label each unit block space as below. $w.l.o.g$ we as
 \begin{definition} An $OUTSIDE$ unit space is a unit space belonging to the set $\{1,3,5,7,8,11,12\}$.
 \end{definition}
 
-\begin{lemma} A movement of this type requires moving a unit in an $INSIDE$ unit space to an $OUTSIDE$ unit space or vis-versa.
+\begin{lemma} A macro-motion of this type requires moving a unit in an $INSIDE$ unit space to an $OUTSIDE$ unit space or vis-versa.
   \begin{proof} 
-    Before the movement, $M_a$ has two units $a_1, a_2 \in OUTSIDE$, 
-    and two units, $a_3, a_4 \in INSIDE$. After the movement, since 
+    Before the macro-motion, $M_a$ has two units $a_1, a_2 \in OUTSIDE$, 
+    and two units, $a_3, a_4 \in INSIDE$. After the macro-motion, since 
     module $M_a$ occupys the space that $M_b$ occupied at the 
-    beginning of the movement, it has 1 unit inside and 3 units 
+    beginning of the macro-motion, it has 1 unit inside and 3 units 
     outside. Therefore, one unit from module $M_a$ must have moved 
-    from $INSIDE$ to $OUTSIDE$ during the movement. 
+    from $INSIDE$ to $OUTSIDE$ during the macro-motion. 
   \end{proof}
 \end{lemma}
-It follows that to stay in the union of the movement, all units must be either $INSIDE$ or $OUTSIDE$. i.e. $UNITS = INSIDE \cup OUTSIDE$, and $INSIDE \cap OUTSIDE = \emptyset$
-
-TRY 2**************
+It follows that to stay in the union of the macro-motion, all units must be either $INSIDE$ or $OUTSIDE$. i.e. $UNITS = INSIDE \cup OUTSIDE$, and $INSIDE \cap OUTSIDE = \emptyset$
 
 \begin{definition} Let a $Transfer(s_{in}, s_{out})$ signify the movement of a unit from an $INSIDE$ space to an $OUTSIDE$ space or vis-versa. Note that this is only a \textbf{valid} transfer if exactly one of the two spaces is empty. It follows that all transfers are invertible. 
 \end{definition}
-\begin{definition}
-INVERT MOVMENT????
-\end{definition}
+
 \begin{lemma} If it is possible to transfer an $INSIDE$ unit, then it is possible to transfer an $OUTSIDE$ unit using inverse movements.
 \end{lemma}
 \begin{proof}
@@ -137,7 +133,7 @@ Case 3 is a vertical version of case 1. Case 4 a vertical version of case 2. The
 \begin{lemma}
 In cases 1,2 $IN \rightarrow OUT$, spaces 1,3,5 must be empty.
 \end{lemma}
-\begin{proof} ****IMPROVE
+\begin{proof}
 \begin{itemize}
 \item Case 1: *** Picture Transfer(5,6) $IN \rightarrow OUT$ connected to space 9. For this transfer to be valid spaces 1, 3, 5, must be empty. Space 5 must be empty because when $arm(6,9)$ extends a unit in 5 would go outside the union. Space 3 must be empty because if space 3 is filled then it must be connected to the rest of the robot with $arm(3,4)$. Space 4 must be connected with $arm(4,6)$. These arms would make it so that when $arm(6,9)$ extends the unit in space 3 will go outside the union. Space 1 must be empty for a similar reason as space 3.
 \item Case 2: *** Picture Transfer(5,6) $IN \rightarrow OUT$ connected to space 11. For this transfer spaces 1,3,5,7 must be empty. Spaces 1,3,5 must be empty for the reasons listed in case 1 as unit 6 is still transfering to space 5. Unit 7 must be empty as unit 8 will occupy that space in the end state. 
@@ -147,4 +143,15 @@ By the pidgen hole principle, it is impossible for both spaces 1,3,5 to be empty
 \end{claim}
 Since a transfer is required for a contracted 1-tunnel macro-motion, and no transfers are possible within the union from the start state, then the contracted 1-tunnel move is not possible given the constraints as above. 
 \end{theorem}
+
+\section{Appendix}
+Theorem 0.1 constraints:
+\begin{enumerate}
+\item Modules are 2x2
+\item Robot is contracted
+\item Units must remain in module that they are initially assigned, but not in the same configuration within that module.
+\item Robot must remain connected throughout the macro-motion
+\item All units in Modules $M_a$ and $M_b$ must stay within the union of the macro-motion.
+\end{enumerate}
+
 \end{document}
