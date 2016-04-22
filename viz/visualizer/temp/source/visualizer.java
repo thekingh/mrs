@@ -25,9 +25,12 @@ public class visualizer extends PApplet {
  *
  ***********************************************************************************************/
 
-//TODO scaling on input/oupt
-//TODO scaling error
+//TODO scaling error ???
 //TODO input ints -> bool -> make robot
+
+/*import rutils.*;*/
+/*import ralgorithm.*;*/
+/*import rgraph.*;*/
 
 int NUM_W = 20;
 int NUM_H = 20;
@@ -115,14 +118,14 @@ boolean is_playing = false;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 public void setup() {
-    
+    size(800, 1000);
 /*    size(DEFAULT_WINDOW_W, DEFAULT_WINDOW_H);*/
 
     // make but don't draw input buttons
     init_buttons(0, DEFAULT_GRID_H, DEFAULT_WINDOW_W - 1, DEFAULT_WINDOW_H - DEFAULT_GRID_H - 1);
-    readOutputStates(expanded_prefix);
+    readOutputStates(elevator_prefix);
     
-    scaleCanvas();
+    scaleCanvasToInput();
 
     start_modules = new ArrayList<InputModule>();
     end_modules   = new ArrayList<InputModule>();
@@ -158,7 +161,15 @@ public void init_buttons(int cx, int cy, int cw, int ch) {
     
 }
 
-public void scaleCanvas() {
+public void scaleCanvasToInput() {
+    
+    NUM_W = 20;
+    NUM_H = 20;
+    num_w = 20;
+    num_h = 20;
+}
+
+public void scaleCanvasToOutput() {
 
     int global_max_dim = 0;
 
@@ -206,23 +217,19 @@ public void scaleCanvas() {
 
 public void draw() {
     background (200, 200, 200);
-    if(MODE == "OUTPUT") {
-        //scaleCanvas();
-    }
+
     drawGrid(0, 0, DEFAULT_GRID_W, DEFAULT_GRID_H);
-/*    drawMenu(0, 800, 800, 200);*/
-    drawMenu(0, DEFAULT_GRID_H, DEFAULT_WINDOW_W - 1, 
-             DEFAULT_WINDOW_H - DEFAULT_GRID_H - 1);
+
+    drawMenu(0, DEFAULT_GRID_H,  DEFAULT_WINDOW_W - 1, 
+                DEFAULT_WINDOW_H - DEFAULT_GRID_H - 1);
 
     if(MODE == "OUTPUT") {
         drawOutputRobot(cur_state);
         drawFrameNumber();
-/*        scaleCanvas();*/
 
         // play loop
         if(is_playing && cur_state < state_count - 1) {
             cur_state++;
-/*            scaleCanvas();*/
             delay(400);
 
             if(cur_state == state_count) {
@@ -301,28 +308,34 @@ public void mouseClicked() {
     
     if (!is_playing && cur_state < state_count - 1 && stepf_button.inBounds(mouseX, mouseY)) {
         cur_state++;
-/*        scaleCanvas();*/
     }
 
     if (!is_playing && cur_state > 0 && stepb_button.inBounds(mouseX, mouseY)) {
         cur_state--;
-/*        scaleCanvas();*/
     }
 
     if (cur_state > 0 && restart_button.inBounds(mouseX, mouseY)) {
         cur_state = 0;
-/*        scaleCanvas();*/
     }
 
     if (cur_state + 10 < state_count && skip_button.inBounds(mouseX, mouseY)) {
         cur_state += 10;
-/*        scaleCanvas();*/
     }
 
 
     // UNIVERSAL //
     if (mode_button.inBounds(mouseX, mouseY)) {
-        MODE = (MODE.equals("OUTPUT")) ? "INPUT_START" : "OUTPUT"; 
+        if(MODE == "OUTPUT") {
+            MODE = "INPUT_START";
+            scaleCanvasToInput();
+        } else if(MODE == "INPUT_START" || MODE == "INPUT_END") {
+            MODE = "OUTPUT";
+            scaleCanvasToOutput();
+
+/*            RunCombing.JSONComb();*/
+/*            delay(5000);*/
+/*            println("done waiting...");*/
+        }
     }
 }
 
@@ -566,6 +579,41 @@ public void drawMenu(int cx, int cy, int cw, int ch) {
     popStyle();
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////   HELPER FUNCS   ///////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+public ArrayList<InputModule> sanitize (ArrayList<InputModule> modules) {
+    
+
+    int left = NUM_W;
+    int bottom = NUM_H;
+
+    // find bottom left-most coordinate -> generate offset for x and y
+    for(InputModule m: modules) {
+
+        if(m.X() < left) {
+            left = m.X();
+        }
+
+        if(m.Y() < bottom) {
+            bottom = m.Y();
+        }
+    
+    }
+
+    for(InputModule m: modules) {
+/*        println("old: (" + m.X() + "," + m.Y() + ")");*/
+        m.setX(m.X() - left); 
+        m.setY(m.Y() - bottom); 
+/*        println("new: (" + m.X() + "," + m.Y() + ")");*/
+/*        println("--------");*/
+    }
+
+    return modules;
+
+
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////    JSON FUNCS    ///////////////////////////////////////////
@@ -573,14 +621,17 @@ public void drawMenu(int cx, int cy, int cw, int ch) {
 
 public void exportToJSON(ArrayList<InputModule> modules, String path) {
 
+    // Preprocess modules 
+    ArrayList<InputModule> sanitized = sanitize(modules);
+
     JSONArray jrs = new JSONArray();
 
-    for(int i = 0; i < modules.size(); i++) {
+    for(int i = 0; i < sanitized.size(); i++) {
         JSONObject jr = new JSONObject();
 
         //make json object
-        jr.setInt("x", modules.get(i).X());
-        jr.setInt("y", modules.get(i).Y());
+        jr.setInt("x", sanitized.get(i).X());
+        jr.setInt("y", sanitized.get(i).Y());
 
         jr.setInt("con0", 1);
         jr.setInt("ext0", 0);
@@ -755,6 +806,14 @@ public class InputModule {
      */
     public int Y() {
         return y;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
     }
  }
 /** 
@@ -1007,7 +1066,6 @@ public class OutputUnit {
 
     }
 }
-  public void settings() {  size(800, 1000); }
   static public void main(String[] passedArgs) {
     String[] appletArgs = new String[] { "visualizer" };
     if (passedArgs != null) {
