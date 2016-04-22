@@ -31,8 +31,8 @@ int DEFAULT_GRID_H = 800;
 String MODE = "INPUT_START";
 //     MODE = "INPUT_END";
 //     MODE = "OUPTUT";
-String OUTPUT_TYPE = "SLIDING";
-//     OUTPUT_TYPE = "COMBING";
+String OUTPUT_TYPE = "COMBING";
+//     OUTPUT_TYPE = "STAIRCASE";
 //     OUTPUT_TYPE = "TUNNEL";
 //     OUTPUT_TYPE = "ELEVATOR";
 
@@ -47,8 +47,8 @@ String input_end_path   = "../../data/combing/input/end.json";
 String output_path         = "../../data/combing/output/";
 
 String combing_prefix  = "../../data/combing/output/state";
-String sliding_prefix  = "../../data/sliding/state";
-String tunnel_prefix   = "../../data/tunnel/state";
+String staircase_prefix  = "../../data/staircase/state";
+/*String tunnel_prefix   = "../../data/tunnel/state";*/
 String elevator_prefix = "../../data/elevator/state";
 String expanded_prefix = "../../data/expanded/state";
 
@@ -80,8 +80,8 @@ ArrayList<InputModule> end_modules;
 
 //demos
 Button combing_button;
-Button sliding_button;
-Button tunnel_button;
+Button staircase_button;
+/*Button tunnel_button;*/
 Button elevator_button;
 
 //playback 
@@ -104,7 +104,6 @@ void setup() {
 
     // make but don't draw input buttons
     init_buttons(0, DEFAULT_GRID_H, DEFAULT_WINDOW_W - 1, DEFAULT_WINDOW_H - DEFAULT_GRID_H - 1);
-/*    readOutputStates(combing_prefix);*/
     
     scaleCanvasToInput();
 
@@ -129,9 +128,9 @@ void init_buttons(int cx, int cy, int cw, int ch) {
 
     //OUTPUT BUTTONS
     combing_button = new Button(cx + cw * 0.050, cy + ch * 0.05, cw * 0.1, ch * 0.1, "COMBING");
-    sliding_button = new Button(cx + cw * 0.175, cy + ch * 0.05, cw * 0.1, ch * 0.1, "SLIDING");
-    tunnel_button  = new Button(cx + cw * 0.300, cy + ch * 0.05, cw * 0.1, ch * 0.1, "TUNNEL");
-    elevator_button= new Button(cx + cw * 0.425, cy + ch * 0.05, cw * 0.1, ch * 0.1, "ELEVATOR");
+    staircase_button = new Button(cx + cw * 0.175, cy + ch * 0.05, cw * 0.1, ch * 0.1, "STAIRCASE");
+    elevator_button  = new Button(cx + cw * 0.300, cy + ch * 0.05, cw * 0.1, ch * 0.1, "ELEVATOR");
+/*    tunnel_button= new Button(cx + cw * 0.425, cy + ch * 0.05, cw * 0.1, ch * 0.1, "TUNNEL");*/
 
     restart_button = new Button(cx + cw * 0.025, cy + ch * 0.5, cw * 0.15, ch * 0.2, "RESTART");
     stepb_button   = new Button(cx + cw * 0.225, cy + ch * 0.5 , cw * 0.15, ch * 0.2, "<<");
@@ -211,7 +210,7 @@ void draw() {
         // play loop
         if(is_playing && cur_state < state_count - 1) {
             cur_state++;
-            delay(400);
+            delay(100);
 
             if(cur_state == state_count) {
                 is_playing = false;
@@ -275,6 +274,7 @@ void mouseClicked() {
     if (valid_save && save_button.inBounds(mouseX, mouseY)) {
         exportToJSON(start_modules, input_start_path, true);
         exportToJSON(end_modules, input_end_path, false);
+        println("States have been saved!");
     }
 
     // OUTPUT //
@@ -301,6 +301,26 @@ void mouseClicked() {
 
     if (cur_state + 10 < state_count && skip_button.inBounds(mouseX, mouseY)) {
         cur_state += 10;
+    }
+
+    if (!is_playing && OUTPUT_TYPE != "STAIRCASE" && staircase_button.inBounds(mouseX, mouseY)) {
+        OUTPUT_TYPE = "STAIRCASE";
+        cur_state = 0;
+        state_count = 0;
+        states.clear();
+        readOutputStates(staircase_prefix);
+        scaleCanvasToOutput();
+        println("Loaded staircase demo");
+    }
+
+    if (!is_playing && OUTPUT_TYPE != "ELEVATOR" && elevator_button.inBounds(mouseX, mouseY)) {
+        OUTPUT_TYPE = "ELEVATOR";
+        cur_state = 0;
+        state_count = 0;
+        states.clear();
+        readOutputStates(elevator_prefix);
+        scaleCanvasToOutput();
+        println("Loaded elevator demo");
     }
 
 
@@ -525,8 +545,8 @@ void drawMenu(int cx, int cy, int cw, int ch) {
         if (MODE == "OUTPUT") {
 
             combing_button.render(OUTPUT_TYPE == "COMBING");
-            sliding_button.render(OUTPUT_TYPE == "SLIDING");
-            tunnel_button.render(OUTPUT_TYPE == "TUNNEL");
+            staircase_button.render(OUTPUT_TYPE == "STAIRCASE");
+/*            tunnel_button.render(OUTPUT_TYPE == "TUNNEL");*/
             elevator_button.render(OUTPUT_TYPE == "ELEVATOR");
 
             stepb_button.render(cur_state > 0);
