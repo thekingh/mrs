@@ -8,11 +8,11 @@ import ralgorithm.*;
 import rgraph.*; 
 import java.io.File; 
 
-import org.json.simple.*; 
-import rgraph.*; 
 import ralgorithm.*; 
-import org.json.simple.parser.*; 
 import rutils.*; 
+import rgraph.*; 
+import org.json.simple.*; 
+import org.json.simple.parser.*; 
 
 import java.util.HashMap; 
 import java.util.ArrayList; 
@@ -37,7 +37,9 @@ public class visualizer extends PApplet {
  ***********************************************************************************************/
 
 //TODO scaling error ???
-//TODO input ints -> bool -> make robot
+// compute step duration
+// connectedness
+// clear state
 
 
 
@@ -66,13 +68,6 @@ String OUTPUT_TYPE = "SLIDING";
 ///////////////////////////////////////    DATA PATHS    ///////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-/*String input_start_path = "input_states/start.json";*/
-/*String input_end_path   = "input_states/end.json";*/
-/**/
-/*String combing_prefix  = "output_states/combing/state";*/
-/*String sliding_prefix  = "output_states/sliding/state";*/
-/*String tunnel_prefix   = "output_states/tunnel/state";*/
-/*String elevator_prefix = "output_states/elevator/state";*/
 
 String input_start_path = "../../data/combing/input/start.json";
 String input_end_path   = "../../data/combing/input/end.json";
@@ -131,7 +126,7 @@ boolean is_playing = false;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 public void setup() {
-    size(800, 1000);
+    
 /*    size(DEFAULT_WINDOW_W, DEFAULT_WINDOW_H);*/
 
     // make but don't draw input buttons
@@ -341,10 +336,12 @@ public void mouseClicked() {
         if(MODE == "OUTPUT") {
             MODE = "INPUT_START";
             scaleCanvasToInput();
+            states.clear();
+            state_count = 0;
         } else if(MODE == "INPUT_START" || MODE == "INPUT_END") {
             MODE = "OUTPUT";
             RunCombing.JSONCombHelper(output_path, input_start_path, input_end_path);
-            delay(5000);
+            delay(500);
             readOutputStates(combing_prefix);
             scaleCanvasToOutput();
             println("done waiting...");
@@ -378,8 +375,8 @@ public void drawGrid(int cx, int cy, int cw, int ch) {
     }
 
     stroke(0, 80);
-    line(cw / 2, 0, cw / 2, ch);
-    line(0, ch/2, cw, ch/2);
+/*    line(cw / 2, 0, cw / 2, ch);*/
+/*    line(0, ch/2, cw, ch/2);*/
 
     stroke(0, 100);
 
@@ -659,7 +656,7 @@ public ArrayList<InputModule> mirror(ArrayList<InputModule> modules) {
     for(InputModule m: modules) {
         x = m.X();
         y = m.Y();
-        m.setX(w - x - 1);
+        m.setX(w - x);
     }
 
     return modules;
@@ -683,7 +680,7 @@ public void exportToJSON(ArrayList<InputModule> modules, String path, boolean cl
     // Preprocess modules 
     ArrayList<InputModule> sanitized = modules;
 /*    if (clean) {*/
-        sanitized = (invert(sanitize(modules)));
+        sanitized = mirror(invert(sanitize(modules)));
 /*    }*/
 
     processing.data.JSONArray jrs = new processing.data.JSONArray();
@@ -1131,6 +1128,7 @@ public class OutputUnit {
 
     }
 }
+  public void settings() {  size(800, 1000); }
   static public void main(String[] passedArgs) {
     String[] appletArgs = new String[] { "visualizer" };
     if (passedArgs != null) {

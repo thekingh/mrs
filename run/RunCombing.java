@@ -16,7 +16,7 @@ public class RunCombing {
 
         Combing c = new Combing(s, t);
         List<State> states = c.run();
-        System.out.println(states.size());
+        System.out.println("Generated States: " + states.size());
 /*        BotBuilder.printStatesToCommandLine(states);*/
         return states;
     }

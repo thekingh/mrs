@@ -94,8 +94,8 @@ public final class BotBuilder {
      */
     public static void outputStates(List<State> states) {
         clearStates();
+
         for (int i = 0; i < states.size(); i++) {
-            System.out.println(i);
             states.get(i).writeToFile(i);
         }
     }
@@ -107,9 +107,11 @@ public final class BotBuilder {
      * Clears states then writes new states to viz readable file
      */
     public static void outputStates(String dir, List<State> states) {
-        clearStates(dir);
+        System.out.println("Clearing states...");
+        clearStates();
+        System.out.println("States cleared...");
         for (int i = 0; i < states.size(); i++) {
-            System.out.println(i);
+            System.out.println("Writing state " + i + " to file");
             states.get(i).writeToFile(dir, i);
         }
     }

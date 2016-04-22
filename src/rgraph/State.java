@@ -139,8 +139,11 @@ public class State {
         //TODO OH GOD HARDCODING LOL
         System.out.println("deleting all files in: ../../data/combing/output");
         File dir = new File("../../data/combing/output/");
+        int count = 0;
         for (File file : dir.listFiles()) {
             file.delete();
+            count++;
+            System.out.println("files deleted: " + count);
         }
     }
 }
