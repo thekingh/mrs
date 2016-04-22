@@ -303,6 +303,16 @@ void mouseClicked() {
         cur_state += 10;
     }
 
+    if (!is_playing && OUTPUT_TYPE != "COMBING" && combing_button.inBounds(mouseX, mouseY)) {
+        OUTPUT_TYPE = "COMBING";
+        cur_state = 0;
+        state_count = 0;
+        states.clear();
+        readOutputStates(combing_prefix);
+        scaleCanvasToOutput();
+        println("Loaded combing demo");
+    }
+    
     if (!is_playing && OUTPUT_TYPE != "STAIRCASE" && staircase_button.inBounds(mouseX, mouseY)) {
         OUTPUT_TYPE = "STAIRCASE";
         cur_state = 0;
