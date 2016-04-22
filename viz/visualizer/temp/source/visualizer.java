@@ -8,11 +8,11 @@ import ralgorithm.*;
 import rgraph.*; 
 import java.io.File; 
 
-import ralgorithm.*; 
-import rutils.*; 
-import rgraph.*; 
 import org.json.simple.*; 
+import rgraph.*; 
+import ralgorithm.*; 
 import org.json.simple.parser.*; 
+import rutils.*; 
 
 import java.util.HashMap; 
 import java.util.ArrayList; 
@@ -126,7 +126,7 @@ boolean is_playing = false;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 public void setup() {
-    
+    size(800, 1000);
 /*    size(DEFAULT_WINDOW_W, DEFAULT_WINDOW_H);*/
 
     // make but don't draw input buttons
@@ -1148,7 +1148,6 @@ public class OutputUnit {
 
     }
 }
-  public void settings() {  size(800, 1000); }
   static public void main(String[] passedArgs) {
     String[] appletArgs = new String[] { "visualizer" };
     if (passedArgs != null) {

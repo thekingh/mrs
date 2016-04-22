@@ -53,10 +53,13 @@ public class Combing extends Algorithm {
         states = new LinkedList<State>();
         LinkedList<State> fstates = new LinkedList<State>();
         LinkedList<State> rstates = new LinkedList<State>();
+        fstates.add(new State(s));
         for (Algorithm part : parts) {
             fstates.addAll(part.run());
         }
         // reverse tranformation of t
+        //
+        rstates.add(new State(t));
         for (Algorithm reversePart : reverseParts) {
             rstates.addAll(reversePart.run());
         }

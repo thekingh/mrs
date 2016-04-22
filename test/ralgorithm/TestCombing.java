@@ -32,7 +32,34 @@ public class TestCombing {
         return combTest(start, finish);
     }
 
+    public static List<State> combingBug22Apr() {
+        int[][] start  = {{1,1,1,0},
+                          {1,0,0,0},
+                          {1,0,0,0},
+                          {1,1,1,1}};
+        int[][] finish = {{0,0,0,1},
+                          {0,0,0,1},
+                          {0,1,1,1},
+                          {1,1,1,1}};
+
+/*        int[][] finish = {{1,1,1,1,1,1,1,1,1}};*/
+        return combTest(start, finish);
+    }
+    public static List<State> combingBug22AprTwo() {
+        int[][] start  = {{1,1,1,0},
+                          {1,0,0,0},
+                          {1,0,0,0},
+                          {1,1,1,1}};
+        int[][] finish = {{0,0,1,1,1},
+                          {0,0,1,1,0},
+                          {1,1,1,1,0}};
+
+/*        int[][] finish = {{1,1,1,1,1,1,1,1,1}};*/
+        return combTest(start, finish);
+    }
+
+
     public static void main(String[] args) {
-        TestHelper.outputStates(easyCombToLine());
+        TestHelper.outputStates(combingBug22AprTwo());
     }
 }
