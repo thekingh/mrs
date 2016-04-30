@@ -26,30 +26,35 @@ import java.io.IOException;
 public class visualizer extends PApplet {
 
 /************************************************************************************************
- *  Authors:    Alex Tong, Casey Gowrie, Kabir Singh
- *  Date:       11 March 2016
- *  Rev-Date:   17 April 2016
+ *  Authors:     Alex Tong, Casey Gowrie, Kabir Singh
+ *  Date:        11 March 2016
+ *  Rev-Date:    01 May   2016
  *
- *  Descrption: Ever heard of Dr Frankenstein? Yeah, this is my best impression of him. 
- *              Wouldn't be surprised if this (horrible) code gains sentience and tries to
- *              murder me.
+ *  Description: Frankensteined-together visualization tool for the MRS project. Has the ability
+ *               to let user input a start and end state robot, perform a cursory validity test,
+ *               and pass the start/end states to the backend. The output can then be stepped
+ *               through or "played." 
+ *               
+ *               Also contains demos for some complex movements in output mode.
  *
  ***********************************************************************************************/
 
-//TODO scaling error ???
-// compute step duration
+// TODO
 // connectedness
-// clear state
+// consolidate classes
+// make prettier with controlP5 library
 
 
 
 
 
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////      GLOBAL      ///////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
 int NUM_W = 20;
 int NUM_H = 20;
-int num_w = 20;
-int num_h = 20;
 int DEFAULT_WINDOW_W = 800;
 int DEFAULT_WINDOW_H = 1000;
 int DEFAULT_GRID_W = 800;
@@ -71,13 +76,12 @@ String OUTPUT_TYPE = "COMBING";
 
 String input_start_path = "../../data/combing/input/start.json";
 String input_end_path   = "../../data/combing/input/end.json";
-String output_path         = "../../data/combing/output/";
+String output_path      = "../../data/combing/output/";
 
-String combing_prefix  = "../../data/combing/output/state";
-String staircase_prefix  = "../../data/staircase/state";
-/*String tunnel_prefix   = "../../data/tunnel/state";*/
-String elevator_prefix = "../../data/elevator/state";
-String expanded_prefix = "../../data/expanded/state";
+String combing_prefix   = "../../data/combing/output/state";
+String staircase_prefix = "../../data/staircase/state";
+String elevator_prefix  = "../../data/elevator/state";
+String expanded_prefix  = "../../data/expanded/state";
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -108,7 +112,6 @@ ArrayList<InputModule> end_modules;
 //demos
 Button combing_button;
 Button staircase_button;
-/*Button tunnel_button;*/
 Button elevator_button;
 
 //playback 
@@ -127,11 +130,11 @@ boolean is_playing = false;
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 public void setup() {
     
-/*    size(DEFAULT_WINDOW_W, DEFAULT_WINDOW_H);*/
 
-    // make but don't draw input buttons
+    // create buttons, but not nec. render
     init_buttons(0, DEFAULT_GRID_H, DEFAULT_WINDOW_W - 1, DEFAULT_WINDOW_H - DEFAULT_GRID_H - 1);
     
+    // scale canvas to default input size
     scaleCanvasToInput();
 
     start_modules = new ArrayList<InputModule>();
@@ -139,6 +142,7 @@ public void setup() {
 }
 
 public void init_buttons(int cx, int cy, int cw, int ch) {
+    // new button signature:
     // button = new Button (x, y, w, h, "text");
 
     mode_button = new Button(cx + cw * .85f, cy + ch * 0.05f, cw * 0.1f, ch * 0.1f, "RUN");
@@ -157,7 +161,6 @@ public void init_buttons(int cx, int cy, int cw, int ch) {
     combing_button = new Button(cx + cw * 0.050f, cy + ch * 0.05f, cw * 0.1f, ch * 0.1f, "COMBING");
     staircase_button = new Button(cx + cw * 0.175f, cy + ch * 0.05f, cw * 0.1f, ch * 0.1f, "STAIRCASE");
     elevator_button  = new Button(cx + cw * 0.300f, cy + ch * 0.05f, cw * 0.1f, ch * 0.1f, "ELEVATOR");
-/*    tunnel_button= new Button(cx + cw * 0.425, cy + ch * 0.05, cw * 0.1, ch * 0.1, "TUNNEL");*/
 
     restart_button = new Button(cx + cw * 0.025f, cy + ch * 0.5f, cw * 0.15f, ch * 0.2f, "RESTART");
     stepb_button   = new Button(cx + cw * 0.225f, cy + ch * 0.5f , cw * 0.15f, ch * 0.2f, "<<");
@@ -172,14 +175,15 @@ public void scaleCanvasToInput() {
     
     NUM_W = 20;
     NUM_H = 20;
-    num_w = 20;
-    num_h = 20;
 }
 
+// Step through all output states and determine scaling to visualize
+// largest robot
 public void scaleCanvasToOutput() {
 
     int global_max_dim = 0;
 
+    // Check every state and find state-maximums
     for(ArrayList<OutputUnit> cur_robot: states) {
  
         int right_most_x = 0;
@@ -197,7 +201,7 @@ public void scaleCanvasToOutput() {
         int local_max_dim = (right_most_x > top_most_y) ? right_most_x : top_most_y;
 
         if (local_max_dim > global_max_dim) {
-            // padding, make sure even
+            // padding, make sure dims are always even
             if(local_max_dim % 2 == 0) {
                 local_max_dim += 2;
             } else {
@@ -209,27 +213,24 @@ public void scaleCanvasToOutput() {
         }
     }
 
-
     NUM_W = global_max_dim;
     NUM_H = global_max_dim;
-    num_w = global_max_dim;
-    num_h = global_max_dim;
-
-
-
-/*    println("rightmost: " + right_most_x);*/
 
 }
 
 
 public void draw() {
+    // always reset to "blank" canvas
     background (200, 200, 200);
 
+    // draw the grid lines
     drawGrid(0, 0, DEFAULT_GRID_W, DEFAULT_GRID_H);
 
+    // draw the menu box (buttons, etc.)
     drawMenu(0, DEFAULT_GRID_H,  DEFAULT_WINDOW_W - 1, 
                 DEFAULT_WINDOW_H - DEFAULT_GRID_H - 1);
 
+    // if in output mode, draw output modules 
     if(MODE == "OUTPUT") {
         drawOutputRobot(cur_state);
         drawFrameNumber();
@@ -244,15 +245,16 @@ public void draw() {
             }
         }
 
-
+    // if in input mode, draw input modules and input highlighting
     } else {
         highlightGridSpace();
         drawInputModules();
+        valid_save = isValidSave();
     }
 
-    valid_save = isValidSave();
 }
 
+// Build in processing function for handling the mouse click event
 public void mouseClicked() {
 
     /////////////////////
@@ -260,7 +262,7 @@ public void mouseClicked() {
     /////////////////////
 
     if (mouseY < DEFAULT_GRID_H) {
-        int sqr_len = width/num_w;
+        int sqr_len = width/NUM_W;
 
         int x = (mouseX / sqr_len);
         int y = 20 - (mouseY / sqr_len) - 1; 
@@ -277,11 +279,10 @@ public void mouseClicked() {
         }
     }
 
-    /////////////////////
-    // BUTTON CLICKING //
-    /////////////////////
+    //////////////////////////////
+    // BUTTON CLICKING -- INPUT //
+    //////////////////////////////
 
-    // INPUT //
     if (start_button.inBounds(mouseX, mouseY)) {
         MODE = "INPUT_START";
     }
@@ -299,12 +300,15 @@ public void mouseClicked() {
     }
 
     if (valid_save && save_button.inBounds(mouseX, mouseY)) {
-        exportToJSON(start_modules, input_start_path, true);
-        exportToJSON(end_modules, input_end_path, false);
+        exportToJSON(start_modules, input_start_path);
+        exportToJSON(end_modules, input_end_path);
         println("States have been saved!");
     }
 
-    // OUTPUT //
+    ///////////////////////////////
+    // BUTTON CLICKING -- OUTPUT //
+    ///////////////////////////////
+
     if (!is_playing && play_button.inBounds(mouseX, mouseY)) {
         is_playing = true;
     }
@@ -361,7 +365,9 @@ public void mouseClicked() {
     }
 
 
-    // UNIVERSAL //
+    //////////////////////////////////
+    // BUTTON CLICKING -- UNIVERSAL //
+    //////////////////////////////////
     if (mode_button.inBounds(mouseX, mouseY)) {
         if(MODE == "OUTPUT") {
             MODE = "INPUT_START";
@@ -379,11 +385,12 @@ public void mouseClicked() {
     }
 }
 
-// cx, cy is top left corner 
-// (0, 0) in proceessing is top left fyi
+// Draw the grid lines, highlighting the spaces where modules occupy 
+// (0, 0) in proceessing is top left fyi, so cx, cy is top left corner 
 public void drawGrid(int cx, int cy, int cw, int ch) {
     
     pushStyle(); 
+
     for(int i = 0; i < NUM_W; i++) {
         if( i % 2 == 0) {
             stroke(0, 35);
@@ -404,26 +411,18 @@ public void drawGrid(int cx, int cy, int cw, int ch) {
         line(0, (ch / NUM_H) * i, cw, (ch / NUM_H) * i);
     }
 
-    stroke(0, 80);
-/*    line(cw / 2, 0, cw / 2, ch);*/
-/*    line(0, ch/2, cw, ch/2);*/
-
-    stroke(0, 100);
-
     popStyle();
 
 }
 
+// Primitive connectivity check (no islands of single modules)
+// TODO make more robust (DFS check)
 public boolean updateConnectivity(ArrayList<InputModule> robot) {
     InputModule newModule = robot.get(robot.size() - 1); // last added
     boolean stillConnected = true;
 
     for (int i = 0; i < robot.size(); i++) {
         InputModule tmp = robot.get(i);
-
-        println("checking against");
-        println("tmp: " + tmp.X() + ", " + tmp.Y());
-        println("new: " + newModule.X() + ", " + newModule.Y());
 
         // below
         if ((tmp.X() == newModule.X()) && (tmp.Y() == newModule.Y() + 2)) {
@@ -442,29 +441,29 @@ public boolean updateConnectivity(ArrayList<InputModule> robot) {
             stillConnected = true;
             break;
         } else {
-            println("\tadded unconnected");
-            println("\ttmp: " + tmp.X() + ", " + tmp.Y());
-            println("\tnew: " + newModule.X() + ", " + newModule.Y());
             stillConnected = false;
         } 
     }
 
     if (stillConnected) {
-        println("*******STILL CONNECTED*********\n");
-    } else {
-        println("YOU DONE BROKED IT\n");
+        print("** still \"connected\" **\n");
+    } else if (!stillConnected && start_modules.size() > 1) {
+        print("xx no longer \"connected\" xx\n");
     }
 
     return stillConnected;
 }
 
+// Continuously called function to ensure start/end combo is valid
 public boolean isValidSave(){
     // check to see size of each arr is same
-    // check to see if both bots are connected
+    // check to see if both bots are "connected"
     return (start_modules.size() == end_modules.size()) && (start_connected) && (end_connected);
 }
 
 
+// Placement checking function -- ensure that no module exists at spot and that spot
+// is a module space (inside thicker grid lines)
 public boolean isValidPlacement(int x, int y) {
 
     // Is on even gridline (snapping)
@@ -493,13 +492,15 @@ public boolean isValidPlacement(int x, int y) {
 
 }
 
+// Highlight the current space the user is hovering over with the mouse
 public void highlightGridSpace() {
 
+    // if the mouse is too far "down", ignore
     if(mouseY >= DEFAULT_GRID_H) {    
         return; 
     }
 
-    int sqr_len = width/num_w;
+    int sqr_len = width/NUM_W;
 
     // Get L and R coordinates on canvas of current box being hovered over
     int left   = (mouseX / sqr_len) * sqr_len;
@@ -525,8 +526,12 @@ public void highlightGridSpace() {
     popStyle();
 }
 
+// Draw the user created input modules -- make sure to output in the
+// correct order
 public void drawInputModules() {
-    // goddammit where the fuck are my pointers
+    
+    // note: this would be easier with pointers >:(
+
     if(MODE == "INPUT_START") {
         // order matters
         for(InputModule m : end_modules) {
@@ -549,6 +554,7 @@ public void drawInputModules() {
     }
 }
 
+// Draw the output robots for a given state number
 public void drawOutputRobot(int index) {
     ArrayList<OutputUnit> units = states.get(index);
 
@@ -557,6 +563,7 @@ public void drawOutputRobot(int index) {
     }
 }
 
+// Draw a state number indicator above the play button
 public void drawFrameNumber() {
     String s = "[" + (cur_state+1) + "/" + state_count + "]";
 
@@ -566,24 +573,25 @@ public void drawFrameNumber() {
     text(s, 0, .85f * DEFAULT_WINDOW_H, DEFAULT_WINDOW_W, DEFAULT_WINDOW_H);
 }
 
+// Draw the elements below the grid
 public void drawMenu(int cx, int cy, int cw, int ch) {
 
     pushStyle();
+
+        // menu "canvas"
         stroke(0, 0, 0);
         fill(230, 230, 230);
         rect(cx, cy, cw, ch);
         
         fill(255, 0, 0);
         textAlign(CENTER);
-        //text(MODE, DEFAULT_WINDOW_W/2, 900);
         mode_button.render(true);
 
-        // draw appropriate buttons
+        // draw appropriate buttons depending on mode
         if (MODE == "OUTPUT") {
 
             combing_button.render(OUTPUT_TYPE == "COMBING");
             staircase_button.render(OUTPUT_TYPE == "STAIRCASE");
-/*            tunnel_button.render(OUTPUT_TYPE == "TUNNEL");*/
             elevator_button.render(OUTPUT_TYPE == "ELEVATOR");
 
             stepb_button.render(cur_state > 0);
@@ -615,7 +623,6 @@ public void drawMenu(int cx, int cy, int cw, int ch) {
 
         }
 
-
     popStyle();
 }
 
@@ -623,23 +630,20 @@ public void drawMenu(int cx, int cy, int cw, int ch) {
 ///////////////////////////////////////   HELPER FUNCS   ///////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-public ArrayList<InputModule> sanitize (ArrayList<InputModule> modules) {
+// offset all module locations as far left and down as possible
+public ArrayList<InputModule> offset (ArrayList<InputModule> modules) {
     
-
     int left = NUM_W;
     int bottom = NUM_H;
 
     // find bottom left-most coordinate -> generate offset for x and y
     for(InputModule m: modules) {
-
         if(m.X() < left) {
             left = m.X();
         }
-
         if(m.Y() < bottom) {
             bottom = m.Y();
         }
-    
     }
 
     // move by offset
@@ -651,35 +655,34 @@ public ArrayList<InputModule> sanitize (ArrayList<InputModule> modules) {
     return modules;
 }
 
+// switch x and y of all module locations
 public ArrayList<InputModule> invert (ArrayList<InputModule> modules) {
          
-    int x, y;
+    int old_x, old_y;
     for(InputModule m: modules) {
-        x = m.X();
-        y = m.Y();
-        m.setX(y);
-        m.setY(x);
+        old_x = m.X();
+        old_y = m.Y();
+        m.setX(old_y);
+        m.setY(old_x);
     }
 
     return modules;
 
 }
 
+// mirror module locations across y-axis (?)
 public ArrayList<InputModule> mirror(ArrayList<InputModule> modules) {
 
     // find bounding box
     int w = 0;
     int h = 0;
     for(InputModule m: modules) {
-
         if(m.X() > w) {
             w = m.X();
         }
-
         if(m.Y() > h) {
             h = m.Y();
         }
-    
     }
          
     int x, y;
@@ -693,63 +696,54 @@ public ArrayList<InputModule> mirror(ArrayList<InputModule> modules) {
 
 }
 
-
-public void clearDirectory(String path) {
-    File dir = new File(path);
-    for(File f : dir.listFiles()) {
-        f.delete();
-    }
-}
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////    JSON FUNCS    ///////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-public void exportToJSON(ArrayList<InputModule> modules, String path, boolean clean) {
+// Export a given module array to a json file, and write to path location
+public void exportToJSON(ArrayList<InputModule> modules, String path) {
 
     // Preprocess modules 
-    ArrayList<InputModule> sanitized = modules;
-/*    if (clean) {*/
-        sanitized = mirror(invert(sanitize(modules)));
-/*    }*/
+    ArrayList<InputModule> sanitized = mirror(invert(offset(modules)));
 
-    processing.data.JSONArray jrs = new processing.data.JSONArray();
+    processing.data.JSONArray json_arr = new processing.data.JSONArray();
 
     for(int i = 0; i < sanitized.size(); i++) {
-        processing.data.JSONObject jr = new processing.data.JSONObject();
+        processing.data.JSONObject json_obj = new processing.data.JSONObject();
 
         //make json object
-        jr.setInt("x", sanitized.get(i).X());
-        jr.setInt("y", sanitized.get(i).Y());
+        json_obj.setInt("x", sanitized.get(i).X());
+        json_obj.setInt("y", sanitized.get(i).Y());
 
-        jr.setInt("con0", 1);
-        jr.setInt("ext0", 0);
+        json_obj.setInt("con0", 1);
+        json_obj.setInt("ext0", 0);
 
-        jr.setInt("con1", 1);
-        jr.setInt("ext1", 0);
+        json_obj.setInt("con1", 1);
+        json_obj.setInt("ext1", 0);
 
-        jr.setInt("con2", 1);
-        jr.setInt("ext2", 0);
+        json_obj.setInt("con2", 1);
+        json_obj.setInt("ext2", 0);
 
-        jr.setInt("con3", 1);
-        jr.setInt("ext3", 0);
+        json_obj.setInt("con3", 1);
+        json_obj.setInt("ext3", 0);
 
-        jrs.setJSONObject(i, jr);
+        // place in json array
+        json_arr.setJSONObject(i, json_obj);
 
     }
 
-
-/*    clearDirectory("../../data/combing/output/");*/
-    saveJSONArray(jrs, path);
+    saveJSONArray(json_arr, path);
 
 }
 
+// Given a path, read all state files present into a ArrayList
+// of OuputStates
 public void readOutputStates(String path_prefix) {
 
     states = new ArrayList<ArrayList<OutputUnit>>();
     String path = path_prefix + state_count + ".json";
     File f = new File(path);
-    println("reading output states from: " + path);
+    println("Reading output states from: " + path);
 
     while(f.exists()) {
         
@@ -955,7 +949,7 @@ public class InputUnit {
         double ratio = 4.0f/5;
 
         // calculate size variables
-        int block_size =  width / num_w;
+        int block_size =  width / NUM_W;
         int unit_width     = (int)((double)block_size * ratio);
 
         int margin     = (int)(((1 -  ratio)/2) * (double)block_size);
@@ -999,7 +993,7 @@ public class InputUnit {
 
         //TODO push matrix to translate off a little bit??
         // calculate sizes
-        int block_size =  width / num_w;
+        int block_size =  width / NUM_W;
         double ratio = 4.0f/5;
         int unit_width     = (int)((double)block_size * ratio);
 
@@ -1091,7 +1085,7 @@ public class OutputUnit {
         double ratio = 4.0f/5;
 
         // calculate size variables
-        int block_size =  width / num_w;
+        int block_size =  width / NUM_W;
         int unit_width     = (int)((double)block_size * ratio);
 
         int margin     = (int)(((1 -  ratio)/2) * (double)block_size);
@@ -1128,7 +1122,7 @@ public class OutputUnit {
     public void drawUnit() {
 
         // calculate sizes
-        int block_size =  width / num_w;
+        int block_size =  width / NUM_W;
         double ratio = 4.0f/5;
         int unit_width     = (int)((double)block_size * ratio);
 

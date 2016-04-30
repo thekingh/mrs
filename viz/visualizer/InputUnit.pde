@@ -45,7 +45,7 @@ public class InputUnit {
         double ratio = 4.0/5;
 
         // calculate size variables
-        int block_size =  width / num_w;
+        int block_size =  width / NUM_W;
         int unit_width     = (int)((double)block_size * ratio);
 
         int margin     = (int)(((1 -  ratio)/2) * (double)block_size);
@@ -89,7 +89,7 @@ public class InputUnit {
 
         //TODO push matrix to translate off a little bit??
         // calculate sizes
-        int block_size =  width / num_w;
+        int block_size =  width / NUM_W;
         double ratio = 4.0/5;
         int unit_width     = (int)((double)block_size * ratio);
 
