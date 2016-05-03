@@ -1,19 +1,90 @@
 AUTHORS: Casey Gowrie, Alex Tong, Kabir Singh
-DATE: 1 May 2016
+DATE: 2 May 2016
 
 ===============================================================================
                                    OVERVIEW
 ===============================================================================
 
+The MRS Visualizer, built on Processing, allows users to create robot shapes
+to be run through the main MRS backend. The visualizer is also able to display
+the output of the combing algorithm on the user-input, and several demos of
+complex movements.
+
 ===============================================================================
                                  ARCHITECTURE 
 ===============================================================================
+
+The visualizer consists of five main files:
+    
+    viz.pde -- main portion of the visualizer (think Frankenstein). Handles
+               user input/output, and overall rendering. 
+
+    Button.pde -- very simple button class. Has (x, y) coordinates (relative 
+                  over Processing canvas), width/height, and the option to
+                  display text in the button itself. Currently used as a 
+                  placeholder until controlP5 library is implemented.
+
+    OuputUnit.pde -- output unit, rendering on output happens at a unit level,
+                     so the output data structure is rather granular.
+
+    InputModule.pde -- input happens at the module level, so the
+                       the data structure is built on input units.
+
+    InputUnit.pde -- most granular data structure for input, always a part of
+                     a input module.
 
 ===============================================================================
                                      TODO
 ===============================================================================
 
+Currently, the main areas of concern are:
+
+    connectedness check - the current connectedness check is incomplete. It 
+                          only ensures that no single modules exist as "islands."
+                          For example, the check would (incorrectly) signal that
+                          two unconnected chunks of multiple modules are a 
+                          valid, connected robot. We would like to implement a 
+                          simple DFS check.
+
+    consolidate classes - the inputmodule/unit and output unit classes are rather
+                          similar. Ideally, we would employ some good OOP
+                          practices and create a superclass, etc. to consolidate
+                          some of the code
+
+    controlP5 library   - there is a fantastic user input library (buttons, 
+                          sliders, etc.) called controlP5. We tried to stay
+                          away from introducing 3rd party tools as much as
+                          possible (especially before introducing Docker).
+
+
 ===============================================================================
-                                    NOTES 
+                                 HOW TO USE
 ===============================================================================
+
+    1. Click on grid spaces when highlighted green to place a module.
+        - Place modules in a connected shape
+    2. Click on "end" to place modules for end state
+        - Place modules in a connected shape
+        - The number of end modules must be the same as start modules
+          (the save button will become white when this condition is met)
+    3. Click on "save" to save the input shapes to file
+    4. Click on "run" to run the input shapes through the Combing algorithm
+       backend and produce the output states
+    5. Use the playback buttons to control the output
+        - " >> ": step forward one state
+        - " << ": step backward one state
+        - " -> ": automatially play forward through the states
+        - " || ": pause playback at current state
+        - " RESTART "  : reset the current state to zero
+        - " SKIP (10) ": increment the current state by 10
+    6. Click on "Elevator" or "Staircase" to demo the pre-built movement
+       demos (make sure the current animation is paused!)
+
+
+===============================================================================
+                                    NOTES
+===============================================================================
+ -  User flow is sort of broken, didn't really account for people trying to
+    to break the program
+
 
