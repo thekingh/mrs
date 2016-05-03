@@ -5,5 +5,5 @@ echo "Compiling class files..."
 javac -target 1.6 -source 1.6 -cp .:../lib/* -g -d ./../bin_old */*.java ./../test/*/*.java ./../run/*.java
 echo "Making jar file..."
 cd ../bin_old/ && jar cf mrs.jar ralgorithm/*.class rutils/*.class rgraph/*.class 
-echo "Moving jar file to visualizer/code..."
-mv mrs.jar ../viz/visualizer/code && cd ../src
+echo "Moving jar file to viz/code..."
+mv mrs.jar ../viz/code && cd ../src

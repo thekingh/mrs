@@ -1,30 +1,3 @@
-import processing.core.*; 
-import processing.data.*; 
-import processing.event.*; 
-import processing.opengl.*; 
-
-import rutils.*; 
-import ralgorithm.*; 
-import rgraph.*; 
-import java.io.File; 
-
-import ralgorithm.*; 
-import rutils.*; 
-import rgraph.*; 
-import org.json.simple.*; 
-import org.json.simple.parser.*; 
-
-import java.util.HashMap; 
-import java.util.ArrayList; 
-import java.io.File; 
-import java.io.BufferedReader; 
-import java.io.PrintWriter; 
-import java.io.InputStream; 
-import java.io.OutputStream; 
-import java.io.IOException; 
-
-public class visualizer extends PApplet {
-
 /************************************************************************************************
  *  Authors:     Alex Tong, Casey Gowrie, Kabir Singh
  *  Date:        11 March 2016
@@ -44,10 +17,10 @@ public class visualizer extends PApplet {
 // consolidate classes
 // make prettier with controlP5 library
 
-
-
-
-
+import rutils.*;
+import ralgorithm.*;
+import rgraph.*;
+import java.io.File;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////      GLOBAL      ///////////////////////////////////////////
@@ -74,14 +47,14 @@ String OUTPUT_TYPE = "COMBING";
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-String input_start_path = "../../data/combing/input/start.json";
-String input_end_path   = "../../data/combing/input/end.json";
-String output_path      = "../../data/combing/output/";
+String input_start_path = "../data/combing/input/start.json";
+String input_end_path   = "../data/combing/input/end.json";
+String output_path      = "../data/combing/output/";
 
-String combing_prefix   = "../../data/combing/output/state";
-String staircase_prefix = "../../data/staircase/state";
-String elevator_prefix  = "../../data/elevator/state";
-String expanded_prefix  = "../../data/expanded/state";
+String combing_prefix   = "../data/combing/output/state";
+String staircase_prefix = "../data/staircase/state";
+String elevator_prefix  = "../data/elevator/state";
+String expanded_prefix  = "../data/expanded/state";
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -128,8 +101,8 @@ int cur_state = 0;
 boolean is_playing = false;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-public void setup() {
-    
+void setup() {
+    size(800, 1000);
 
     // create buttons, but not nec. render
     init_buttons(0, DEFAULT_GRID_H, DEFAULT_WINDOW_W - 1, DEFAULT_WINDOW_H - DEFAULT_GRID_H - 1);
@@ -141,37 +114,37 @@ public void setup() {
     end_modules   = new ArrayList<InputModule>();
 }
 
-public void init_buttons(int cx, int cy, int cw, int ch) {
+void init_buttons(int cx, int cy, int cw, int ch) {
     // new button signature:
     // button = new Button (x, y, w, h, "text");
 
-    mode_button = new Button(cx + cw * .85f, cy + ch * 0.05f, cw * 0.1f, ch * 0.1f, "RUN");
+    mode_button = new Button(cx + cw * .85, cy + ch * 0.05, cw * 0.1, ch * 0.1, "RUN");
 
     // INPUT BUTTONS
-    start_button = new Button(cx + cw * 0.125f, cy + ch * 0.7f, cw * 0.15f, ch * 0.25f, "START");
-    start_connected_button = new Button(cx + cw * 0.125f, cy + ch * 0.4f, cw * 0.15f, ch * 0.25f, "SCONNECT");
+    start_button = new Button(cx + cw * 0.125, cy + ch * 0.7, cw * 0.15, ch * 0.25, "START");
+    start_connected_button = new Button(cx + cw * 0.125, cy + ch * 0.4, cw * 0.15, ch * 0.25, "SCONNECT");
 
-    end_button   = new Button(cx + cw * 0.325f, cy + ch * 0.7f, cw * 0.15f, ch * 0.25f, "END");
-    end_connected_button = new Button(cx + cw * 0.325f, cy + ch * 0.4f, cw * 0.15f, ch * 0.25f, "ECONNECT");
+    end_button   = new Button(cx + cw * 0.325, cy + ch * 0.7, cw * 0.15, ch * 0.25, "END");
+    end_connected_button = new Button(cx + cw * 0.325, cy + ch * 0.4, cw * 0.15, ch * 0.25, "ECONNECT");
 
-    clear_button = new Button(cx + cw * 0.525f, cy + ch * 0.7f, cw * 0.15f, ch * 0.25f, "CLEAR");
-    save_button  = new Button(cx + cw * 0.725f, cy + ch * 0.7f, cw * 0.15f, ch * 0.25f, "SAVE");
+    clear_button = new Button(cx + cw * 0.525, cy + ch * 0.7, cw * 0.15, ch * 0.25, "CLEAR");
+    save_button  = new Button(cx + cw * 0.725, cy + ch * 0.7, cw * 0.15, ch * 0.25, "SAVE");
 
     //OUTPUT BUTTONS
-    combing_button = new Button(cx + cw * 0.050f, cy + ch * 0.05f, cw * 0.1f, ch * 0.1f, "COMBING");
-    staircase_button = new Button(cx + cw * 0.175f, cy + ch * 0.05f, cw * 0.1f, ch * 0.1f, "STAIRCASE");
-    elevator_button  = new Button(cx + cw * 0.300f, cy + ch * 0.05f, cw * 0.1f, ch * 0.1f, "ELEVATOR");
+    combing_button = new Button(cx + cw * 0.050, cy + ch * 0.05, cw * 0.1, ch * 0.1, "COMBING");
+    staircase_button = new Button(cx + cw * 0.175, cy + ch * 0.05, cw * 0.1, ch * 0.1, "STAIRCASE");
+    elevator_button  = new Button(cx + cw * 0.300, cy + ch * 0.05, cw * 0.1, ch * 0.1, "ELEVATOR");
 
-    restart_button = new Button(cx + cw * 0.025f, cy + ch * 0.5f, cw * 0.15f, ch * 0.2f, "RESTART");
-    stepb_button   = new Button(cx + cw * 0.225f, cy + ch * 0.5f , cw * 0.15f, ch * 0.2f, "<<");
-    play_button    = new Button(cx + cw * 0.425f, cy + ch * 0.35f, cw * 0.15f, ch * 0.2f, "->");
-    pause_button   = new Button(cx + cw * 0.425f, cy + ch * 0.65f, cw * 0.15f, ch * 0.2f, "||");
-    stepf_button   = new Button(cx + cw * 0.625f, cy + ch * 0.5f , cw * 0.15f, ch * 0.2f, ">>");
-    skip_button    = new Button(cx + cw * 0.825f, cy + ch * 0.5f , cw * 0.15f, ch * 0.2f, "SKIP (10)");
+    restart_button = new Button(cx + cw * 0.025, cy + ch * 0.5, cw * 0.15, ch * 0.2, "RESTART");
+    stepb_button   = new Button(cx + cw * 0.225, cy + ch * 0.5 , cw * 0.15, ch * 0.2, "<<");
+    play_button    = new Button(cx + cw * 0.425, cy + ch * 0.35, cw * 0.15, ch * 0.2, "->");
+    pause_button   = new Button(cx + cw * 0.425, cy + ch * 0.65, cw * 0.15, ch * 0.2, "||");
+    stepf_button   = new Button(cx + cw * 0.625, cy + ch * 0.5 , cw * 0.15, ch * 0.2, ">>");
+    skip_button    = new Button(cx + cw * 0.825, cy + ch * 0.5 , cw * 0.15, ch * 0.2, "SKIP (10)");
     
 }
 
-public void scaleCanvasToInput() {
+void scaleCanvasToInput() {
     
     NUM_W = 20;
     NUM_H = 20;
@@ -179,7 +152,7 @@ public void scaleCanvasToInput() {
 
 // Step through all output states and determine scaling to visualize
 // largest robot
-public void scaleCanvasToOutput() {
+void scaleCanvasToOutput() {
 
     int global_max_dim = 0;
 
@@ -219,7 +192,7 @@ public void scaleCanvasToOutput() {
 }
 
 
-public void draw() {
+void draw() {
     // always reset to "blank" canvas
     background (200, 200, 200);
 
@@ -255,7 +228,7 @@ public void draw() {
 }
 
 // Build in processing function for handling the mouse click event
-public void mouseClicked() {
+void mouseClicked() {
 
     /////////////////////
     // MODULE CLICKING //
@@ -387,7 +360,7 @@ public void mouseClicked() {
 
 // Draw the grid lines, highlighting the spaces where modules occupy 
 // (0, 0) in proceessing is top left fyi, so cx, cy is top left corner 
-public void drawGrid(int cx, int cy, int cw, int ch) {
+void drawGrid(int cx, int cy, int cw, int ch) {
     
     pushStyle(); 
 
@@ -447,7 +420,7 @@ public boolean updateConnectivity(ArrayList<InputModule> robot) {
 
     if (stillConnected) {
         print("** still \"connected\" **\n");
-    } else if (!stillConnected && start_modules.size() > 1) {
+    } else if (!stillConnected && robot.size() > 1) {
         print("xx no longer \"connected\" xx\n");
     }
 
@@ -493,7 +466,7 @@ public boolean isValidPlacement(int x, int y) {
 }
 
 // Highlight the current space the user is hovering over with the mouse
-public void highlightGridSpace() {
+void highlightGridSpace() {
 
     // if the mouse is too far "down", ignore
     if(mouseY >= DEFAULT_GRID_H) {    
@@ -528,7 +501,7 @@ public void highlightGridSpace() {
 
 // Draw the user created input modules -- make sure to output in the
 // correct order
-public void drawInputModules() {
+void drawInputModules() {
     
     // note: this would be easier with pointers >:(
 
@@ -555,7 +528,7 @@ public void drawInputModules() {
 }
 
 // Draw the output robots for a given state number
-public void drawOutputRobot(int index) {
+void drawOutputRobot(int index) {
     ArrayList<OutputUnit> units = states.get(index);
 
     for(OutputUnit u: units) {
@@ -564,17 +537,17 @@ public void drawOutputRobot(int index) {
 }
 
 // Draw a state number indicator above the play button
-public void drawFrameNumber() {
+void drawFrameNumber() {
     String s = "[" + (cur_state+1) + "/" + state_count + "]";
 
     // draw in bottom right of window
     textAlign(CENTER);
     fill(0);
-    text(s, 0, .85f * DEFAULT_WINDOW_H, DEFAULT_WINDOW_W, DEFAULT_WINDOW_H);
+    text(s, 0, .85 * DEFAULT_WINDOW_H, DEFAULT_WINDOW_W, DEFAULT_WINDOW_H);
 }
 
 // Draw the elements below the grid
-public void drawMenu(int cx, int cy, int cw, int ch) {
+void drawMenu(int cx, int cy, int cw, int ch) {
 
     pushStyle();
 
@@ -631,7 +604,7 @@ public void drawMenu(int cx, int cy, int cw, int ch) {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // offset all module locations as far left and down as possible
-public ArrayList<InputModule> offset (ArrayList<InputModule> modules) {
+ArrayList<InputModule> offset (ArrayList<InputModule> modules) {
     
     int left = NUM_W;
     int bottom = NUM_H;
@@ -656,7 +629,7 @@ public ArrayList<InputModule> offset (ArrayList<InputModule> modules) {
 }
 
 // switch x and y of all module locations
-public ArrayList<InputModule> invert (ArrayList<InputModule> modules) {
+ArrayList<InputModule> invert (ArrayList<InputModule> modules) {
          
     int old_x, old_y;
     for(InputModule m: modules) {
@@ -671,7 +644,7 @@ public ArrayList<InputModule> invert (ArrayList<InputModule> modules) {
 }
 
 // mirror module locations across y-axis (?)
-public ArrayList<InputModule> mirror(ArrayList<InputModule> modules) {
+ArrayList<InputModule> mirror(ArrayList<InputModule> modules) {
 
     // find bounding box
     int w = 0;
@@ -701,7 +674,7 @@ public ArrayList<InputModule> mirror(ArrayList<InputModule> modules) {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Export a given module array to a json file, and write to path location
-public void exportToJSON(ArrayList<InputModule> modules, String path) {
+void exportToJSON(ArrayList<InputModule> modules, String path) {
 
     // Preprocess modules 
     ArrayList<InputModule> sanitized = mirror(invert(offset(modules)));
@@ -738,7 +711,7 @@ public void exportToJSON(ArrayList<InputModule> modules, String path) {
 
 // Given a path, read all state files present into a ArrayList
 // of OuputStates
-public void readOutputStates(String path_prefix) {
+void readOutputStates(String path_prefix) {
 
     states = new ArrayList<ArrayList<OutputUnit>>();
     String path = path_prefix + state_count + ".json";
@@ -777,388 +750,4 @@ public void readOutputStates(String path_prefix) {
         path = path_prefix + state_count + ".json";
         f = new File(path);
     }
-}
-public class Button {
-
-    private int x;
-    private int y;
-    private int w;
-    private int h;
-
-    private String txt;
-
-    public Button () {
-        this(0, 0, 0, 0,"");
-    }
-
-    public Button(int x, int y, int w, int h, String txt) {
-        this.w = w;
-        this.h = h;
-        this.x = x;
-        this.y = y;
-        this.txt = txt;
-    }
-
-    public Button(float x, float y, float w, float h, String txt) {
-        this.w = (int)w;
-        this.h = (int)h;
-        this.x = (int)x;
-        this.y = (int)y;
-        this.txt = txt;
-    }
-
-    public boolean inBounds(int mx, int my) {
-        return ((mx >= x) && (mx <= x + w) && (my >= y) && (my <= y + h));
-    }
-
-    public void render(boolean cur_mode) {
-        // draw body of button
-        pushStyle();
-            stroke(0, 0, 0);
-            if (cur_mode) {
-                fill(255, 255, 255);
-            } else {
-                fill(150, 150, 150);
-            }
-            rect(x, y, w, h);
-        popStyle();
-
-        // draw button text
-        pushStyle();
-            textAlign(CENTER, CENTER);
-            stroke(0, 0, 0);
-            fill(0, 0, 0);
-            text(txt, x + w/2, y + h/2);
-        popStyle();
-    }
-} 
-/** 
- * Module class exclusively for the input visualiztion
- *
- *  @author Casey Gowrie
- *  @author Alex Tong
- *  @author Kabir Singh
- *  
- *  @version 1.0
- */
-
-
-public class InputModule {
-    private InputUnit[] units;
-    private int x; //NOTE THIS IS THE BOTTOM LEFT
-    private int y; //OF MODULE CLUSTER
-
-    public InputModule() {
-        this(0, 0);
-    }
-    
-    /**
-     * Given an x and y coordinate, construct a new module containing
-     * four robots (w/ the x and y coordinates the bottom left corner
-     * of the module's footprint
-     *
-     * @param x leftmost bound of module's footprint
-     * @param y bottommost bound of module's footprint
-     */
-    public InputModule(int x, int y) {
-        this.x = x;
-        this.y = y;
-
-        units    = new InputUnit[4];
-        units[0] = new InputUnit(this.x    , this.y);
-        units[1] = new InputUnit(this.x + 1, this.y);
-        units[2] = new InputUnit(this.x, this.y + 1);
-        units[3] = new InputUnit(this.x + 1, this.y + 1);
-    } 
-
-    /**
-     * Render all individual units of a module
-     */
-    public void render(boolean cur) {
-        for(InputUnit u: units) {
-            u.render(cur);
-        }
-    }
-
-    /**
-     *  Return the leftmost bound of the module's footprint
-     */
-    public int X() {
-        return x;
-    }
-
-    /**
-     *  Return the bottommost bound of the module's footprint
-     */
-    public int Y() {
-        return y;
-    }
-
-    public void setX(int x) {
-        this.x = x;
-    }
-
-    public void setY(int y) {
-        this.y = y;
-    }
- }
-/** 
- *  Unit class exclusively for the input visualiztion
- *
- *  @author Casey Gowrie
- *  @author Alex Tong
- *  @author Kabir Singh
- *  
- *  @version 1.0
- */
-
-public class InputUnit {
-    private int x;
-    private int y;
-
-    public InputUnit() {
-        this(0, 0);
-    }
-
-    /**
-     * Given an x and y coordinate, construct a new unit at that location
-     *
-     * @param x x coordinate of unit
-     * @param y y coordinate of unit
-     */
-    public InputUnit(int x, int y) {
-        this.x = x;
-        this.y = y;
-    }
-
-    public int X() {
-        return x;
-    }
-
-    public int Y() {
-        return y;
-    }
-
-    /**
-     * Given a direction, draw a robot arm; reused code from the more dynamic
-     * output visualization unit class.
-     */
-    public void drawContractedArms(int dir) {
-
-        // how much of block length the unit width is
-        double ratio = 4.0f/5;
-
-        // calculate size variables
-        int block_size =  width / NUM_W;
-        int unit_width     = (int)((double)block_size * ratio);
-
-        int margin     = (int)(((1 -  ratio)/2) * (double)block_size);
-        int arm_len    = margin;
-        int disconnect = 0;
-
-        //TODO hacky, but flip y
-        int mod_y = 20 - y - 1;
-
-        // unit boundaries
-        int left   = ((block_size * x)) + (block_size - unit_width)/2;
-        int top    = ((block_size * mod_y)) + (block_size - unit_width)/2;
-        int right  = (left + unit_width);
-        int bottom = (top  + unit_width);
-
-        pushStyle();
-        stroke(0, 255);
-        strokeWeight(1);
-    
-        // draw arm in given direction (arm + "hand")
-        if(dir == 0) {
-            line(left + (unit_width/2), top, left + unit_width/2, top - arm_len + disconnect);
-            line(left + (unit_width/4), top - arm_len + disconnect, right - unit_width/4, top - arm_len + disconnect);
-        } else if(dir == 2) {
-            line(left + (unit_width/2), bottom, left + unit_width/2, bottom + arm_len - disconnect);
-            line(left + (unit_width/4), bottom + arm_len - disconnect, right - unit_width/4, bottom + arm_len - disconnect);
-        } else if (dir == 3 ) {
-            line(left, top + (unit_width/2), left - arm_len + disconnect , top + unit_width/2 );
-            line(left - arm_len + disconnect, top + (unit_width/4), left - arm_len + disconnect, bottom - (unit_width/4));
-        } else {
-            line(right, top + (unit_width/2), right + arm_len - disconnect, top + unit_width/2 );
-            line(right + arm_len - disconnect, top + (unit_width/4), right + arm_len - disconnect, bottom - (unit_width/4));
-        }
-        popStyle();
-    }
-
-    /**
-     * Draws the unit's body 
-     */
-    public void drawUnit(boolean cur) {
-
-        //TODO push matrix to translate off a little bit??
-        // calculate sizes
-        int block_size =  width / NUM_W;
-        double ratio = 4.0f/5;
-        int unit_width     = (int)((double)block_size * ratio);
-
-        //TODO hacky, but flip y
-        int mod_y = 20 - y - 1;
-
-        // unit boundaries
-        int left   = ((block_size * x)) + (block_size - unit_width)/2;
-        int top    = ((block_size * mod_y)) + (block_size - unit_width)/2;
-        int right  = (left + unit_width);
-        int bottom = (top  + unit_width);
-        
-        pushStyle();
-            stroke(1);
-            if (!cur) {
-                fill(50, 50, 50); 
-                pushMatrix();
-                    translate(3, -3);
-                    rect(left, top, unit_width, unit_width);
-                popMatrix();
-            } else {
-                fill(51, 204, 255); // pretty blue
-                rect(left, top, unit_width, unit_width);
-            }
-        popStyle();
-    }
-
-    /**
-     * Render the entire unit
-     */
-    public void render(boolean cur) {
-
-        // draw unit body
-        drawUnit(cur);
-
-        // draw unit arms
-        if (cur) {
-            for(int dir = 0; dir < 4; dir++) {
-    /*            drawArm(dir, extensions[dir], connections[dir]);*/
-                drawContractedArms(dir);
-            }
-        }
-
-    }
-}
-public class OutputUnit {
-    
-    private int x,y;
-    private int[]  connections;
-    private int[]  extensions;
-
-    public OutputUnit() {
-        this(0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-    }
-
-    public OutputUnit(String s) {
-        this(0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-    }
-
-    public OutputUnit(int x, int y, int e0, int c0, int e1, int c1, int e2, int c2, int e3, int c3) {
-        this.x = x;
-        this.y = y;
-
-        connections = new int[4];
-        extensions  = new int[4];
-
-        connections[0] = c0;
-        connections[1] = c1;
-        connections[2] = c2;
-        connections[3] = c3;
-
-        extensions[0]  = e0;
-        extensions[1]  = e1;
-        extensions[2]  = e2;
-        extensions[3]  = e3;
-    }
-
-    public int X() {
-        return this.x;
-    }
-
-    public int Y() {
-        return this.y;
-    }
-
-    public void drawArm(int dir, int ext, int con) {
-
-        // how much of block length the unit width is
-        double ratio = 4.0f/5;
-
-        // calculate size variables
-        int block_size =  width / NUM_W;
-        int unit_width     = (int)((double)block_size * ratio);
-
-        int margin     = (int)(((1 -  ratio)/2) * (double)block_size);
-        int arm_len    = (extensions[dir]  == 1) ? (margin + block_size/2) : (margin);
-        int disconnect = (connections[dir] == 1) ? (0) : (margin/2);
-
-        // unit boundaries
-
-        int mod_y = NUM_H - y - 1;
-        int left   = ((block_size * x)) + (block_size - unit_width)/2;
-        int top    = ((block_size * mod_y)) + (block_size - unit_width)/2;
-        int right  = (left + unit_width);
-        int bottom = (top  + unit_width);
-
-        stroke(0, 255);
-        strokeWeight(1);
-    
-        // draw arm in given direction (arm + "hand")
-        if(dir == 0) {
-            line(left + (unit_width/2), top, left + unit_width/2, top - arm_len + disconnect);
-            line(left + (unit_width/4), top - arm_len + disconnect, right - unit_width/4, top - arm_len + disconnect);
-        } else if(dir == 2) {
-            line(left + (unit_width/2), bottom, left + unit_width/2, bottom + arm_len - disconnect);
-            line(left + (unit_width/4), bottom + arm_len - disconnect, right - unit_width/4, bottom + arm_len - disconnect);
-        } else if (dir == 3 ) {
-            line(left, top + (unit_width/2), left - arm_len + disconnect , top + unit_width/2 );
-            line(left - arm_len + disconnect, top + (unit_width/4), left - arm_len + disconnect, bottom - (unit_width/4));
-        } else {
-            line(right, top + (unit_width/2), right + arm_len - disconnect, top + unit_width/2 );
-            line(right + arm_len - disconnect, top + (unit_width/4), right + arm_len - disconnect, bottom - (unit_width/4));
-        }
-    }
-
-    public void drawUnit() {
-
-        // calculate sizes
-        int block_size =  width / NUM_W;
-        double ratio = 4.0f/5;
-        int unit_width     = (int)((double)block_size * ratio);
-
-        // unit boundaries
-
-        int mod_y = NUM_H - y - 1;
-        int left   = ((block_size * x)) + (block_size - unit_width)/2;
-        int top    = ((block_size * mod_y)) + (block_size - unit_width)/2;
-        int right  = (left + unit_width);
-        int bottom = (top  + unit_width);
-        
-        fill(51, 204, 255); // pretty blue
-        stroke(1);
-        rect(left, top, unit_width, unit_width);
-        fill(255, 255, 255);
-    }
-
-    public void render() {
-
-        // draw unit body
-        drawUnit();
-
-        // draw unit arms
-        for(int dir = 0; dir < 4; dir++) {
-            drawArm(dir, extensions[dir], connections[dir]);
-        }
-
-    }
-}
-  public void settings() {  size(800, 1000); }
-  static public void main(String[] passedArgs) {
-    String[] appletArgs = new String[] { "visualizer" };
-    if (passedArgs != null) {
-      PApplet.main(concat(appletArgs, passedArgs));
-    } else {
-      PApplet.main(appletArgs);
-    }
-  }
 }

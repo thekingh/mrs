@@ -137,8 +137,8 @@ public class State {
     //TODO this path prefix thing... its bad umkay?
     public static void clearStates() {
         //TODO OH GOD HARDCODING LOL
-        System.out.println("deleting all files in: ../../data/combing/output");
-        File dir = new File("../../data/combing/output/");
+        System.out.println("deleting all files in: ../data/combing/output");
+        File dir = new File("../data/combing/output/");
         int count = 0;
         for (File file : dir.listFiles()) {
             file.delete();
