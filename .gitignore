@@ -6,4 +6,5 @@ src/src/*.class
 doc/
 *.rbt
 viz/json_states/
+data/combing/output/*.json
 
