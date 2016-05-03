@@ -1,6 +1,18 @@
+/************************************************************************************************
+ *  Authors:     Alex Tong, Casey Gowrie, Kabir Singh
+ *  Date:        13 January 2016
+ *  Rev-Date:    01 May     2016
+ *
+ *  Description: Unit class specifically for read-in JSON data. Used exclusiviely for the
+ *               output mode.
+ *
+ ***********************************************************************************************/
+
 public class OutputUnit {
     
+    /* grid position */
     private int x,y;
+    /* arrays of arm connection/extension state */
     private int[]  connections;
     private int[]  extensions;
 
@@ -52,7 +64,6 @@ public class OutputUnit {
         int disconnect = (connections[dir] == 1) ? (0) : (margin/2);
 
         // unit boundaries
-
         int mod_y = NUM_H - y - 1;
         int left   = ((block_size * x)) + (block_size - unit_width)/2;
         int top    = ((block_size * mod_y)) + (block_size - unit_width)/2;
@@ -86,7 +97,6 @@ public class OutputUnit {
         int unit_width     = (int)((double)block_size * ratio);
 
         // unit boundaries
-
         int mod_y = NUM_H - y - 1;
         int left   = ((block_size * x)) + (block_size - unit_width)/2;
         int top    = ((block_size * mod_y)) + (block_size - unit_width)/2;

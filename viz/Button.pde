@@ -1,5 +1,16 @@
+/************************************************************************************************
+ *  Authors:     Alex Tong, Casey Gowrie, Kabir Singh
+ *  Date:        13 March 2016
+ *  Rev-Date:    02 May   2016
+ *
+ *  Description: A simple button class -- used as a placeholder until controlP5 library could
+ *               be integrated reasonably.
+ *
+ ***********************************************************************************************/
+
 public class Button {
 
+    /* top left pixel coordinate, height and width */
     private int x;
     private int y;
     private int w;
@@ -32,9 +43,10 @@ public class Button {
     }
 
     public void render(boolean cur_mode) {
-        // draw body of button
+        /* draw body of button */
         pushStyle();
             stroke(0, 0, 0);
+            /* highlighting depending on the mode */
             if (cur_mode) {
                 fill(255, 255, 255);
             } else {
@@ -43,7 +55,7 @@ public class Button {
             rect(x, y, w, h);
         popStyle();
 
-        // draw button text
+        /* draw button text */
         pushStyle();
             textAlign(CENTER, CENTER);
             stroke(0, 0, 0);

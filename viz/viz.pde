@@ -12,11 +12,6 @@
  *
  ***********************************************************************************************/
 
-// TODO
-// connectedness
-// consolidate classes
-// make prettier with controlP5 library
-
 import rutils.*;
 import ralgorithm.*;
 import rgraph.*;
